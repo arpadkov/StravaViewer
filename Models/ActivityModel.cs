@@ -13,10 +13,10 @@ namespace StravaViewer.Models
 
     public enum PlotType
     {
-        YearlySummary,
-        MonthlySummary,
-        MonthDetail,
-        UniqueDetail,
+        YearlySummary,      // displayTime - all,       grouped by - years
+        MonthlySummary,     // displayTime - year,      grouped by - month
+        MonthDetail,        // displayTime - month,     individual activities displayed
+        UniqueDetail,       // displayTime - unique,    individual activities displayed
     }
 
     public class ActivityModel
@@ -106,13 +106,7 @@ namespace StravaViewer.Models
 
         private PlotData getMonthlySummaryPlot()
         {
-            int display_year = displayTime.EndYear;
-            displayTime = TimePeriod.FromYear(display_year);
-
-            //var fromDate = new DateTime(2021, 1, 1);
-            //var toDate = new DateTime(2022, 1, 1);
-
-            //TimePeriod month = new TimePeriod(displayTime, toDate);
+            displayTime = TimePeriod.FromYear(displayTime.EndYear);
 
             var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), displayTime);
 
@@ -122,19 +116,12 @@ namespace StravaViewer.Models
 
         private PlotData getYearlySummaryPlot()
         {
-            //var fromDate = firstAct().start_date;
-            //var toDate = lastAct().start_date;
             displayTime = new TimePeriod(firstAct().start_date, lastAct().start_date);
 
             var abstract_plot = new AbstractYearlySummaryPlot(getActivitiesByType(), displayTime);
 
             var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
             return plot_data;
-        }
-
-        public void Test()
-        {
-            OnModelChange(EventArgs.Empty);
         }
 
         private Activity firstAct()
@@ -163,7 +150,24 @@ namespace StravaViewer.Models
             return last_act;
         }
 
+        /* TODO Misi
+         * this method inkrements the current display time by 1 unit
+         * - determine the unit of the current displayTime (all, year, month) from plotType
+         * - set displayTime for the next timeperiod
+         * - invoke ModelChanged event
+         */
+        public void NextDisplayTime()
+        {
 
+        }
+
+        /* TODO Misi
+         * see NextDisplayTime
+         */
+        public void LastDisplayTime()
+        {
+
+        }
 
         protected virtual void OnActivitiesSet(EventArgs e)
         {

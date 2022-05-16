@@ -34,15 +34,16 @@ namespace StravaViewer
         {
             Model.SetActivities();
 
-
-            //TimePeriod display_time = TimePeriod.FromYear(2021);
             Model.DisplayTime = TimePeriod.FromYear(2022);
-
-            //Model.Test();
         }
 
+        /* TODO Misi
+         * - add 2 buttons
+         * - bind them to the NextDisplayTime() and LastDisplayTime() methods
+         * - make them fancy
+         */
 
-
+        #region Trash
         private void ModelChanged(object sender, EventArgs e)
         {
             plot(Model.GetPlotData());
@@ -55,6 +56,8 @@ namespace StravaViewer
 
             BarPlot.Refresh();
         }
+
+
 
         private void ActivitiesSet(object sender, EventArgs e)
         {
@@ -132,5 +135,7 @@ namespace StravaViewer
 
             calculatedCoordsLabel.Text = (BarPlot.plt.XAxis.Dims.Min * BarPlot.plt.XAxis.Dims.PxPerUnit).ToString();
         }
+        #endregion
+
     }
 }
