@@ -9,11 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Forms\" />
     <Folder Include="StravaClient\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="ScottPlot" Version="4.1.45" />
+    <PackageReference Include="ScottPlot.WinForms" Version="4.1.45" />
   </ItemGroup>
 
 </Project>

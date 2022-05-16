@@ -1,7 +1,19 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 
 namespace StravaViewer.Models
 {
+    public enum ActivityType
+    {
+        Run,
+        Ride,
+        Hike,
+        WeightTraining,
+        Swim,
+        Walk,
+        Workout
+    }
+
     public class Activity
     {
         public string id;
@@ -9,8 +21,9 @@ namespace StravaViewer.Models
         public float distance;
         public float moving_time;
         public float elapsed_time;
-        public string start_date;
+        public DateTime start_date;
         public float total_elevation_gain;
+        public ActivityType type;
 
         public Activity(JObject json)
         {
@@ -19,12 +32,15 @@ namespace StravaViewer.Models
             this.name = json["name"].ToString();
             this.distance = json["distance"].ToObject<float>();
             this.moving_time = json["moving_time"].ToObject<float>();
-            this.elapsed_time = json["elapsed_time"].ToObject<float>();
-            this.start_date = json["start_date"].ToString();
+            this.elapsed_time = json["elapsed_time"].ToObject<float>();            
             this.total_elevation_gain = json["total_elevation_gain"].ToObject<float>();
-            #pragma warning restore CS8602 // Dereference of a possibly null reference.
 
-            Console.WriteLine(String.Format("Construction activity ID - {0}", id));
+            string start_date_string = json["start_date"].ToString();
+            start_date = Convert.ToDateTime(start_date_string);
+
+            string type_string = json["type"].ToString();
+            type = (ActivityType)Enum.Parse(typeof(ActivityType), type_string);
+            #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
     }
 

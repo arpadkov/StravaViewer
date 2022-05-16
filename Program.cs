@@ -1,8 +1,3 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using StravaViewer.Client;
-using StravaViewer.Models;
-
 namespace StravaViewer
 {
     internal static class Program
@@ -17,25 +12,8 @@ namespace StravaViewer
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             MainWindow mainWindow = new MainWindow();
-
-StravaClient Client = new StravaClient();
-            Client.SetAccesToken("95.arpadkov");
-
-            JArray json_activities = Client.GetAllActivities();
-            List<Activity> activities = new List<Activity>();
-
-            foreach (JObject json_activity in json_activities)
-            {
-                activities.Add(new Activity(json_activity));
-            }
-
-            mainWindow.SetLabel(activities.Count.ToString());
-
-
             Application.Run(mainWindow);
-
             
-
         }
     }
 }

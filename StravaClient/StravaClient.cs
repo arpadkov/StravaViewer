@@ -76,7 +76,7 @@ namespace StravaViewer.Client
 
                 if (new_activities_json.Count > 0)
                 {
-                    page_has_data = true; // CHANGE BACK TO TRUE !!!!!!!!!!!!!!!!!!!
+                    page_has_data = false; // CHANGE BACK TO TRUE !!!!!!!!!!!!!!!!!!!
                 }
                 else
                 {
