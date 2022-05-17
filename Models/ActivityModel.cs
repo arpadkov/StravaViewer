@@ -60,8 +60,6 @@ namespace StravaViewer.Models
 
         public void SetActivities()
         {
-            Client.SetAccesToken();
-
             JArray json_activities = Client.GetAllActivities();
 
             foreach (JObject json_activity in json_activities)

@@ -26,93 +26,7 @@ namespace StravaViewer.Client
             this.userFolderPath = Path.Combine(clientPath, user);
 
             SetUserCredentials();
-        }
-
-        private void SetUserCredentials()
-        {
-            string filename = Path.Combine(clientPath, user + ".json");
-            this.user_credentials = JsonConvert.DeserializeObject<StravaUserCredentials>(File.ReadAllText(filename));
-        }
-
-        public void SetAccesToken()
-        {
-            Dictionary<string, string> payload_dict = new Dictionary<string, string>
-                {
-                    {"client_id", user_credentials.ClientId},
-                    {"client_secret", user_credentials.ClientSecret},
-                    {"refresh_token", user_credentials.RefreshToken},
-                    {"grant_type", "refresh_token"},
-                };
-            var payload = new StringContent(JsonConvert.SerializeObject(payload_dict, Formatting.Indented), Encoding.UTF8, "application/json");
-
-            Console.WriteLine("Requesting acces token ...");
-            var response = client.PostAsync(authentication_url, payload).Result;
-
-            var result = response.Content.ReadAsStringAsync().Result;
-            JObject result_json = Newtonsoft.Json.Linq.JObject.Parse(result);
-
-            #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            this.access_token = result_json["access_token"].ToString();
-            #pragma warning restore CS8602 // Dereference of a possibly null reference.
-        }
-
-        private JArray GetActivitiesByPage(int page)
-        {
-            //var activities = new List<Activity>();
-            Console.WriteLine(String.Format("Requesting activities for page {0}...", page));
-
-            string activites_url = activites_base_url + "&page=" + page.ToString();
-
-            var request = new HttpRequestMessage(HttpMethod.Get, activites_url);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", access_token);
-            var response = client.SendAsync(request).Result;
-
-            var activities_json = JArray.Parse(response.Content.ReadAsStringAsync().Result);
-
-            return activities_json;
-        }
-
-
-        private JArray GetAllActivitiesFromAPI()
-        {
-            JArray activities_json = new JArray();
-            JArray new_activities_json = new JArray();
-            bool page_has_data = true;
-            int page = 1;
-
-            while (page_has_data)
-            {
-                new_activities_json = GetActivitiesByPage(page);
-                activities_json.Merge(new_activities_json);
-
-                if (new_activities_json.Count > 0)
-                {
-                    page_has_data = true; // CHANGE BACK TO TRUE !!!!!!!!!!!!!!!!!!!
-                }
-                else
-                {
-                    page_has_data = false; 
-                }
-
-                page++;
-            }
-
-            SaveAllActivityJson(activities_json);
-
-            return activities_json;
-        }
-
-        private void SaveAllActivityJson(JArray activities_json)
-        {
-            foreach (var activity_json in activities_json)
-            {
-                #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                string actId = activity_json["id"].ToString();
-                #pragma warning restore CS8602 // Dereference of a possibly null reference.
-
-                string filename = Path.Combine(userFolderPath, actId + ".json");
-                File.WriteAllText(filename, JsonConvert.SerializeObject(activity_json));
-            }
+            SetAccesToken();
         }
 
         public JArray GetAllActivities(bool sync = false)
@@ -136,6 +50,82 @@ namespace StravaViewer.Client
             return activities_json;
         }
 
+        private void SetUserCredentials()
+        {
+            string filename = Path.Combine(clientPath, user + ".json");
+            this.user_credentials = JsonConvert.DeserializeObject<StravaUserCredentials>(File.ReadAllText(filename));
+        }
+
+        private void SetAccesToken()
+        {
+            Dictionary<string, string> payload_dict = new Dictionary<string, string>
+                {
+                    {"client_id", user_credentials.ClientId},
+                    {"client_secret", user_credentials.ClientSecret},
+                    {"refresh_token", user_credentials.RefreshToken},
+                    {"grant_type", "refresh_token"},
+                };
+            var payload = new StringContent(JsonConvert.SerializeObject(payload_dict, Formatting.Indented), Encoding.UTF8, "application/json");
+
+            Console.WriteLine("Requesting acces token ...");
+            var response = client.PostAsync(authentication_url, payload).Result;
+
+            var result = response.Content.ReadAsStringAsync().Result;
+            JObject result_json = Newtonsoft.Json.Linq.JObject.Parse(result);
+
+            #pragma warning disable CS8602 // Dereference of a possibly null reference.
+            this.access_token = result_json["access_token"].ToString();
+            #pragma warning restore CS8602 // Dereference of a possibly null reference.
+        }
+
+        private JArray GetAllActivitiesFromAPI()
+        {
+            JArray activities_json = new JArray();
+            JArray new_activities_json = new JArray();
+            bool page_has_data = true;
+            int page = 1;
+
+            while (page_has_data)
+            {
+                new_activities_json = GetActivitiesByPage(page);
+                activities_json.Merge(new_activities_json);
+
+                if (new_activities_json.Count > 0)
+                {
+                    page_has_data = true; // CHANGE BACK TO TRUE !!!!!!!!!!!!!!!!!!!
+                }
+                else
+                {
+                    page_has_data = false;
+                }
+
+                page++;
+            }
+
+            SaveAllActivityJson(activities_json);
+
+            return activities_json;
+        }
+
+        private JArray GetActivitiesByPage(int page)
+        {
+            //var activities = new List<Activity>();
+            Console.WriteLine(String.Format("Requesting activities for page {0}...", page));
+
+            string activites_url = activites_base_url + "&page=" + page.ToString();
+
+            var request = new HttpRequestMessage(HttpMethod.Get, activites_url);
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", access_token);
+            var response = client.SendAsync(request).Result;
+
+            //var activities_json_unformatted = response.Content.ReadAsStringAsync().Result;
+            //var activities_json = JArray.Parse(activities_json_unformatted).ToList();
+
+            var activities_json = JArray.Parse(response.Content.ReadAsStringAsync().Result);
+
+            return activities_json;
+        }
+
         private void CheckBackupFolder()
         {
             // If directory does not exist, create it
@@ -150,6 +140,31 @@ namespace StravaViewer.Client
             return !Directory.EnumerateFileSystemEntries(userFolderPath).Any();
         }
 
+        private void SaveAllActivityJson(JArray activities_json)
+        {
+            string actId;
+            string raw_date_string;
+            DateTime start_date;
+            string date;
+            string filename;
+            string unformattedJson;
+            string formattedJson;
 
+            foreach (var activity_json in activities_json)
+            {
+                #pragma warning disable CS8602 // Dereference of a possibly null reference.
+                actId = activity_json["id"].ToString();
+                raw_date_string = activity_json["start_date"].ToString();
+                start_date = Convert.ToDateTime(raw_date_string);
+                date = start_date.ToString("yyyy-MM-dd");
+                #pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+                filename = Path.Combine(userFolderPath, date + "_" + actId + ".json");
+
+                unformattedJson = JsonConvert.SerializeObject(activity_json);
+                formattedJson = JValue.Parse(unformattedJson).ToString(Formatting.Indented);
+                File.WriteAllText(filename, formattedJson);
+            }
+        }
     }
 }
