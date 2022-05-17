@@ -1,30 +1,41 @@
-﻿using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace StravaViewer.Client
 {
     public class StravaClient
     {
+        private string user;
+        private string clientPath;
+        private string userFolderPath;
+
         private HttpClient client = new HttpClient();
         private string application_folder_name = "StravaClient";
         private string authentication_url = "https://www.strava.com/oauth/token";
         private string activites_base_url = "https://www.strava.com/api/v3/athlete/activities?per_page=100";
 
         string? access_token;
-        StravaUserCredentials? user_credentials;        
-
-        private void ReadUserCredentials(string user)
+        StravaUserCredentials? user_credentials;
+        
+        public StravaClient(string user)
         {
-            string applicationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), application_folder_name);
-            string filename = Path.Combine(applicationPath, user + ".json");
+            this.user = user;
+
+            this.clientPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), application_folder_name);
+            this.userFolderPath = Path.Combine(clientPath, user);
+
+            SetUserCredentials();
+        }
+
+        private void SetUserCredentials()
+        {
+            string filename = Path.Combine(clientPath, user + ".json");
             this.user_credentials = JsonConvert.DeserializeObject<StravaUserCredentials>(File.ReadAllText(filename));
         }
 
-        public void SetAccesToken(string user)
+        public void SetAccesToken()
         {
-            ReadUserCredentials(user);
-
             Dictionary<string, string> payload_dict = new Dictionary<string, string>
                 {
                     {"client_id", user_credentials.ClientId},
@@ -45,7 +56,7 @@ namespace StravaViewer.Client
             #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
-        private JArray GetActivities(int page)
+        private JArray GetActivitiesByPage(int page)
         {
             //var activities = new List<Activity>();
             Console.WriteLine(String.Format("Requesting activities for page {0}...", page));
@@ -62,7 +73,7 @@ namespace StravaViewer.Client
         }
 
 
-        public JArray GetAllActivities()
+        private JArray GetAllActivitiesFromAPI()
         {
             JArray activities_json = new JArray();
             JArray new_activities_json = new JArray();
@@ -71,12 +82,12 @@ namespace StravaViewer.Client
 
             while (page_has_data)
             {
-                new_activities_json = GetActivities(page);
+                new_activities_json = GetActivitiesByPage(page);
                 activities_json.Merge(new_activities_json);
 
                 if (new_activities_json.Count > 0)
                 {
-                    page_has_data = false; // CHANGE BACK TO TRUE !!!!!!!!!!!!!!!!!!!
+                    page_has_data = true; // CHANGE BACK TO TRUE !!!!!!!!!!!!!!!!!!!
                 }
                 else
                 {
@@ -86,8 +97,59 @@ namespace StravaViewer.Client
                 page++;
             }
 
+            SaveAllActivityJson(activities_json);
+
             return activities_json;
         }
+
+        private void SaveAllActivityJson(JArray activities_json)
+        {
+            foreach (var activity_json in activities_json)
+            {
+                #pragma warning disable CS8602 // Dereference of a possibly null reference.
+                string actId = activity_json["id"].ToString();
+                #pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+                string filename = Path.Combine(userFolderPath, actId + ".json");
+                File.WriteAllText(filename, JsonConvert.SerializeObject(activity_json));
+            }
+        }
+
+        public JArray GetAllActivities(bool sync = false)
+        {
+            JArray activities_json = new JArray();
+
+            CheckBackupFolder();
+
+            if (sync || IsEmptyUserBackupFolder())
+            {
+                GetAllActivitiesFromAPI();
+            }
+
+            string[] json_files = Directory.GetFiles(userFolderPath);
+
+            foreach (string json_file in json_files)
+            {
+                activities_json.Add(JObject.Parse(File.ReadAllText(json_file)));
+            }
+
+            return activities_json;
+        }
+
+        private void CheckBackupFolder()
+        {
+            // If directory does not exist, create it
+            if (Directory.Exists(userFolderPath) == false)
+            {
+                Directory.CreateDirectory(userFolderPath);
+            }
+        }
+
+        private bool IsEmptyUserBackupFolder()
+        {
+            return !Directory.EnumerateFileSystemEntries(userFolderPath).Any();
+        }
+
 
     }
 }

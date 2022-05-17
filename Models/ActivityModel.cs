@@ -43,7 +43,7 @@ namespace StravaViewer.Models
             this.plotType = PlotType.MonthlySummary;
 
             this.activities = new List<Activity>();
-            this.Client = new StravaClient();
+            this.Client = new StravaClient("95.arpadkov");
         }
 
         public TimePeriod DisplayTime
@@ -60,7 +60,7 @@ namespace StravaViewer.Models
 
         public void SetActivities()
         {
-            Client.SetAccesToken("95.arpadkov");
+            Client.SetAccesToken();
 
             JArray json_activities = Client.GetAllActivities();
 
