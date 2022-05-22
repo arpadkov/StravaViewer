@@ -167,7 +167,7 @@ namespace StravaViewer.Models
          */
         public void NextDisplayTime()
         {
-
+            // Misi started
         }
 
         /* TODO Misi
