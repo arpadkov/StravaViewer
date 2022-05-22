@@ -5,6 +5,7 @@
         public double[] Values;
         public double[] Positions;
         public string[] Labels;
+        public bool isDetailPlot;
 
         public PlotData(double[] values, string[] labels)
         {

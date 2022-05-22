@@ -18,15 +18,15 @@ namespace StravaViewer
             BarPlot.Configuration.RightClickDragZoom = false;
             BarPlot.Configuration.ScrollWheelZoom = false;
             BarPlot.Configuration.DoubleClickBenchmark = false;
+            BarPlot.Configuration.LockHorizontalAxis = true;
+            BarPlot.Configuration.LockVerticalAxis = true;
+
 
             //this.Size = new System.Drawing.Size(1200, 900);
 
-            //BarPlot.Configuration.LockHorizontalAxis = true;
-            //BarPlot.Configuration.LockVerticalAxis = true; 
 
             this.Model = new ActivityModel();
             Model.ModelChanged += ModelChanged;
-            Model.ActivitiesSet += ActivitiesSet;
 
         }
 
@@ -43,7 +43,7 @@ namespace StravaViewer
          * - make them fancy
          */
 
-        #region Trash
+
         private void ModelChanged(object sender, EventArgs e)
         {
             plot(Model.GetPlotData());
@@ -51,18 +51,34 @@ namespace StravaViewer
 
         private void plot(PlotData plot_data)
         {
-            BarPlot.Plot.AddBar(plot_data.Values, plot_data.Positions);
-            BarPlot.Plot.XTicks(plot_data.Positions, plot_data.Labels);
+            if (plot_data.isDetailPlot)
+            {
+                plot_detail(plot_data);
+            }
+            else
+            {
+                plot_summary(plot_data);
+            }
 
             BarPlot.Refresh();
         }
 
-
-
-        private void ActivitiesSet(object sender, EventArgs e)
+        private void plot_summary(PlotData plot_data)
         {
-            label1.Text = "Acts set";
+            BarPlot.Plot.AddBar(plot_data.Values, plot_data.Positions);
+            BarPlot.Plot.XTicks(plot_data.Positions, plot_data.Labels);            
         }
+
+        private void plot_detail(PlotData plot_data)
+        {
+
+        }
+
+
+
+
+
+        /*#region Trash
 
         private void BarPlot_MouseMove(object sender, MouseEventArgs e)
         {
@@ -135,7 +151,7 @@ namespace StravaViewer
 
             calculatedCoordsLabel.Text = (BarPlot.plt.XAxis.Dims.Min * BarPlot.plt.XAxis.Dims.PxPerUnit).ToString();
         }
-        #endregion
+        #endregion*/
 
     }
 }

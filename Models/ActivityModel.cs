@@ -95,6 +95,10 @@ namespace StravaViewer.Models
             {
                 return getMonthlySummaryPlot();
             }
+            else if (plotType == PlotType.MonthDetail)
+            {
+                return getMonthDetailPlot();
+            }
 
             else
             {
@@ -119,6 +123,13 @@ namespace StravaViewer.Models
             var abstract_plot = new AbstractYearlySummaryPlot(getActivitiesByType(), displayTime);
 
             var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
+            return plot_data;
+        }
+
+        private PlotData getMonthDetailPlot()
+        {
+            var plot_data = PlotData.Empty();
+
             return plot_data;
         }
 
