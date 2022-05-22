@@ -74,6 +74,16 @@ namespace StravaViewer
 
         }
 
+        private void NextTimeButton_Click(object sender, EventArgs e)
+        {
+            Model.NextDisplayTime();
+        }
+
+        private void LastTimeButton_Click(object sender, EventArgs e)
+        {
+            Model.LastDisplayTime();
+        }
+
 
 
 

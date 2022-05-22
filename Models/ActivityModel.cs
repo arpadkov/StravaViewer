@@ -163,11 +163,11 @@ namespace StravaViewer.Models
          * this method inkrements the current display time by 1 unit
          * - determine the unit of the current displayTime (all, year, month) from plotType
          * - set displayTime for the next timeperiod
-         * - invoke ModelChanged event
          */
         public void NextDisplayTime()
         {
             // Misi started
+            this.DisplayTime = TimePeriod.FromYear(2022);
         }
 
         /* TODO Misi

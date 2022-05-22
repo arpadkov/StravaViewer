@@ -26,7 +26,7 @@ namespace StravaViewer.Models
         public static TimePeriod FromYear(int year)
         {
             DateTime firstDay = new DateTime(year, 1, 1);
-            DateTime lastDay = new DateTime(year, 12, 31);
+            DateTime lastDay = new DateTime(year+1, 1, 1);
 
             return new TimePeriod(firstDay, lastDay);
         }
