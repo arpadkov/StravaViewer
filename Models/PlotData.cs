@@ -21,6 +21,34 @@
             this.Positions = positions_list.ToArray();
         }
 
+        public PlotData(AbstractPlot.AbstractSummaryPlot plot)
+        {
+            this.Values = plot.GetValues();
+            this.Labels = plot.GetLabels();
+
+            List<double> positions_list = new List<double>();
+            for (int i = 0; i < Values.Length; i++)
+            {
+                positions_list.Add(i);
+            }
+
+            this.Positions = positions_list.ToArray();
+        }
+
+        //public PlotData(AbstractPlot.AbstractDetailPlot plot)
+        //{
+        //    this.Values = plot.GetValues();
+        //    this.Labels = plot.GetLabels();
+
+        //    List<double> positions_list = new List<double>();
+        //    for (int i = 0; i < Values.Length; i++)
+        //    {
+        //        positions_list.Add(i);
+        //    }
+
+        //    this.Positions = positions_list.ToArray();
+        //}
+
         public static PlotData Empty()
         {
             double[] values = new double[0];

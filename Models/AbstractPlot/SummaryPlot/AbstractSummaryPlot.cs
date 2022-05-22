@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StravaViewer.Models.AbstractPlot
 {
-    abstract class AbstractSummaryPlot
+    public abstract class AbstractSummaryPlot
     {
 
         protected List<Activity> activities;
@@ -14,7 +14,8 @@ namespace StravaViewer.Models.AbstractPlot
         protected DateTime toDate;
         //protected TimePeriod timePeriod;
 
-        abstract protected List<ActivityCollection> getCollections(); 
+        abstract protected List<ActivityCollection> GetCollections(); 
+        abstract public string[] GetLabels();
 
         public AbstractSummaryPlot(List<Activity> activities, TimePeriod timePeriod)
         {
@@ -27,7 +28,7 @@ namespace StravaViewer.Models.AbstractPlot
         {
             List<double> values_list = new List<double>();
 
-            foreach (ActivityCollection collection in getCollections())
+            foreach (ActivityCollection collection in GetCollections())
             {
                 values_list.Add(collection.getDistance());          // convert return value to double????
             }

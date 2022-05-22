@@ -23,7 +23,7 @@ namespace StravaViewer.Models.AbstractPlot
             return years;
         }
 
-        protected override List<ActivityCollection> getCollections()
+        protected override List<ActivityCollection> GetCollections()
         {
             List<ActivityCollection> collections = new List<ActivityCollection>();
 
@@ -41,7 +41,7 @@ namespace StravaViewer.Models.AbstractPlot
             return collections;
         }
 
-        public string[] GetLabels()
+        public override string[] GetLabels()
         {
             List<string> labels_list = new List<string>();
 

@@ -89,11 +89,11 @@ namespace StravaViewer.Models
         {
             if (plotType == PlotType.YearlySummary)
             {
-                return getYearlySummaryPlot();
+                return new PlotData(getYearlySummaryPlot());
             }
             else if (plotType == PlotType.MonthlySummary)
             {
-                return getMonthlySummaryPlot();
+                return new PlotData(getMonthlySummaryPlot());
             }
             else if (plotType == PlotType.MonthDetail)
             {
@@ -106,24 +106,24 @@ namespace StravaViewer.Models
             }
         }
 
-        private PlotData getMonthlySummaryPlot()
+        private AbstractSummaryPlot getMonthlySummaryPlot()
         {
             displayTime = TimePeriod.FromYear(displayTime.EndYear);
 
             var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), displayTime);
 
-            var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
-            return plot_data;
+            //var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
+            return abstract_plot;
         }
 
-        private PlotData getYearlySummaryPlot()
+        private AbstractSummaryPlot getYearlySummaryPlot()
         {
             displayTime = new TimePeriod(firstAct().start_date, lastAct().start_date);
 
             var abstract_plot = new AbstractYearlySummaryPlot(getActivitiesByType(), displayTime);
 
-            var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
-            return plot_data;
+            //var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
+            return abstract_plot;
         }
 
         private PlotData getMonthDetailPlot()

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StravaViewer.Models.AbstractPlot.DetailPlot
+namespace StravaViewer.Models.AbstractPlot
 {
-    internal class AbstractDetailPlot
+    public class AbstractDetailPlot
     {
         private List<Activity> activities;
         private DateTime fromDate;
@@ -28,6 +28,45 @@ namespace StravaViewer.Models.AbstractPlot.DetailPlot
                 days.Add(day);
             }
             return days;
+        }
+
+        //not ready
+        //this is baaaad
+        public List<double[]> GetValues()
+        {
+            List<double[]> value_series = new List<double[]>();
+
+            int level = 0;
+            List<Activity> remaining_acts = new List<Activity>(activities);
+
+            while (remaining_acts.Count > 0)
+            {
+                value_series.Add(GetValuesForLevel(remaining_acts));
+                level++;
+            }
+
+            return value_series;
+        }
+
+        private double[] GetValuesForLevel(List<Activity> remaining_acts)
+        {
+            double[] values = new double[remaining_acts.Count];
+
+            int i = 0;
+            foreach (DateTime day in GetDays())
+            {
+                foreach (Activity activity in remaining_acts)
+                {
+                    if (activity.start_date.Day == day.Day)
+                    {
+                        values[i] = activity.distance;
+
+                    }
+                }
+                i++;
+            }
+
+            return values;
         }
 
         public string[] GetLabels()

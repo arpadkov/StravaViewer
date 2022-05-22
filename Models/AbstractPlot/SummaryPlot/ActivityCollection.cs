@@ -1,6 +1,6 @@
 ﻿namespace StravaViewer.Models.AbstractPlot
 {
-    internal class ActivityCollection
+    public class ActivityCollection
     {
         private List<Activity> activities;
 
