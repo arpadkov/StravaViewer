@@ -97,7 +97,7 @@ namespace StravaViewer.Models
             }
             else if (plotType == PlotType.MonthDetail)
             {
-                return getMonthDetailPlot();
+                return new PlotData(getMonthDetailPlot());
             }
 
             else
@@ -108,7 +108,7 @@ namespace StravaViewer.Models
 
         private AbstractSummaryPlot getMonthlySummaryPlot()
         {
-            displayTime = TimePeriod.FromYear(displayTime.EndYear);
+            displayTime = TimePeriod.FromYear(2022);
 
             var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), displayTime);
 
@@ -126,11 +126,13 @@ namespace StravaViewer.Models
             return abstract_plot;
         }
 
-        private PlotData getMonthDetailPlot()
+        private AbstractDetailPlot getMonthDetailPlot()
         {
-            var plot_data = PlotData.Empty();
+            displayTime = new TimePeriod(new DateTime(2022, 05, 01), new DateTime(2022, 06, 01));
 
-            return plot_data;
+            var abstract_plot = new AbstractDetailPlot(getActivitiesByType(), displayTime);
+
+            return abstract_plot;
         }
 
         private Activity firstAct()
@@ -167,7 +169,7 @@ namespace StravaViewer.Models
         public void NextDisplayTime()
         {
             // Misi started
-            this.DisplayTime = TimePeriod.FromYear(2022);
+            //this.DisplayTime = TimePeriod.FromYear(2022);
         }
 
         /* TODO Misi

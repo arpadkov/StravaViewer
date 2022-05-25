@@ -21,5 +21,20 @@
 
             return selected_activities;
         }
+
+        public static List<Activity> GetActsByDay(List<Activity> activities, DateTime day)
+        {
+            List<Activity> selected_activities = new List<Activity>();
+
+            foreach (Activity activity in activities)
+            {
+                if (activity.start_date.Date == day.Date)
+                {
+                    selected_activities.Add(activity);
+                }
+            }
+
+            return selected_activities;
+        }
     }
 }

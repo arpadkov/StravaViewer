@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StravaViewer.Models.AbstractPlot
+﻿namespace StravaViewer.Models.AbstractPlot
 {
     public class AbstractDetailPlot
     {
@@ -12,61 +6,66 @@ namespace StravaViewer.Models.AbstractPlot
         private DateTime fromDate;
         private DateTime toDate;
 
+        private List<DateTime> days;
+        private List<DetailActivityCollection> activityCollections;
+
         public AbstractDetailPlot(List<Activity> activities, TimePeriod timePeriod)
         {
             this.activities = activities;
             this.fromDate = timePeriod.StartTime;
             this.toDate = timePeriod.EndTime;
+
+            this.days = GetDays();
+            this.activityCollections = GetCollections();
         }
 
         private List<DateTime> GetDays()
         {
             List<DateTime> days = new List<DateTime>();
 
-            for (DateTime day = fromDate; day <= toDate; day.AddDays(1))
+            DateTime day = fromDate;
+            while (day <= toDate)
             {
                 days.Add(day);
+                day = day.AddDays(1);
             }
             return days;
         }
 
-        //not ready
-        //this is baaaad
+        private List<DetailActivityCollection> GetCollections()
+        {
+            List<DetailActivityCollection> collections = new List<DetailActivityCollection>();
+
+            foreach (DateTime day in days)
+            {
+                List<Activity> acts = ActivitySorter.GetActsByDay(activities, day);
+                collections.Add(new DetailActivityCollection(acts));
+            }
+
+            return collections;
+        }
+
+        private int MaxActivityCount()
+        {
+            int count = 0;
+            foreach (DetailActivityCollection collection in activityCollections)
+            {
+                if (collection.Count > count) 
+                {
+                    count = collection.Count;
+                }
+            }
+
+            return count;
+        }
+
+
+
         public List<double[]> GetValues()
         {
             List<double[]> value_series = new List<double[]>();
 
-            int level = 0;
-            List<Activity> remaining_acts = new List<Activity>(activities);
-
-            while (remaining_acts.Count > 0)
-            {
-                value_series.Add(GetValuesForLevel(remaining_acts));
-                level++;
-            }
-
             return value_series;
-        }
-
-        private double[] GetValuesForLevel(List<Activity> remaining_acts)
-        {
-            double[] values = new double[remaining_acts.Count];
-
-            int i = 0;
-            foreach (DateTime day in GetDays())
-            {
-                foreach (Activity activity in remaining_acts)
-                {
-                    if (activity.start_date.Day == day.Day)
-                    {
-                        values[i] = activity.distance;
-
-                    }
-                }
-                i++;
-            }
-
-            return values;
         }
 
         public string[] GetLabels()

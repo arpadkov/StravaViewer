@@ -20,9 +20,6 @@ namespace StravaViewer.Models
         public DateTime StartTime { get { return _startTime; } }
         public DateTime EndTime { get { return _endTime; } }
 
-        public int StartYear { get { return _startTime.Year; } }
-        public int EndYear { get { return _endTime.Year; } }
-
         public static TimePeriod FromYear(int year)
         {
             DateTime firstDay = new DateTime(year, 1, 1);

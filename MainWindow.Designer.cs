@@ -37,6 +37,8 @@
             // 
             // BarPlot
             // 
+            this.BarPlot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.BarPlot.Location = new System.Drawing.Point(138, 36);
             this.BarPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.BarPlot.Name = "BarPlot";
@@ -74,7 +76,6 @@
             this.Controls.Add(this.NextTimeButton);
             this.Controls.Add(this.BarPlot);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximumSize = new System.Drawing.Size(1500, 1500);
             this.MinimumSize = new System.Drawing.Size(100, 100);
             this.Name = "MainWindow";
             this.Text = "StravaViewer";

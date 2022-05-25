@@ -65,7 +65,11 @@ namespace StravaViewer
 
         private void plot_summary(PlotData plot_data)
         {
-            BarPlot.Plot.AddBar(plot_data.Values, plot_data.Positions);
+            foreach (double[] values in plot_data.Values)
+            {
+                BarPlot.Plot.AddBar(values, plot_data.Positions);
+            }
+            //BarPlot.Plot.AddBar(plot_data.Values, plot_data.Positions);
             BarPlot.Plot.XTicks(plot_data.Positions, plot_data.Labels);            
         }
 
