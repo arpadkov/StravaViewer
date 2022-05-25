@@ -65,6 +65,16 @@
         {
             List<double[]> value_series = new List<double[]>();
 
+            for (int level=0; level<=MaxActivityCount(); level++)
+            {
+                List<double> values = new List<double>();
+                foreach (DetailActivityCollection collection in activityCollections)
+                {
+                    values.Add(collection.GetDistance(level));
+                }
+                value_series.Add(values.ToArray());
+            }
+
             return value_series;
         }
 

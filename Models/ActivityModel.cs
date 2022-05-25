@@ -40,7 +40,7 @@ namespace StravaViewer.Models
 
             this.activityType = ActivityType.Run;
             this.infoType = InfoType.Distance;
-            this.plotType = PlotType.MonthlySummary;
+            this.plotType = PlotType.MonthDetail;
 
             this.activities = new List<Activity>();
             this.Client = new StravaClient("95.arpadkov");

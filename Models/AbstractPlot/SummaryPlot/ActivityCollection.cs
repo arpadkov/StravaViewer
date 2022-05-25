@@ -11,7 +11,15 @@
 
         public float getDistance()
         {
-            return activities.Sum(act => act.distance)/1000;
+            if (activities.Any())
+            {
+                return activities.Sum(act => act.distance)/1000;
+            }
+            else
+            {
+                return 0;
+            }
+            
         }
 
     }
