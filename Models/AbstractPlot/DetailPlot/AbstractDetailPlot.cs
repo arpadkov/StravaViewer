@@ -7,7 +7,7 @@
         private DateTime toDate;
 
         private List<DateTime> days;
-        private List<DetailActivityCollection> activityCollections;
+        private List<ActivityCollection> activityCollections;
 
         public AbstractDetailPlot(List<Activity> activities, TimePeriod timePeriod)
         {
@@ -32,14 +32,14 @@
             return days;
         }
 
-        private List<DetailActivityCollection> GetCollections()
+        private List<ActivityCollection> GetCollections()
         {
-            List<DetailActivityCollection> collections = new List<DetailActivityCollection>();
+            List<ActivityCollection> collections = new List<ActivityCollection>();
 
             foreach (DateTime day in days)
             {
                 List<Activity> acts = ActivitySorter.GetActsByDay(activities, day);
-                collections.Add(new DetailActivityCollection(acts));
+                collections.Add(new ActivityCollection(acts));
             }
 
             return collections;
@@ -48,7 +48,7 @@
         private int MaxActivityCount()
         {
             int count = 0;
-            foreach (DetailActivityCollection collection in activityCollections)
+            foreach (ActivityCollection collection in activityCollections)
             {
                 if (collection.Count > count) 
                 {
@@ -68,7 +68,7 @@
             for (int level=0; level<=MaxActivityCount(); level++)
             {
                 List<double> values = new List<double>();
-                foreach (DetailActivityCollection collection in activityCollections)
+                foreach (ActivityCollection collection in activityCollections)
                 {
                     values.Add(collection.GetDistance(level));
                 }

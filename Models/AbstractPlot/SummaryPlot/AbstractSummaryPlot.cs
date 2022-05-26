@@ -30,7 +30,7 @@ namespace StravaViewer.Models.AbstractPlot
 
             foreach (ActivityCollection collection in GetCollections())
             {
-                values_list.Add(collection.getDistance());          // convert return value to double????
+                values_list.Add(collection.GetSumDistance());          // convert return value to double????
             }
 
             double[] values = values_list.ToArray();
