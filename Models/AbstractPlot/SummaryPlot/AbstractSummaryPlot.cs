@@ -13,7 +13,7 @@ namespace StravaViewer.Models.AbstractPlot
         protected DateTime fromDate;
         protected DateTime toDate;
         //protected TimePeriod timePeriod;
-        protected List<ActivityCollection> activityCollections = new List<ActivityCollection>();
+        public List<ActivityCollection> activityCollections = new List<ActivityCollection>();
 
         abstract protected List<ActivityCollection> GetCollections();
         abstract public string[] GetLabels();

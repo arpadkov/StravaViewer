@@ -88,11 +88,23 @@ namespace StravaViewer
             Model.LastDisplayTime();
         }
 
-        private void BarPlot_MouseClick(object sender, MouseEventArgs e)
+        private void DisplayDetails()
         {
             (double x, double y) = BarPlot.GetMouseCoordinates();
-            clickCoordLabel.Text = "Click Coordinates\n" + x.ToString() + " - " + y.ToString();
+
+            foreach (Models.AbstractPlot.ActivityCollection collection in Model.AbstractPlot.activityCollections)
+            {
+                if (collection.BoundingRectangle.Contains(x, y))
+                {
+                    detailLabel.Text = "Activity / Collection details:\n" + collection.ToString();
+                }
+            }
+
+            
+
+
         }
+
 
         private void BarPlot_MouseDown(object sender, MouseEventArgs e)
         {
@@ -100,6 +112,8 @@ namespace StravaViewer
             x = Math.Round(x, 2);
             y = Math.Round(y, 2);
             clickCoordLabel.Text = "Click Coordinates\n" + x.ToString() + " : " + y.ToString();
+
+            DisplayDetails();
         }
 
         private void BarPlot_MouseMove(object sender, MouseEventArgs e)

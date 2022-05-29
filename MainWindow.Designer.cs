@@ -34,6 +34,7 @@
             this.LastTimeButton = new System.Windows.Forms.Button();
             this.clickCoordLabel = new System.Windows.Forms.Label();
             this.moveCoordinatesLabel = new System.Windows.Forms.Label();
+            this.detailLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BarPlot
@@ -45,7 +46,6 @@
             this.BarPlot.Name = "BarPlot";
             this.BarPlot.Size = new System.Drawing.Size(658, 346);
             this.BarPlot.TabIndex = 0;
-            this.BarPlot.MouseClick += new System.Windows.Forms.MouseEventHandler(this.BarPlot_MouseClick);
             this.BarPlot.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BarPlot_MouseDown);
             this.BarPlot.MouseMove += new System.Windows.Forms.MouseEventHandler(this.BarPlot_MouseMove);
             // 
@@ -89,11 +89,21 @@
             this.moveCoordinatesLabel.TabIndex = 3;
             this.moveCoordinatesLabel.Text = "Mouse Coordinates";
             // 
+            // detailLabel
+            // 
+            this.detailLabel.AutoSize = true;
+            this.detailLabel.Location = new System.Drawing.Point(721, 142);
+            this.detailLabel.Name = "detailLabel";
+            this.detailLabel.Size = new System.Drawing.Size(146, 15);
+            this.detailLabel.TabIndex = 4;
+            this.detailLabel.Text = "Activity/Collection details:";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(935, 500);
+            this.Controls.Add(this.detailLabel);
             this.Controls.Add(this.moveCoordinatesLabel);
             this.Controls.Add(this.clickCoordLabel);
             this.Controls.Add(this.LastTimeButton);
@@ -115,5 +125,6 @@
         private Button LastTimeButton;
         private Label clickCoordLabel;
         private Label moveCoordinatesLabel;
+        private Label detailLabel;
     }
 }

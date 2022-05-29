@@ -18,6 +18,8 @@
             this.bottom = bottom;
             this.width = width;
 
+            this.top = bottom + height;
+
             this.left = verticalCenter - width/2;
             this.right = verticalCenter + width/2;
 
@@ -42,6 +44,11 @@
             {
                 return false;
             }
+        }
+
+        public override string ToString()
+        {
+            return String.Format("Top: {0}, Center: {1}, Bottom: {2}", top, verticalCenter, bottom);
         }
 
 

@@ -61,5 +61,10 @@
             }
         }
 
+        public override string ToString()
+        {
+            return String.Format("{0} Activities, {1} km total", activities.Count, GetSumDistance());
+        }
+
     }
 }

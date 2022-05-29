@@ -33,6 +33,8 @@ namespace StravaViewer.Models
 
         private TimePeriod displayTime;
 
+        public AbstractSummaryPlot? AbstractPlot; //temporary
+
         public ActivityModel()
         {
             this.displayTime = new TimePeriod(DateTime.Now, DateTime.Now);
@@ -113,6 +115,7 @@ namespace StravaViewer.Models
             var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), displayTime);
 
             //var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
+            this.AbstractPlot = abstract_plot; //temporary
             return abstract_plot;
         }
 
@@ -123,6 +126,7 @@ namespace StravaViewer.Models
             var abstract_plot = new AbstractYearlySummaryPlot(getActivitiesByType(), displayTime);
 
             //var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
+            this.AbstractPlot = abstract_plot; //temporary
             return abstract_plot;
         }
 

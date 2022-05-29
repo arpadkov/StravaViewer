@@ -10,6 +10,7 @@ namespace StravaViewer.Models.AbstractPlot
         {
             this.years = getYears();
             this.activityCollections = GetCollections();
+            SetBoundingRectangles();
         }
 
         private List<int> getYears()
@@ -42,6 +43,18 @@ namespace StravaViewer.Models.AbstractPlot
             }
 
             return collections;
+        }
+
+        private void SetBoundingRectangles()
+        {
+            foreach (var (collection, index) in activityCollections.Select((value, i) => (value, i)))
+            {
+                collection.BoundingRectangle = new BoundingRectangle(
+                    height: collection.GetSumDistance(),
+                    verticalCenter: index,
+                    bottom: 0,
+                    width: 0.5);
+            }
         }
 
         public override string[] GetLabels()
