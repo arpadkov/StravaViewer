@@ -4,9 +4,12 @@ namespace StravaViewer.Models.AbstractPlot
 {
     internal class AbstractYearlySummaryPlot : AbstractSummaryPlot
     {
+        private List<int> years;
 
         public AbstractYearlySummaryPlot(List<Activity> activities, TimePeriod timePeriod) : base(activities, timePeriod)
         {
+            this.years = getYears();
+            this.activityCollections = GetCollections();
         }
 
         private List<int> getYears()
@@ -27,7 +30,7 @@ namespace StravaViewer.Models.AbstractPlot
         {
             List<ActivityCollection> collections = new List<ActivityCollection>();
 
-            foreach (int year in getYears())
+            foreach (int year in years)
             {
                 DateTime firstDay = new DateTime(year, 1, 1);
                 DateTime lastDay = new DateTime(year + 1, 1, 1);
@@ -45,7 +48,7 @@ namespace StravaViewer.Models.AbstractPlot
         {
             List<string> labels_list = new List<string>();
 
-            foreach (int year in getYears())
+            foreach (int year in years)
             {
                 labels_list.Add(year.ToString());
             }

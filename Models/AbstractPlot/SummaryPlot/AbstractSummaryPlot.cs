@@ -13,8 +13,9 @@ namespace StravaViewer.Models.AbstractPlot
         protected DateTime fromDate;
         protected DateTime toDate;
         //protected TimePeriod timePeriod;
+        protected List<ActivityCollection> activityCollections = new List<ActivityCollection>();
 
-        abstract protected List<ActivityCollection> GetCollections(); 
+        abstract protected List<ActivityCollection> GetCollections();
         abstract public string[] GetLabels();
 
         public AbstractSummaryPlot(List<Activity> activities, TimePeriod timePeriod)
@@ -22,13 +23,15 @@ namespace StravaViewer.Models.AbstractPlot
             this.activities = activities;
             this.fromDate = timePeriod.StartTime;
             this.toDate = timePeriod.EndTime;
+
+            //this.activityCollections = GetCollections();
         }
 
         public double[] GetValues()
         {
             List<double> values_list = new List<double>();
 
-            foreach (ActivityCollection collection in GetCollections())
+            foreach (ActivityCollection collection in activityCollections)
             {
                 values_list.Add(collection.GetSumDistance());          // convert return value to double????
             }

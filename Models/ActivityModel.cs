@@ -40,7 +40,7 @@ namespace StravaViewer.Models
 
             this.activityType = ActivityType.Run;
             this.infoType = InfoType.Distance;
-            this.plotType = PlotType.MonthDetail;
+            this.plotType = PlotType.YearlySummary;
 
             this.activities = new List<Activity>();
             this.Client = new StravaClient("95.arpadkov");
@@ -108,7 +108,7 @@ namespace StravaViewer.Models
 
         private AbstractSummaryPlot getMonthlySummaryPlot()
         {
-            displayTime = TimePeriod.FromYear(2022);
+            displayTime = TimePeriod.FromYear(2021);
 
             var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), displayTime);
 

@@ -59,13 +59,11 @@
             return count;
         }
 
-
-
         public List<double[]> GetValues()
         {
             List<double[]> value_series = new List<double[]>();
 
-            for (int level=0; level<=MaxActivityCount(); level++)
+            for (int level=0; level<MaxActivityCount(); level++)
             {
                 List<double> values = new List<double>();
                 foreach (ActivityCollection collection in activityCollections)

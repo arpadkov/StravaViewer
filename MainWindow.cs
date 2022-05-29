@@ -69,7 +69,7 @@ namespace StravaViewer
             {
                 BarPlot.Plot.AddBar(values, plot_data.Positions);
             }
-            //BarPlot.Plot.AddBar(plot_data.Values, plot_data.Positions);
+
             BarPlot.Plot.XTicks(plot_data.Positions, plot_data.Labels);            
         }
 
@@ -86,6 +86,28 @@ namespace StravaViewer
         private void LastTimeButton_Click(object sender, EventArgs e)
         {
             Model.LastDisplayTime();
+        }
+
+        private void BarPlot_MouseClick(object sender, MouseEventArgs e)
+        {
+            (double x, double y) = BarPlot.GetMouseCoordinates();
+            clickCoordLabel.Text = "Click Coordinates\n" + x.ToString() + " - " + y.ToString();
+        }
+
+        private void BarPlot_MouseDown(object sender, MouseEventArgs e)
+        {
+            (double x, double y) = BarPlot.GetMouseCoordinates();
+            x = Math.Round(x, 2);
+            y = Math.Round(y, 2);
+            clickCoordLabel.Text = "Click Coordinates\n" + x.ToString() + " : " + y.ToString();
+        }
+
+        private void BarPlot_MouseMove(object sender, MouseEventArgs e)
+        {
+            (double x, double y) = BarPlot.GetMouseCoordinates();
+            x = Math.Round(x, 2);
+            y = Math.Round(y, 2);
+            moveCoordinatesLabel.Text = "Mouse Coordinates\n" + x.ToString() + " : " + y.ToString();
         }
 
 

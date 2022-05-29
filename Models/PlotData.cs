@@ -37,7 +37,7 @@
 
         public PlotData(AbstractPlot.AbstractDetailPlot plot)
         {
-            this.Values = plot.GetValues();
+            this.Values = ConvertValues(plot.GetValues());
             this.Labels = plot.GetLabels();
 
             List<double> positions_list = new List<double>();
@@ -47,6 +47,39 @@
             }
 
             this.Positions = positions_list.ToArray();
+        }
+
+        /*
+         * converts the values:
+         * to simulate stacking, shifts values
+         * TERRIBLE
+         */
+        private List<double[]> ConvertValues(List<double[]> valueSeries)
+        {
+            List<double[]> result = new List<double[]>();
+
+            double[] values_offset = new double[valueSeries[0].Length];
+            for (int i = 0; i < valueSeries.Count; i++)            
+            {
+                
+                double[] new_values = offsetSeries(valueSeries[i], values_offset);
+
+                values_offset = new_values;
+
+                result.Add(new_values);
+            }
+
+            return Enumerable.Reverse(result).ToList();
+        }
+
+        private double[] offsetSeries(double[] original, double[] offset)
+        {
+            double[] result = new double[original.Length];
+            for (int i = 0; i < original.Length; i++)
+            {
+                result[i] = original[i] + offset[i];
+            }
+            return result;
         }
 
         public static PlotData Empty()

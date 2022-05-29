@@ -3,6 +3,7 @@
     public class ActivityCollection
     {
         private List<Activity> activities;
+        private BoundingRectangle? boundingRectangle;
 
         public ActivityCollection(List<Activity> activities)
         {
@@ -19,15 +20,19 @@
         {
             if (activities.Any())
             {
-                return activities.Sum(act => act.distance)/1000;
+                return activities.Sum(act => act.distance) / 1000;
             }
             else
             {
                 return 0;
             }
-            
+
         }
 
+        /*
+         * relevant for DetailPlot
+         * returns the distance for the "level"-th activity
+         */
         public float GetDistance(int level)
         {
             if (activities.Count != 0 && activities.Count > level)
@@ -39,6 +44,21 @@
                 return 0;
             }
 
+        }
+
+        public BoundingRectangle BoundingRectangle
+        {
+            get
+            {
+                if (boundingRectangle != null)
+                    return boundingRectangle;
+                return BoundingRectangle.Empty();
+            }
+
+            set
+            {
+                this.boundingRectangle = value;
+            }
         }
 
     }

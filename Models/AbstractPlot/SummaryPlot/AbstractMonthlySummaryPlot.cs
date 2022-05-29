@@ -8,9 +8,12 @@ namespace StravaViewer.Models.AbstractPlot
 {
     internal class AbstractMonthlySummaryPlot : AbstractSummaryPlot
     {
+        private List<int> months;
 
         public AbstractMonthlySummaryPlot(List<Activity> activities, TimePeriod timePeriod) : base(activities, timePeriod)
         {
+            this.months = getMonths();
+            this.activityCollections = GetCollections();
         }
 
         private List<int> getMonths()
@@ -31,7 +34,7 @@ namespace StravaViewer.Models.AbstractPlot
         {
             List<ActivityCollection> collections = new List<ActivityCollection>();
 
-            foreach (int month in getMonths())
+            foreach (int month in months)
             {
                 DateTime firstDay = new DateTime(fromDate.Year, month, 1);
                 DateTime lastDay = new DateTime(fromDate.Year, month, 1).AddMonths(1);
@@ -45,11 +48,17 @@ namespace StravaViewer.Models.AbstractPlot
             return collections;
         }
 
+        private void SetBoundingRectangles()
+        {
+            
+        }
+
+
         public override string[] GetLabels()
         {
             List<string> labels_list = new List<string>();
 
-            foreach (int month in getMonths())
+            foreach (int month in months)
             {
                 labels_list.Add(new DateTime(1, month, 1).ToString("MMM"));
             }
