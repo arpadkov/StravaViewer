@@ -1,12 +1,11 @@
 using StravaViewer.Models;
+using StravaViewer.Models.AbstractPlot;
 
 namespace StravaViewer
 {
     public partial class MainWindow : Form
     {
         ActivityModel Model;
-
-
 
         public MainWindow()
         {
@@ -32,9 +31,11 @@ namespace StravaViewer
 
         private void LoadClient(object sender, EventArgs e)
         {
-            Model.SetActivities();
+            //Model.SetActivities();
 
             Model.DisplayTime = TimePeriod.FromYear(2022);
+
+            //Model.ModelChanged += ModelChanged;
         }
 
         /* TODO Misi
@@ -46,37 +47,40 @@ namespace StravaViewer
 
         private void ModelChanged(object sender, EventArgs e)
         {
-            plot(Model.GetPlotData());
+            if (Model.AbstractPlot != null && !Model.AbstractPlot.PlotData.IsEmpty)
+            {
+                plot();
+            }
+           
         }
 
-        private void plot(PlotData plot_data)
+        private void plot()
         {
-            if (plot_data.isDetailPlot)
+
+            foreach (double[] values in Model.AbstractPlot.PlotData.valueSeries)
             {
-                plot_detail(plot_data);
+                BarPlot.Plot.AddBar(values, Model.AbstractPlot.PlotData.Positions);
             }
-            else
-            {
-                plot_summary(plot_data);
-            }
+
+            BarPlot.Plot.XTicks(Model.AbstractPlot.PlotData.Positions, Model.AbstractPlot.PlotData.Labels);
 
             BarPlot.Refresh();
         }
 
-        private void plot_summary(PlotData plot_data)
-        {
-            foreach (double[] values in plot_data.Values)
-            {
-                BarPlot.Plot.AddBar(values, plot_data.Positions);
-            }
+        //private void plot_summary()
+        //{
+        //    foreach (double[] values in plot_data.valueSeries)
+        //    {
+        //        BarPlot.Plot.AddBar(values, plot_data.Positions);
+        //    }
 
-            BarPlot.Plot.XTicks(plot_data.Positions, plot_data.Labels);            
-        }
+        //    BarPlot.Plot.XTicks(plot_data.Positions, plot_data.Labels);            
+        //}
 
-        private void plot_detail(PlotData plot_data)
-        {
+        //private void plot_detail()
+        //{
 
-        }
+        //}
 
         private void NextTimeButton_Click(object sender, EventArgs e)
         {

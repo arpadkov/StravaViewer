@@ -33,7 +33,7 @@ namespace StravaViewer.Models
 
         private TimePeriod displayTime;
 
-        public AbstractSummaryPlot? AbstractPlot; //temporary
+        public AbstractPlot.AbstractPlot? AbstractPlot; //temporary
 
         public ActivityModel()
         {
@@ -42,10 +42,14 @@ namespace StravaViewer.Models
 
             this.activityType = ActivityType.Run;
             this.infoType = InfoType.Distance;
-            this.plotType = PlotType.YearlySummary;
+            this.plotType = PlotType.MonthlySummary;
 
             this.activities = new List<Activity>();
             this.Client = new StravaClient("95.arpadkov");
+
+            SetActivities();
+
+            SetAbstractPlot();
         }
 
         public TimePeriod DisplayTime
@@ -87,50 +91,45 @@ namespace StravaViewer.Models
             return acts;
         }
 
-        public PlotData GetPlotData()
+        public void SetAbstractPlot()
         {
             if (plotType == PlotType.YearlySummary)
             {
-                return new PlotData(getYearlySummaryPlot());
+                this.AbstractPlot = SetYearlySummaryPlot();
             }
             else if (plotType == PlotType.MonthlySummary)
             {
-                return new PlotData(getMonthlySummaryPlot());
+                this.AbstractPlot = SetMonthlySummaryPlot();
             }
             else if (plotType == PlotType.MonthDetail)
             {
-                return new PlotData(getMonthDetailPlot());
-            }
-
-            else
-            {
-                return PlotData.Empty();
+                this.AbstractPlot = SetMonthDetailPlot();
             }
         }
 
-        private AbstractSummaryPlot getMonthlySummaryPlot()
+        private AbstractPlot.AbstractPlot SetMonthlySummaryPlot()
         {
-            displayTime = TimePeriod.FromYear(2021);
+            displayTime = TimePeriod.FromYear(2022);
 
             var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), displayTime);
 
             //var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
-            this.AbstractPlot = abstract_plot; //temporary
+            //this.AbstractPlot = abstract_plot; //temporary
             return abstract_plot;
         }
 
-        private AbstractSummaryPlot getYearlySummaryPlot()
+        private AbstractPlot.AbstractPlot SetYearlySummaryPlot()
         {
             displayTime = new TimePeriod(firstAct().start_date, lastAct().start_date);
 
             var abstract_plot = new AbstractYearlySummaryPlot(getActivitiesByType(), displayTime);
 
             //var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
-            this.AbstractPlot = abstract_plot; //temporary
+            //this.AbstractPlot = abstract_plot; //temporary
             return abstract_plot;
         }
 
-        private AbstractDetailPlot getMonthDetailPlot()
+        private AbstractDetailPlot SetMonthDetailPlot()
         {
             displayTime = new TimePeriod(new DateTime(2022, 05, 01), new DateTime(2022, 06, 01));
 
@@ -174,6 +173,7 @@ namespace StravaViewer.Models
         {
             // Misi started
             //this.DisplayTime = TimePeriod.FromYear(2022);
+            OnModelChange(EventArgs.Empty);
         }
 
         /* TODO Misi
@@ -181,7 +181,7 @@ namespace StravaViewer.Models
          */
         public void LastDisplayTime()
         {
-
+            OnModelChange(EventArgs.Empty);
         }
 
         protected virtual void OnActivitiesSet(EventArgs e)

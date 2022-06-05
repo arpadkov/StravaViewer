@@ -1,22 +1,14 @@
 ﻿namespace StravaViewer.Models.AbstractPlot
 {
-    public class AbstractDetailPlot
+    public class AbstractDetailPlot : AbstractPlot
     {
-        private List<Activity> activities;
-        private DateTime fromDate;
-        private DateTime toDate;
-
         private List<DateTime> days;
-        private List<ActivityCollection> activityCollections;
 
-        public AbstractDetailPlot(List<Activity> activities, TimePeriod timePeriod)
+        public AbstractDetailPlot(List<Activity> activities, TimePeriod timePeriod) : base(activities, timePeriod)
         {
-            this.activities = activities;
-            this.fromDate = timePeriod.StartTime;
-            this.toDate = timePeriod.EndTime;
-
             this.days = GetDays();
             this.activityCollections = GetCollections();
+            this.PlotData = new PlotData(GetValues(), GetLabels());
         }
 
         private List<DateTime> GetDays()
@@ -32,7 +24,7 @@
             return days;
         }
 
-        private List<ActivityCollection> GetCollections()
+        protected override List<ActivityCollection> GetCollections()
         {
             List<ActivityCollection> collections = new List<ActivityCollection>();
 
@@ -59,7 +51,7 @@
             return count;
         }
 
-        public List<double[]> GetValues()
+        public new List<double[]> GetValues()
         {
             List<double[]> value_series = new List<double[]>();
 
@@ -73,10 +65,43 @@
                 value_series.Add(values.ToArray());
             }
 
-            return value_series;
+            return ConvertValues(value_series);
         }
 
-        public string[] GetLabels()
+        /*
+         * converts the values:
+         * to simulate stacking, shifts values
+         * TERRIBLE
+         */
+        private List<double[]> ConvertValues(List<double[]> valueSeries)
+        {
+            List<double[]> result = new List<double[]>();
+
+            double[] values_offset = new double[valueSeries[0].Length];
+            for (int i = 0; i < valueSeries.Count; i++)
+            {
+
+                double[] new_values = offsetSeries(valueSeries[i], values_offset);
+
+                values_offset = new_values;
+
+                result.Add(new_values);
+            }
+
+            return Enumerable.Reverse(result).ToList();
+        }
+
+        private double[] offsetSeries(double[] original, double[] offset)
+        {
+            double[] result = new double[original.Length];
+            for (int i = 0; i < original.Length; i++)
+            {
+                result[i] = original[i] + offset[i];
+            }
+            return result;
+        }
+
+        public override string[] GetLabels()
         {
             List<string> labels_list = new List<string>();
 

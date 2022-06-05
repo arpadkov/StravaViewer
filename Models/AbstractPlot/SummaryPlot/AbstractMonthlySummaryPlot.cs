@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StravaViewer.Models.AbstractPlot
 {
-    internal class AbstractMonthlySummaryPlot : AbstractSummaryPlot
+    internal class AbstractMonthlySummaryPlot : AbstractPlot
     {
         private List<int> months;
 
@@ -14,6 +14,7 @@ namespace StravaViewer.Models.AbstractPlot
         {
             this.months = getMonths();
             this.activityCollections = GetCollections();
+            this.PlotData = new PlotData(GetValues(), GetLabels());
             SetBoundingRectangles();
         }
 

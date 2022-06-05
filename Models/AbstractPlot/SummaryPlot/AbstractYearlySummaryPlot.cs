@@ -2,7 +2,7 @@
 
 namespace StravaViewer.Models.AbstractPlot
 {
-    internal class AbstractYearlySummaryPlot : AbstractSummaryPlot
+    internal class AbstractYearlySummaryPlot : AbstractPlot
     {
         private List<int> years;
 
@@ -10,6 +10,7 @@ namespace StravaViewer.Models.AbstractPlot
         {
             this.years = getYears();
             this.activityCollections = GetCollections();
+            this.PlotData = new PlotData(GetValues(), GetLabels());
             SetBoundingRectangles();
         }
 
