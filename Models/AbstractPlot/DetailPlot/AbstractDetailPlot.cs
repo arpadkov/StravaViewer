@@ -18,7 +18,7 @@
             List<DateTime> days = new List<DateTime>();
 
             DateTime day = fromDate;
-            while (day <= toDate)
+            while (day < toDate)
             {
                 days.Add(day);
                 day = day.AddDays(1);
@@ -78,7 +78,15 @@
                 value_series.Add(values.ToArray());
             }
 
+            if (value_series.Count == 0)
+            {
+                double[] empty_array = new double[activityCollections.Count];
+                value_series.Add(empty_array);
+            }
+
             return ConvertValues(value_series);
+
+
         }
 
         /*
@@ -138,7 +146,15 @@
                     int indexLastActSeries = 1 - indexAct;
 
                     // calculates the top the top of last act
-                    double bottom = PlotData.valueSeries[indexLastActSeries][indexCol] - activity.distance / 1000;
+                    double bottom;
+                    if (PlotData.valueSeries.Count == 1)
+                    {
+                        bottom = 0;
+                    }
+                    else
+                    {
+                        bottom = PlotData.valueSeries[indexLastActSeries][indexCol] - activity.distance / 1000;
+                    }                    
 
                     activity.BoundingRectangle = new BoundingRectangle(
                     height: activity.distance/1000,

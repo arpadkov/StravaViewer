@@ -20,6 +20,7 @@
             }
 
             Positions = positions_list.ToArray();
+
         }
 
         public PlotData(AbstractPlot plot)

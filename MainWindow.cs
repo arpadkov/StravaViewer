@@ -26,6 +26,7 @@ namespace StravaViewer
 
             this.Model = new ActivityModel();
             Model.ModelChanged += ModelChanged;
+            plot();
 
         }
 
@@ -33,7 +34,7 @@ namespace StravaViewer
         {
             //Model.SetActivities();
 
-            Model.DisplayTime = TimePeriod.FromYear(2022);
+            //Model.DisplayTime = TimePeriod.FromYear(2022);
 
             //Model.ModelChanged += ModelChanged;
         }
@@ -56,6 +57,7 @@ namespace StravaViewer
 
         private void plot()
         {
+            BarPlot.Plot.Clear();
 
             foreach (double[] values in Model.AbstractPlot.PlotData.valueSeries)
             {
@@ -121,13 +123,19 @@ namespace StravaViewer
 
         private void DisplayActivityDetails(double x, double y)
         {
-            foreach (Activity activity in Model.AbstractPlot.activities)
+
+            foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)
             {
-                if (activity.BoundingRectangle.Contains(x, y))
-                {
-                    detailLabel.Text = "Activity / Collection details:\n" + activity.ToString();
-                }
+                foreach (Activity activity in actCollection.activities)
+                    {
+                        if (activity.BoundingRectangle.Contains(x, y))
+                        {
+                            detailLabel.Text = "Activity / Collection details:\n" + activity.ToString();
+                        }
+                    }
             }
+                
+                
         }
 
 
@@ -153,10 +161,14 @@ namespace StravaViewer
         {
             if (Model.PlotType == PlotType.MonthDetail)
             {
-                foreach (Activity act in Model.AbstractPlot.activities)
+                foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)
                 {
-                    DrawBoundingRectangle(act.BoundingRectangle);
+                    foreach (Activity act in actCollection.activities)
+                    {
+                        DrawBoundingRectangle(act.BoundingRectangle);
+                    }
                 }
+
             }
             else if (Model.PlotType == PlotType.YearlySummary || Model.PlotType == PlotType.MonthlySummary){
                 foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)

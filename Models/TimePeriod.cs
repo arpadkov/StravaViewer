@@ -11,10 +11,10 @@ namespace StravaViewer.Models
         private DateTime _startTime;
         private DateTime _endTime;
 
-        public TimePeriod(DateTime _startTime, DateTime _endTime)
+        public TimePeriod(DateTime startTime, DateTime endTime)
         {
-            this._startTime = _startTime;
-            this._endTime = _endTime;
+            this._startTime = startTime;
+            this._endTime = endTime;
         }
 
         public DateTime StartTime { get { return _startTime; } }

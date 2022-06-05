@@ -37,7 +37,8 @@ namespace StravaViewer.Models
 
         public ActivityModel()
         {
-            this.displayTime = new TimePeriod(DateTime.Now, DateTime.Now);
+            
+            //this.displayTime = new TimePeriod(DateTime.Now, DateTime.Now);
             //this.displayTime = TimePeriod.FromYear(2019);
 
             this.activityType = ActivityType.Run;
@@ -48,20 +49,51 @@ namespace StravaViewer.Models
             this.Client = new StravaClient("95.arpadkov");
 
             SetActivities();
-
+            this.displayTime = InitializeDisplaytime();
+            //this.displayTime = new TimePeriod(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1), new DateTime(DateTime.Today.Year, DateTime.Today.Month + 1, 1));
+            //displayTime = new TimePeriod(new DateTime(2022, 05, 01), new DateTime(2022, 06, 01));
+            //displayTime = new TimePeriod(new DateTime(2021, 12, 01), new DateTime(2022, 01, 01));
             SetAbstractPlot();
+        }
+
+        private TimePeriod InitializeDisplaytime()
+        {
+            TimePeriod timePeriod;
+            if (PlotType == PlotType.MonthlySummary)
+            {
+                timePeriod = TimePeriod.FromYear(DateTime.Today.Year);
+            }
+            else if (PlotType == PlotType.MonthDetail)
+            {
+                timePeriod = new TimePeriod(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1), new DateTime(DateTime.Today.Year, DateTime.Today.Month+1, 1));
+            }
+            else
+            {
+                timePeriod = new TimePeriod(firstAct().start_date, lastAct().start_date);
+            }
+            return timePeriod;
         }
 
         public TimePeriod DisplayTime
         {
             get { return this.displayTime; }
-            set { this.displayTime = value; OnModelChange(EventArgs.Empty); }
+            set
+            {
+                this.displayTime = value;
+                SetAbstractPlot();
+                OnModelChange(EventArgs.Empty);
+            }
         }
 
         public PlotType PlotType
         {
             get { return this.plotType; }
-            set { this.plotType = value; OnModelChange(EventArgs.Empty); }
+            set
+            {
+                this.plotType = value;
+                SetAbstractPlot();
+                OnModelChange(EventArgs.Empty);
+            }
         }
 
         public void SetActivities()
@@ -109,7 +141,7 @@ namespace StravaViewer.Models
 
         private AbstractPlot.AbstractPlot SetMonthlySummaryPlot()
         {
-            displayTime = TimePeriod.FromYear(2022);
+            //displayTime = TimePeriod.FromYear(2022);
 
             var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), displayTime);
 
@@ -120,7 +152,7 @@ namespace StravaViewer.Models
 
         private AbstractPlot.AbstractPlot SetYearlySummaryPlot()
         {
-            displayTime = new TimePeriod(firstAct().start_date, lastAct().start_date);
+            
 
             var abstract_plot = new AbstractYearlySummaryPlot(getActivitiesByType(), displayTime);
 
@@ -131,7 +163,8 @@ namespace StravaViewer.Models
 
         private AbstractDetailPlot SetMonthDetailPlot()
         {
-            displayTime = new TimePeriod(new DateTime(2022, 05, 01), new DateTime(2022, 06, 01));
+            ///////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/////////////////////////////////
+            //displayTime = new TimePeriod(new DateTime(2022, 06, 01), new DateTime(2022, 07, 01));
 
             var abstract_plot = new AbstractDetailPlot(getActivitiesByType(), displayTime);
 
@@ -171,9 +204,14 @@ namespace StravaViewer.Models
          */
         public void NextDisplayTime()
         {
-            // Misi started
-            //this.DisplayTime = TimePeriod.FromYear(2022);
-            OnModelChange(EventArgs.Empty);
+            if (PlotType == PlotType.MonthlySummary)
+            {
+                DisplayTime = new TimePeriod(DisplayTime.StartTime.AddYears(1), DisplayTime.EndTime.AddYears(1));
+            }
+            else if (PlotType == PlotType.MonthDetail)
+            {
+                DisplayTime = new TimePeriod(DisplayTime.StartTime.AddMonths(1), DisplayTime.EndTime.AddMonths(1));
+            }
         }
 
         /* TODO Misi
@@ -181,7 +219,14 @@ namespace StravaViewer.Models
          */
         public void LastDisplayTime()
         {
-            OnModelChange(EventArgs.Empty);
+            if (PlotType == PlotType.MonthlySummary)
+            {
+                DisplayTime = new TimePeriod(DisplayTime.StartTime.AddYears(-1), DisplayTime.EndTime.AddYears(-1));
+            }
+            else if (PlotType == PlotType.MonthDetail)
+            {
+                DisplayTime = new TimePeriod(DisplayTime.StartTime.AddMonths(-1), DisplayTime.EndTime.AddMonths(-1));
+            }
         }
 
         protected virtual void OnActivitiesSet(EventArgs e)
