@@ -64,6 +64,8 @@ namespace StravaViewer
 
             BarPlot.Plot.XTicks(Model.AbstractPlot.PlotData.Positions, Model.AbstractPlot.PlotData.Labels);
 
+            DrawBoundingRectangles();
+
             BarPlot.Refresh();
         }
 
@@ -96,6 +98,18 @@ namespace StravaViewer
         {
             (double x, double y) = BarPlot.GetMouseCoordinates();
 
+            if (Model.PlotType == PlotType.MonthDetail)
+            {
+                DisplayActivityDetails(x, y);
+            }
+            else
+            {
+                DisplayCollectionDetails(x, y);
+            }
+        }
+
+        private void DisplayCollectionDetails(double x, double y)
+        {
             foreach (Models.AbstractPlot.ActivityCollection collection in Model.AbstractPlot.activityCollections)
             {
                 if (collection.BoundingRectangle.Contains(x, y))
@@ -103,10 +117,17 @@ namespace StravaViewer
                     detailLabel.Text = "Activity / Collection details:\n" + collection.ToString();
                 }
             }
+        }
 
-            
-
-
+        private void DisplayActivityDetails(double x, double y)
+        {
+            foreach (Activity activity in Model.AbstractPlot.activities)
+            {
+                if (activity.BoundingRectangle.Contains(x, y))
+                {
+                    detailLabel.Text = "Activity / Collection details:\n" + activity.ToString();
+                }
+            }
         }
 
 
@@ -128,6 +149,35 @@ namespace StravaViewer
             moveCoordinatesLabel.Text = "Mouse Coordinates\n" + x.ToString() + " : " + y.ToString();
         }
 
+        private void DrawBoundingRectangles()
+        {
+            if (Model.PlotType == PlotType.MonthDetail)
+            {
+                foreach (Activity act in Model.AbstractPlot.activities)
+                {
+                    DrawBoundingRectangle(act.BoundingRectangle);
+                }
+            }
+            else if (Model.PlotType == PlotType.YearlySummary || Model.PlotType == PlotType.MonthlySummary){
+                foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)
+                {
+                    DrawBoundingRectangle(actCollection.BoundingRectangle);
+                }
+            }
+        }
+
+        private void DrawBoundingRectangle(BoundingRectangle rect)
+        {
+            PlotLine(rect.left, rect.bottom, rect.right, rect.bottom); //bottom
+            PlotLine(rect.left, rect.top, rect.right, rect.top); //top
+            PlotLine(rect.left, rect.bottom, rect.left, rect.top); //left
+            PlotLine(rect.right, rect.bottom, rect.right, rect.top); //right
+        }
+
+        private void PlotLine(double x1, double y1, double x2, double y2)
+        {
+            var vLine = BarPlot.Plot.AddLine(x1, y1, x2, y2, Color.Red, lineWidth: 3);
+        }
 
 
 

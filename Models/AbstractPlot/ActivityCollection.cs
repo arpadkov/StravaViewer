@@ -2,7 +2,7 @@
 {
     public class ActivityCollection
     {
-        private List<Activity> activities;
+        public List<Activity> activities;
         private BoundingRectangle? boundingRectangle;
 
         public ActivityCollection(List<Activity> activities)

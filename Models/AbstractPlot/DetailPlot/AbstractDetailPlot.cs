@@ -9,6 +9,8 @@
             this.days = GetDays();
             this.activityCollections = GetCollections();
             this.PlotData = new PlotData(GetValues(), GetLabels());
+            SetBoundingRectangles();
+            //SetActivities();
         }
 
         private List<DateTime> GetDays()
@@ -23,6 +25,17 @@
             }
             return days;
         }
+
+        //private void SetActivities()
+        //{
+        //    foreach (ActivityCollection collection in activityCollections)
+        //    {
+        //        foreach (Activity activity in collection.activities)
+        //        {
+        //            this.activities.Add(activity);
+        //        }
+        //    }
+        //}
 
         protected override List<ActivityCollection> GetCollections()
         {
@@ -112,6 +125,30 @@
 
             string[] labels = labels_list.ToArray();
             return labels;
+        }
+
+        private void SetBoundingRectangles()
+        {
+            foreach (var (collection, indexCol) in activityCollections.Select((valueColl, iColl) => (valueColl, iColl)))
+            {
+                //no idea wtf this is but it works
+                foreach (var (activity, indexAct) in collection.activities.Select((valueAct, iAct) => (valueAct, iAct)))
+                {
+                    // valueSeries are reversed, selecting last-before act
+                    int indexLastActSeries = 1 - indexAct;
+
+                    // calculates the top the top of last act
+                    double bottom = PlotData.valueSeries[indexLastActSeries][indexCol] - activity.distance / 1000;
+
+                    activity.BoundingRectangle = new BoundingRectangle(
+                    height: activity.distance/1000,
+                    verticalCenter: indexCol,
+                    bottom: bottom,
+                    width: 0.5);
+                }
+
+                
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
+using StravaViewer.Models.AbstractPlot;
 
 namespace StravaViewer.Models
 {
@@ -24,6 +25,7 @@ namespace StravaViewer.Models
         public DateTime start_date;
         public float total_elevation_gain;
         public ActivityType type;
+        private BoundingRectangle boundingRectangle = BoundingRectangle.Empty();
 
         public Activity(JObject json)
         {
@@ -42,6 +44,26 @@ namespace StravaViewer.Models
             type = (ActivityType)Enum.Parse(typeof(ActivityType), type_string);
             #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
+
+        public BoundingRectangle BoundingRectangle
+        {
+            get
+            {
+                return boundingRectangle;
+            }
+
+            set
+            {
+                this.boundingRectangle = value;
+            }
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} - {1} km", name, distance/1000);
+        }
     }
+
+
 
 }

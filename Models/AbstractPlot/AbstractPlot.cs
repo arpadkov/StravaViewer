@@ -9,7 +9,7 @@ namespace StravaViewer.Models.AbstractPlot
     public abstract class AbstractPlot
     {
 
-        protected List<Activity> activities;
+        public List<Activity> activities;
         protected DateTime fromDate;
         protected DateTime toDate;
         //protected TimePeriod timePeriod;

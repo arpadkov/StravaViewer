@@ -2,14 +2,14 @@
 {
     public class BoundingRectangle
     {
-        double top;
-        double bottom;
-        double left;
-        double right;
-        double width;
-        double height;
-        double verticalCenter;
-        double horizontalCenter;
+        public double top;
+        public double bottom;
+        public double left;
+        public double right;
+        public double width;
+        public double height;
+        public double verticalCenter;
+        public double horizontalCenter;
 
         public BoundingRectangle(double height, double verticalCenter, double bottom, double width)
         {
@@ -26,7 +26,7 @@
             this.horizontalCenter = bottom + height/2;
         }
 
-        public BoundingRectangle Empty()
+        public static BoundingRectangle Empty()
         {
             return new BoundingRectangle(0, 0, 0, 0);
         }
