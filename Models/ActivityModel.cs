@@ -43,10 +43,10 @@ namespace StravaViewer.Models
 
             this.activityType = ActivityType.Run;
             this.infoType = InfoType.Distance;
-            this.plotType = PlotType.MonthlySummary;
+            this.plotType = PlotType.YearlySummary;
 
             this.activities = new List<Activity>();
-            this.Client = new StravaClient("95.arpadkov");
+            this.Client = new StravaClient("bontovics.t");
 
             SetActivities();
             this.displayTime = InitializeDisplaytime();
@@ -56,7 +56,7 @@ namespace StravaViewer.Models
             SetAbstractPlot();
         }
 
-        private TimePeriod InitializeDisplaytime()
+        public TimePeriod InitializeDisplaytime()
         {
             TimePeriod timePeriod;
             if (PlotType == PlotType.MonthlySummary)

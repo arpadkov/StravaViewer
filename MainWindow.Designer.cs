@@ -35,6 +35,7 @@
             this.clickCoordLabel = new System.Windows.Forms.Label();
             this.moveCoordinatesLabel = new System.Windows.Forms.Label();
             this.detailLabel = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BarPlot
@@ -46,6 +47,7 @@
             this.BarPlot.Name = "BarPlot";
             this.BarPlot.Size = new System.Drawing.Size(658, 346);
             this.BarPlot.TabIndex = 0;
+            this.BarPlot.DoubleClick += new System.EventHandler(this.BarPlot_DoubleClick);
             this.BarPlot.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BarPlot_MouseDown);
             this.BarPlot.MouseMove += new System.Windows.Forms.MouseEventHandler(this.BarPlot_MouseMove);
             // 
@@ -98,11 +100,22 @@
             this.detailLabel.TabIndex = 4;
             this.detailLabel.Text = "Activity/Collection details:";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(721, 193);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Show All";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(935, 500);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.detailLabel);
             this.Controls.Add(this.moveCoordinatesLabel);
             this.Controls.Add(this.clickCoordLabel);
@@ -126,5 +139,6 @@
         private Label clickCoordLabel;
         private Label moveCoordinatesLabel;
         private Label detailLabel;
+        private Button button1;
     }
 }

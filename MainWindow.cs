@@ -133,9 +133,7 @@ namespace StravaViewer
                             detailLabel.Text = "Activity / Collection details:\n" + activity.ToString();
                         }
                     }
-            }
-                
-                
+            }                
         }
 
 
@@ -191,8 +189,43 @@ namespace StravaViewer
             var vLine = BarPlot.Plot.AddLine(x1, y1, x2, y2, Color.Red, lineWidth: 3);
         }
 
+        private void BarPlot_DoubleClick(object sender, EventArgs e)
+        {
+            (double x, double y) = BarPlot.GetMouseCoordinates();
 
+            if (Model.PlotType == PlotType.YearlySummary)
+            {
+                foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)
+                {
+                    if (actCollection.BoundingRectangle.Contains(x, y))
+                    {
+                        int year = actCollection.activities[0].start_date.Year;
+                        Model.PlotType = PlotType.MonthlySummary;
+                        Model.DisplayTime = new TimePeriod(new DateTime(year, 01, 01), new DateTime(year + 1, 01, 01));
+                    }
+                }
+            }
 
+            else if (Model.PlotType == PlotType.MonthlySummary)
+            {
+                foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)
+                {
+                    if (actCollection.BoundingRectangle.Contains(x, y))
+                    {
+                        int year = actCollection.activities[0].start_date.Year;
+                        int month = actCollection.activities[0].start_date.Month;
+                        Model.PlotType = PlotType.MonthDetail;
+                        Model.DisplayTime = new TimePeriod(new DateTime(year, month, 01), new DateTime(year, month + 1, 01));
+                    }
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Model.PlotType = PlotType.YearlySummary;
+            Model.DisplayTime = Model.InitializeDisplaytime();
+        }
 
         /*#region Trash
 

@@ -1,9 +1,9 @@
-request access for aPI application:
+request access for API application:
 http://www.strava.com/oauth/authorize?client_id=[CLIENT_ID]&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=read_all,profile:read_all,activity:read_all
-save code from url for postman
+http://www.strava.com/oauth/authorize?client_id=81997&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=read_all,profile:read_all,activity:read_all
+save CODE from url for postman
 
 request refresh token:
 web.postmen
 https://www.strava.com/oauth/token?client_id=[CLIENT_ID]&client_secret=[CLIENT_SECRET]&code=[CODE]&grant_type=authorization_code
 from response json: -----> refresh token <-----
-
