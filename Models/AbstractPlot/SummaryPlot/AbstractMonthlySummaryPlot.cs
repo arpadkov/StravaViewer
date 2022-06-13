@@ -14,7 +14,7 @@ namespace StravaViewer.Models.AbstractPlot
         {
             this.months = getMonths();
             this.activityCollections = GetCollections();
-            this.PlotData = new PlotData(GetValues(), GetLabels());
+            this.PlotData = new PlotData(GetValues(), GetLabels(), GetTitle());
             SetBoundingRectangles();
         }
 
@@ -76,7 +76,10 @@ namespace StravaViewer.Models.AbstractPlot
             return labels;
         }
 
-
+        public override string GetTitle()
+        {
+            return fromDate.ToString("yyyy");
+        }
 
     }
 }

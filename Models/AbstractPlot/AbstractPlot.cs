@@ -19,6 +19,7 @@ namespace StravaViewer.Models.AbstractPlot
 
         abstract protected List<ActivityCollection> GetCollections();
         abstract public string[] GetLabels();
+        abstract public string GetTitle();
 
         public AbstractPlot(List<Activity> activities, TimePeriod timePeriod)
         {

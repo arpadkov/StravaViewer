@@ -66,6 +66,8 @@ namespace StravaViewer
 
             BarPlot.Plot.XTicks(Model.AbstractPlot.PlotData.Positions, Model.AbstractPlot.PlotData.Labels);
 
+            BarPlot.Plot.Title(Model.AbstractPlot.PlotData.Title);
+
             DrawBoundingRectangles();
 
             BarPlot.Refresh();
@@ -193,32 +195,14 @@ namespace StravaViewer
         {
             (double x, double y) = BarPlot.GetMouseCoordinates();
 
-            if (Model.PlotType == PlotType.YearlySummary)
+            foreach (ActivityCollection actCollection in Model.ActivityCollections)
             {
-                foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)
+                if (actCollection.BoundingRectangle.Contains(x, y))
                 {
-                    if (actCollection.BoundingRectangle.Contains(x, y))
-                    {
-                        int year = actCollection.activities[0].start_date.Year;
-                        Model.PlotType = PlotType.MonthlySummary;
-                        Model.DisplayTime = new TimePeriod(new DateTime(year, 01, 01), new DateTime(year + 1, 01, 01));
-                    }
+                    Model.DrillDown(actCollection);
                 }
             }
 
-            else if (Model.PlotType == PlotType.MonthlySummary)
-            {
-                foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)
-                {
-                    if (actCollection.BoundingRectangle.Contains(x, y))
-                    {
-                        int year = actCollection.activities[0].start_date.Year;
-                        int month = actCollection.activities[0].start_date.Month;
-                        Model.PlotType = PlotType.MonthDetail;
-                        Model.DisplayTime = new TimePeriod(new DateTime(year, month, 01), new DateTime(year, month + 1, 01));
-                    }
-                }
-            }
         }
 
         private void button1_Click(object sender, EventArgs e)

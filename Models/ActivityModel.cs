@@ -46,7 +46,7 @@ namespace StravaViewer.Models
             this.plotType = PlotType.YearlySummary;
 
             this.activities = new List<Activity>();
-            this.Client = new StravaClient("bontovics.t");
+            this.Client = new StravaClient("95.arpadkov");
 
             SetActivities();
             this.displayTime = InitializeDisplaytime();
@@ -94,6 +94,26 @@ namespace StravaViewer.Models
                 SetAbstractPlot();
                 OnModelChange(EventArgs.Empty);
             }
+        }
+
+        public List<ActivityCollection> ActivityCollections
+        {
+            get { return AbstractPlot.activityCollections; }
+            set { }
+        }
+
+        public List<BoundingRectangle> BoundingRectangles
+        {
+            get 
+            {
+                List<BoundingRectangle> result = new List<BoundingRectangle>();
+                for (int i = 0; i < AbstractPlot.activityCollections.Count; i++)
+                {
+                    result.Add(AbstractPlot.activityCollections[i].BoundingRectangle);
+                }
+                return result;
+            }
+            set { }
         }
 
         public void SetActivities()
@@ -226,6 +246,24 @@ namespace StravaViewer.Models
             else if (PlotType == PlotType.MonthDetail)
             {
                 DisplayTime = new TimePeriod(DisplayTime.StartTime.AddMonths(-1), DisplayTime.EndTime.AddMonths(-1));
+            }
+        }
+
+        public void DrillDown(ActivityCollection activityCollection)
+        {
+            if (PlotType == PlotType.YearlySummary)
+            {
+                int year = activityCollection.activities[0].start_date.Year;
+                PlotType = PlotType.MonthlySummary;
+                DisplayTime = new TimePeriod(new DateTime(year, 01, 01), new DateTime(year + 1, 01, 01));
+            }
+
+            else if (PlotType == PlotType.MonthlySummary)
+            {
+                int year = activityCollection.activities[0].start_date.Year;
+                int month = activityCollection.activities[0].start_date.Month;
+                PlotType = PlotType.MonthDetail;
+                DisplayTime = new TimePeriod(new DateTime(year, month, 01), new DateTime(year, month + 1, 01));
             }
         }
 

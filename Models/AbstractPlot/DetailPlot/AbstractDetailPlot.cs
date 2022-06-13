@@ -8,7 +8,7 @@
         {
             this.days = GetDays();
             this.activityCollections = GetCollections();
-            this.PlotData = new PlotData(GetValues(), GetLabels());
+            this.PlotData = new PlotData(GetValues(), GetLabels(), GetTitle());
             SetBoundingRectangles();
             //SetActivities();
         }
@@ -25,17 +25,6 @@
             }
             return days;
         }
-
-        //private void SetActivities()
-        //{
-        //    foreach (ActivityCollection collection in activityCollections)
-        //    {
-        //        foreach (Activity activity in collection.activities)
-        //        {
-        //            this.activities.Add(activity);
-        //        }
-        //    }
-        //}
 
         protected override List<ActivityCollection> GetCollections()
         {
@@ -133,6 +122,11 @@
 
             string[] labels = labels_list.ToArray();
             return labels;
+        }
+
+        public override string GetTitle()
+        {
+            return fromDate.ToString("yyyy - MMMM");
         }
 
         private void SetBoundingRectangles()

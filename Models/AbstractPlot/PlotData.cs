@@ -5,12 +5,14 @@
         public List<double[]> valueSeries = new List<double[]>();
         public double[] Positions;
         public string[] Labels;
+        public string Title;
         public bool IsEmpty;
 
-        public PlotData(List<double[]> values, string[] labels, bool IsEmpty = false)
+        public PlotData(List<double[]> values, string[] labels, string title, bool IsEmpty = false)
         {
             this.valueSeries = values;
             this.Labels = labels;
+            this.Title = title;
             this.IsEmpty = IsEmpty;
 
             List<double> positions_list = new List<double>();
@@ -89,7 +91,7 @@
             List<double[]> valueSeries = new List<double[]>();
             valueSeries.Add(new double[0]);
             string[] labels = new string[0];
-            PlotData data = new PlotData(valueSeries, labels, IsEmpty: true);
+            PlotData data = new PlotData(valueSeries, labels, "", IsEmpty: true);
             return data;
         }
     }
