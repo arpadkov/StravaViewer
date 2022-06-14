@@ -37,6 +37,7 @@
             this.detailLabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.infoTypeCombo = new System.Windows.Forms.ComboBox();
+            this.activityTypeCombo = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // BarPlot
@@ -120,11 +121,21 @@
             this.infoTypeCombo.TabIndex = 6;
             this.infoTypeCombo.SelectedIndexChanged += new System.EventHandler(this.infoTypeCombo_SelectedIndexChanged);
             // 
+            // activityTypeCombo
+            // 
+            this.activityTypeCombo.FormattingEnabled = true;
+            this.activityTypeCombo.Location = new System.Drawing.Point(721, 303);
+            this.activityTypeCombo.Name = "activityTypeCombo";
+            this.activityTypeCombo.Size = new System.Drawing.Size(121, 23);
+            this.activityTypeCombo.TabIndex = 7;
+            this.activityTypeCombo.SelectedIndexChanged += new System.EventHandler(this.activityTypeCombo_SelectedIndexChanged);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(935, 500);
+            this.Controls.Add(this.activityTypeCombo);
             this.Controls.Add(this.infoTypeCombo);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.detailLabel);
@@ -152,5 +163,6 @@
         private Label detailLabel;
         private Button button1;
         private ComboBox infoTypeCombo;
+        private ComboBox activityTypeCombo;
     }
 }

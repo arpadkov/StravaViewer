@@ -107,6 +107,17 @@ namespace StravaViewer.Models
             }
         }
 
+        public ActivityType ActivityType
+        {
+            get { return this.activityType; }
+            set
+            {
+                this.activityType = value;
+                SetAbstractPlot();
+                OnModelChange(EventArgs.Empty);
+            }
+        }
+
         public List<ActivityCollection> ActivityCollections
         {
             get { return AbstractPlot.activityCollections; }

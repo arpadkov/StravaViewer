@@ -28,6 +28,7 @@ namespace StravaViewer
             Model.ModelChanged += ModelChanged;
 
             this.infoTypeCombo.DataSource = Enum.GetValues(typeof(InfoType));
+            this.activityTypeCombo.DataSource = Enum.GetValues(typeof(ActivityType));
 
             plot();
 
@@ -217,6 +218,11 @@ namespace StravaViewer
         private void infoTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             Model.InfoType = (InfoType) infoTypeCombo.SelectedItem;
+        }
+
+        private void activityTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Model.ActivityType = (ActivityType) activityTypeCombo.SelectedItem;
         }
 
         /*#region Trash
