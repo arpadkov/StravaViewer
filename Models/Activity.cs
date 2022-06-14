@@ -45,6 +45,16 @@ namespace StravaViewer.Models
             #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
+        public float GetValue(InfoType type)
+        {
+            switch (type)
+            {
+                case InfoType.Distance: return distance / 1000;
+                case InfoType.ElevationGain: return total_elevation_gain;
+                default: return 0;
+            }
+        }
+
         public BoundingRectangle BoundingRectangle
         {
             get

@@ -16,16 +16,18 @@ namespace StravaViewer.Models.AbstractPlot
         public List<ActivityCollection> activityCollections = new List<ActivityCollection>();
 
         public PlotData PlotData = PlotData.Empty();
+        protected InfoType type;
 
         abstract protected List<ActivityCollection> GetCollections();
         abstract public string[] GetLabels();
         abstract public string GetTitle();
 
-        public AbstractPlot(List<Activity> activities, TimePeriod timePeriod)
+        public AbstractPlot(List<Activity> activities, TimePeriod timePeriod, InfoType type)
         {
             this.activities = activities;
             this.fromDate = timePeriod.StartTime;
             this.toDate = timePeriod.EndTime;
+            this.type = type;
 
             //this.activityCollections = GetCollections();
         }
@@ -37,7 +39,7 @@ namespace StravaViewer.Models.AbstractPlot
 
             foreach (ActivityCollection collection in activityCollections)
             {
-                values_list.Add(collection.GetSumDistance());          // convert return value to double????
+                values_list.Add(collection.GetTotalValue(type));          // convert return value to double????
             }
 
             valueSeries.Add(values_list.ToArray());

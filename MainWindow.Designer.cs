@@ -36,6 +36,7 @@
             this.moveCoordinatesLabel = new System.Windows.Forms.Label();
             this.detailLabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.infoTypeCombo = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // BarPlot
@@ -110,11 +111,21 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // infoTypeCombo
+            // 
+            this.infoTypeCombo.FormattingEnabled = true;
+            this.infoTypeCombo.Location = new System.Drawing.Point(721, 245);
+            this.infoTypeCombo.Name = "infoTypeCombo";
+            this.infoTypeCombo.Size = new System.Drawing.Size(121, 23);
+            this.infoTypeCombo.TabIndex = 6;
+            this.infoTypeCombo.SelectedIndexChanged += new System.EventHandler(this.infoTypeCombo_SelectedIndexChanged);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(935, 500);
+            this.Controls.Add(this.infoTypeCombo);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.detailLabel);
             this.Controls.Add(this.moveCoordinatesLabel);
@@ -140,5 +151,6 @@
         private Label moveCoordinatesLabel;
         private Label detailLabel;
         private Button button1;
+        private ComboBox infoTypeCombo;
     }
 }

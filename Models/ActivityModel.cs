@@ -7,7 +7,7 @@ namespace StravaViewer.Models
     public enum InfoType
     {
         Distance,
-        ElvationgGain,
+        ElevationGain,
         Movingtime
     }
 
@@ -96,6 +96,17 @@ namespace StravaViewer.Models
             }
         }
 
+        public InfoType InfoType
+        {
+            get { return this.infoType; }
+            set
+            {
+                this.infoType = value;
+                SetAbstractPlot();
+                OnModelChange(EventArgs.Empty);
+            }
+        }
+
         public List<ActivityCollection> ActivityCollections
         {
             get { return AbstractPlot.activityCollections; }
@@ -163,7 +174,7 @@ namespace StravaViewer.Models
         {
             //displayTime = TimePeriod.FromYear(2022);
 
-            var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), displayTime);
+            var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), displayTime, InfoType);
 
             //var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
             //this.AbstractPlot = abstract_plot; //temporary
@@ -174,7 +185,7 @@ namespace StravaViewer.Models
         {
             
 
-            var abstract_plot = new AbstractYearlySummaryPlot(getActivitiesByType(), displayTime);
+            var abstract_plot = new AbstractYearlySummaryPlot(getActivitiesByType(), displayTime, InfoType);
 
             //var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
             //this.AbstractPlot = abstract_plot; //temporary
@@ -186,7 +197,7 @@ namespace StravaViewer.Models
             ///////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/////////////////////////////////
             //displayTime = new TimePeriod(new DateTime(2022, 06, 01), new DateTime(2022, 07, 01));
 
-            var abstract_plot = new AbstractDetailPlot(getActivitiesByType(), displayTime);
+            var abstract_plot = new AbstractDetailPlot(getActivitiesByType(), displayTime, InfoType);
 
             return abstract_plot;
         }

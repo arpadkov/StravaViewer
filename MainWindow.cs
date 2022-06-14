@@ -26,6 +26,9 @@ namespace StravaViewer
 
             this.Model = new ActivityModel();
             Model.ModelChanged += ModelChanged;
+
+            this.infoTypeCombo.DataSource = Enum.GetValues(typeof(InfoType));
+
             plot();
 
         }
@@ -209,6 +212,11 @@ namespace StravaViewer
         {
             Model.PlotType = PlotType.YearlySummary;
             Model.DisplayTime = Model.InitializeDisplaytime();
+        }
+
+        private void infoTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Model.InfoType = (InfoType) infoTypeCombo.SelectedItem;
         }
 
         /*#region Trash

@@ -16,34 +16,45 @@
             set {; }
         }
 
-        public float GetSumDistance()
+        public float GetTotalValue(InfoType type)
         {
+
             if (activities.Any())
             {
-                return activities.Sum(act => act.distance) / 1000;
+                switch (type)
+                {
+                    case InfoType.Distance: return activities.Sum(act => act.distance) / 1000;
+                    case InfoType.ElevationGain: return activities.Sum(act => act.total_elevation_gain);
+                    default: return 0;
+                }
             }
             else
             {
                 return 0;
             }
-
         }
 
         /*
          * relevant for DetailPlot
          * returns the distance for the "level"-th activity
          */
-        public float GetDistance(int level)
+        public float GetValue(int level, InfoType type)
         {
             if (activities.Count != 0 && activities.Count > level)
             {
-                return activities[level].distance / 1000;
+
+
+                switch (type)
+                {
+                    case InfoType.Distance: return activities[level].distance / 1000;
+                    case InfoType.ElevationGain: return activities[level].total_elevation_gain;
+                    default: return 0;
+                }
             }
             else
             {
                 return 0;
             }
-
         }
 
         public BoundingRectangle BoundingRectangle
@@ -63,7 +74,7 @@
 
         public override string ToString()
         {
-            return String.Format("{0} Activities, {1} km total", activities.Count, GetSumDistance());
+            return String.Format("{0} Activities, {1} km total", activities.Count, GetTotalValue(InfoType.Distance));
         }
 
     }

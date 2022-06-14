@@ -4,7 +4,7 @@
     {
         private List<DateTime> days;
 
-        public AbstractDetailPlot(List<Activity> activities, TimePeriod timePeriod) : base(activities, timePeriod)
+        public AbstractDetailPlot(List<Activity> activities, TimePeriod timePeriod, InfoType type) : base(activities, timePeriod, type)
         {
             this.days = GetDays();
             this.activityCollections = GetCollections();
@@ -62,7 +62,7 @@
                 List<double> values = new List<double>();
                 foreach (ActivityCollection collection in activityCollections)
                 {
-                    values.Add(collection.GetDistance(level));
+                    values.Add(collection.GetValue(level, type));
                 }
                 value_series.Add(values.ToArray());
             }
@@ -147,11 +147,11 @@
                     }
                     else
                     {
-                        bottom = PlotData.valueSeries[indexLastActSeries][indexCol] - activity.distance / 1000;
+                        bottom = PlotData.valueSeries[indexLastActSeries][indexCol] - activity.GetValue(type);
                     }                    
 
                     activity.BoundingRectangle = new BoundingRectangle(
-                    height: activity.distance/1000,
+                    height: activity.GetValue(type),
                     verticalCenter: indexCol,
                     bottom: bottom,
                     width: 0.5);

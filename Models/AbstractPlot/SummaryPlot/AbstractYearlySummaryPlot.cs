@@ -6,7 +6,7 @@ namespace StravaViewer.Models.AbstractPlot
     {
         private List<int> years;
 
-        public AbstractYearlySummaryPlot(List<Activity> activities, TimePeriod timePeriod) : base(activities, timePeriod)
+        public AbstractYearlySummaryPlot(List<Activity> activities, TimePeriod timePeriod, InfoType type) : base(activities, timePeriod, type)
         {
             this.years = getYears();
             this.activityCollections = GetCollections();
@@ -51,7 +51,7 @@ namespace StravaViewer.Models.AbstractPlot
             foreach (var (collection, index) in activityCollections.Select((value, i) => (value, i)))
             {
                 collection.BoundingRectangle = new BoundingRectangle(
-                    height: collection.GetSumDistance(),
+                    height: collection.GetTotalValue(type),
                     verticalCenter: index,
                     bottom: 0,
                     width: 0.5);
