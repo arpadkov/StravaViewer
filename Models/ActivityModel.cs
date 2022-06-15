@@ -167,6 +167,8 @@ namespace StravaViewer.Models
 
         public void SetAbstractPlot()
         {
+            this.AbstractPlot = null;
+
             if (plotType == PlotType.YearlySummary)
             {
                 this.AbstractPlot = SetYearlySummaryPlot();
@@ -185,7 +187,7 @@ namespace StravaViewer.Models
         {
             //displayTime = TimePeriod.FromYear(2022);
 
-            var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), displayTime, InfoType);
+            var abstract_plot = new AbstractMonthlySummaryPlot(getActivitiesByType(), DisplayTime, InfoType);
 
             //var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
             //this.AbstractPlot = abstract_plot; //temporary
@@ -196,7 +198,7 @@ namespace StravaViewer.Models
         {
             
 
-            var abstract_plot = new AbstractYearlySummaryPlot(getActivitiesByType(), displayTime, InfoType);
+            var abstract_plot = new AbstractYearlySummaryPlot(getActivitiesByType(), DisplayTime, InfoType);
 
             //var plot_data = new PlotData(abstract_plot.GetValues(), abstract_plot.GetLabels());
             //this.AbstractPlot = abstract_plot; //temporary
@@ -208,7 +210,7 @@ namespace StravaViewer.Models
             ///////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/////////////////////////////////
             //displayTime = new TimePeriod(new DateTime(2022, 06, 01), new DateTime(2022, 07, 01));
 
-            var abstract_plot = new AbstractDetailPlot(getActivitiesByType(), displayTime, InfoType);
+            var abstract_plot = new AbstractDetailPlot(getActivitiesByType(), DisplayTime, InfoType);
 
             return abstract_plot;
         }
@@ -239,35 +241,27 @@ namespace StravaViewer.Models
             return last_act;
         }
 
-        /* TODO Misi
-         * this method inkrements the current display time by 1 unit
-         * - determine the unit of the current displayTime (all, year, month) from plotType
-         * - set displayTime for the next timeperiod
-         */
         public void NextDisplayTime()
         {
             if (PlotType == PlotType.MonthlySummary)
             {
-                DisplayTime = new TimePeriod(DisplayTime.StartTime.AddYears(1), DisplayTime.EndTime.AddYears(1));
+                this.DisplayTime = new TimePeriod(DisplayTime.StartTime.AddYears(1), DisplayTime.EndTime.AddYears(1));
             }
             else if (PlotType == PlotType.MonthDetail)
             {
-                DisplayTime = new TimePeriod(DisplayTime.StartTime.AddMonths(1), DisplayTime.EndTime.AddMonths(1));
+                this.DisplayTime = new TimePeriod(DisplayTime.StartTime.AddMonths(1), DisplayTime.EndTime.AddMonths(1));
             }
         }
 
-        /* TODO Misi
-         * see NextDisplayTime
-         */
         public void LastDisplayTime()
         {
             if (PlotType == PlotType.MonthlySummary)
             {
-                DisplayTime = new TimePeriod(DisplayTime.StartTime.AddYears(-1), DisplayTime.EndTime.AddYears(-1));
+                this.DisplayTime = new TimePeriod(DisplayTime.StartTime.AddYears(-1), DisplayTime.EndTime.AddYears(-1));
             }
             else if (PlotType == PlotType.MonthDetail)
             {
-                DisplayTime = new TimePeriod(DisplayTime.StartTime.AddMonths(-1), DisplayTime.EndTime.AddMonths(-1));
+                this.DisplayTime = new TimePeriod(DisplayTime.StartTime.AddMonths(-1), DisplayTime.EndTime.AddMonths(-1));
             }
         }
 
@@ -276,16 +270,16 @@ namespace StravaViewer.Models
             if (PlotType == PlotType.YearlySummary)
             {
                 int year = activityCollection.activities[0].start_date.Year;
-                PlotType = PlotType.MonthlySummary;
-                DisplayTime = new TimePeriod(new DateTime(year, 01, 01), new DateTime(year + 1, 01, 01));
+                plotType = PlotType.MonthlySummary;
+                this.DisplayTime = new TimePeriod(new DateTime(year, 01, 01), new DateTime(year + 1, 01, 01));
             }
 
             else if (PlotType == PlotType.MonthlySummary)
             {
                 int year = activityCollection.activities[0].start_date.Year;
                 int month = activityCollection.activities[0].start_date.Month;
-                PlotType = PlotType.MonthDetail;
-                DisplayTime = new TimePeriod(new DateTime(year, month, 01), new DateTime(year, month + 1, 01));
+                plotType = PlotType.MonthDetail;
+                this.DisplayTime = new TimePeriod(new DateTime(year, month, 01), new DateTime(year, month + 1, 01));
             }
         }
 

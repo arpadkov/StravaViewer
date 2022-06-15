@@ -28,6 +28,11 @@ namespace StravaViewer.Models
             return new TimePeriod(firstDay, lastDay);
         }
 
+        public string ToString()
+        {
+            return _startTime.ToString("yyyy-MMM-dd") + " - " + _endTime.ToString("yyyy-MMM-dd");
+        }
+
 
     }
 

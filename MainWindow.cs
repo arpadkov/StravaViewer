@@ -25,7 +25,7 @@ namespace StravaViewer
 
 
             this.Model = new ActivityModel();
-            Model.ModelChanged += ModelChanged;
+            this.Model.ModelChanged += ModelChanged;
 
             this.infoTypeCombo.DataSource = Enum.GetValues(typeof(InfoType));
             this.activityTypeCombo.DataSource = Enum.GetValues(typeof(ActivityType));
@@ -52,7 +52,7 @@ namespace StravaViewer
 
         private void ModelChanged(object sender, EventArgs e)
         {
-            if (Model.AbstractPlot != null && !Model.AbstractPlot.PlotData.IsEmpty)
+            if (this.Model.AbstractPlot != null && !this.Model.AbstractPlot.PlotData.IsEmpty)
             {
                 plot();
             }
@@ -63,14 +63,14 @@ namespace StravaViewer
         {
             BarPlot.Plot.Clear();
 
-            foreach (double[] values in Model.AbstractPlot.PlotData.valueSeries)
+            foreach (double[] values in this.Model.AbstractPlot.PlotData.valueSeries)
             {
-                BarPlot.Plot.AddBar(values, Model.AbstractPlot.PlotData.Positions);
+                BarPlot.Plot.AddBar(values, this.Model.AbstractPlot.PlotData.Positions);
             }
 
-            BarPlot.Plot.XTicks(Model.AbstractPlot.PlotData.Positions, Model.AbstractPlot.PlotData.Labels);
+            BarPlot.Plot.XTicks(this.Model.AbstractPlot.PlotData.Positions, this.Model.AbstractPlot.PlotData.Labels);
 
-            BarPlot.Plot.Title(Model.AbstractPlot.PlotData.Title);
+            BarPlot.Plot.Title(this.Model.AbstractPlot.PlotData.Title);
 
             DrawBoundingRectangles();
 
@@ -94,19 +94,19 @@ namespace StravaViewer
 
         private void NextTimeButton_Click(object sender, EventArgs e)
         {
-            Model.NextDisplayTime();
+            this.Model.NextDisplayTime();
         }
 
         private void LastTimeButton_Click(object sender, EventArgs e)
         {
-            Model.LastDisplayTime();
+            this.Model.LastDisplayTime();
         }
 
         private void DisplayDetails()
         {
             (double x, double y) = BarPlot.GetMouseCoordinates();
 
-            if (Model.PlotType == PlotType.MonthDetail)
+            if (this.Model.PlotType == PlotType.MonthDetail)
             {
                 DisplayActivityDetails(x, y);
             }
@@ -118,7 +118,7 @@ namespace StravaViewer
 
         private void DisplayCollectionDetails(double x, double y)
         {
-            foreach (Models.AbstractPlot.ActivityCollection collection in Model.AbstractPlot.activityCollections)
+            foreach (ActivityCollection collection in this.Model.AbstractPlot.activityCollections)
             {
                 if (collection.BoundingRectangle.Contains(x, y))
                 {
@@ -130,7 +130,7 @@ namespace StravaViewer
         private void DisplayActivityDetails(double x, double y)
         {
 
-            foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)
+            foreach (ActivityCollection actCollection in this.Model.AbstractPlot.activityCollections)
             {
                 foreach (Activity activity in actCollection.activities)
                     {
@@ -163,9 +163,9 @@ namespace StravaViewer
 
         private void DrawBoundingRectangles()
         {
-            if (Model.PlotType == PlotType.MonthDetail)
+            if (this.Model.PlotType == PlotType.MonthDetail)
             {
-                foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)
+                foreach (ActivityCollection actCollection in this.Model.AbstractPlot.activityCollections)
                 {
                     foreach (Activity act in actCollection.activities)
                     {
@@ -174,8 +174,8 @@ namespace StravaViewer
                 }
 
             }
-            else if (Model.PlotType == PlotType.YearlySummary || Model.PlotType == PlotType.MonthlySummary){
-                foreach (ActivityCollection actCollection in Model.AbstractPlot.activityCollections)
+            else if (this.Model.PlotType == PlotType.YearlySummary || Model.PlotType == PlotType.MonthlySummary){
+                foreach (ActivityCollection actCollection in this.Model.AbstractPlot.activityCollections)
                 {
                     DrawBoundingRectangle(actCollection.BoundingRectangle);
                 }
@@ -203,7 +203,8 @@ namespace StravaViewer
             {
                 if (actCollection.BoundingRectangle.Contains(x, y))
                 {
-                    Model.DrillDown(actCollection);
+                    this.Model.DrillDown(actCollection);
+                    return;
                 }
             }
 
@@ -211,18 +212,18 @@ namespace StravaViewer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Model.PlotType = PlotType.YearlySummary;
-            Model.DisplayTime = Model.InitializeDisplaytime();
+            this.Model.PlotType = PlotType.YearlySummary;
+            this.Model.DisplayTime = Model.InitializeDisplaytime();
         }
 
         private void infoTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Model.InfoType = (InfoType) infoTypeCombo.SelectedItem;
+            this.Model.InfoType = (InfoType) infoTypeCombo.SelectedItem;
         }
 
         private void activityTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Model.ActivityType = (ActivityType) activityTypeCombo.SelectedItem;
+            this.Model.ActivityType = (ActivityType) activityTypeCombo.SelectedItem;
         }
 
         /*#region Trash
