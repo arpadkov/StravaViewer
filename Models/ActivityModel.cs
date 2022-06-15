@@ -279,7 +279,7 @@ namespace StravaViewer.Models
                 int year = activityCollection.activities[0].start_date.Year;
                 int month = activityCollection.activities[0].start_date.Month;
                 plotType = PlotType.MonthDetail;
-                this.DisplayTime = new TimePeriod(new DateTime(year, month, 01), new DateTime(year, month + 1, 01));
+                this.DisplayTime = new TimePeriod(new DateTime(year, month, 01), new DateTime(year, month, 01).AddMonths(1));
             }
         }
 
