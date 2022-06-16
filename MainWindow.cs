@@ -80,21 +80,6 @@ namespace StravaViewer
             BarPlot.Refresh();
         }
 
-        //private void plot_summary()
-        //{
-        //    foreach (double[] values in plot_data.valueSeries)
-        //    {
-        //        BarPlot.Plot.AddBar(values, plot_data.Positions);
-        //    }
-
-        //    BarPlot.Plot.XTicks(plot_data.Positions, plot_data.Labels);            
-        //}
-
-        //private void plot_detail()
-        //{
-
-        //}
-
         private void NextTimeButton_Click(object sender, EventArgs e)
         {
             this.Model.NextDisplayTime();
@@ -109,40 +94,35 @@ namespace StravaViewer
         {
             (double x, double y) = BarPlot.GetMouseCoordinates();
 
-            if (this.Model.PlotType == PlotType.MonthDetail)
-            {
-                DisplayActivityDetails(x, y);
-            }
-            else
-            {
-                DisplayCollectionDetails(x, y);
-            }
-        }
-
-        private void DisplayCollectionDetails(double x, double y)
-        {
             foreach (ActivityCollection collection in this.Model.AbstractPlot.activityCollections)
             {
+                // the corresponding ActivityCollection is clicked
                 if (collection.BoundingRectangle.Contains(x, y))
                 {
                     detailLabel.Text = "Activity / Collection details:\n" + collection.ToString();
+                    return;
+                }
+
+                // no ActivityCollection is clicked, an Activity may be clicked
+                foreach (Activity activity in collection.activities)
+                {
+                    if (activity.BoundingRectangle.Contains(x, y))
+                    {
+                        detailLabel.Text = "Activity / Collection details:\n" + activity.ToString();
+                        return;
+                    }
                 }
             }
         }
 
-        private void DisplayActivityDetails(double x, double y)
+        private void DisplayDetails(ActivityCollection ActivityCollection)
         {
 
-            foreach (ActivityCollection actCollection in this.Model.AbstractPlot.activityCollections)
-            {
-                foreach (Activity activity in actCollection.activities)
-                    {
-                        if (activity.BoundingRectangle.Contains(x, y))
-                        {
-                            detailLabel.Text = "Activity / Collection details:\n" + activity.ToString();
-                        }
-                    }
-            }                
+        }
+
+        private void DisplayDetils(Activity Activity)
+        {
+
         }
 
 
