@@ -63,6 +63,9 @@ namespace StravaViewer
         {
             BarPlot.Plot.Clear();
 
+            // Reversing the list, to plot the highest bar first
+            this.Model.AbstractPlot.PlotData.valueSeries.Reverse();
+
             foreach (double[] values in this.Model.AbstractPlot.PlotData.valueSeries)
             {
                 BarPlot.Plot.AddBar(values, this.Model.AbstractPlot.PlotData.Positions);

@@ -41,7 +41,7 @@ namespace StravaViewer.Models
             //this.displayTime = new TimePeriod(DateTime.Now, DateTime.Now);
             //this.displayTime = TimePeriod.FromYear(2019);
 
-            this.activityType = ActivityType.Run;
+            this.activityType = ActivityType.Ride;
             this.infoType = InfoType.Distance;
             this.plotType = PlotType.YearlySummary;
 

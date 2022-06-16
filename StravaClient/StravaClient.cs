@@ -24,9 +24,6 @@ namespace StravaViewer.Client
 
             this.clientPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), application_folder_name);
             this.userFolderPath = Path.Combine(clientPath, user);
-
-            SetUserCredentials();
-            SetAccesToken();
         }
 
         public JArray GetAllActivities(bool sync = false)
@@ -37,6 +34,8 @@ namespace StravaViewer.Client
 
             if (sync || IsEmptyUserBackupFolder())
             {
+                SetUserCredentials();
+                SetAccesToken();
                 GetAllActivitiesFromAPI();
             }
 
@@ -80,6 +79,8 @@ namespace StravaViewer.Client
 
         private JArray GetAllActivitiesFromAPI()
         {
+
+
             JArray activities_json = new JArray();
             JArray new_activities_json = new JArray();
             bool page_has_data = true;

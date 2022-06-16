@@ -98,7 +98,7 @@
                 result.Add(new_values);
             }
 
-            return Enumerable.Reverse(result).ToList();
+            return result;
         }
 
         private double[] offsetSeries(double[] original, double[] offset)
@@ -117,7 +117,7 @@
 
             foreach (DateTime day in GetDays())
             {
-                labels_list.Add(day.ToString("MMM/dd"));
+                labels_list.Add(day.ToString("dd"));
             }
 
             string[] labels = labels_list.ToArray();
@@ -131,33 +131,23 @@
 
         private void SetBoundingRectangles()
         {
+            double bottom;
+
+            // for each column/ActivityCollection
             foreach (var (collection, indexCol) in activityCollections.Select((valueColl, iColl) => (valueColl, iColl)))
             {
-                //no idea wtf this is but it works
+                // for each Activity in the Collection
                 foreach (var (activity, indexAct) in collection.activities.Select((valueAct, iAct) => (valueAct, iAct)))
                 {
-                    // valueSeries are reversed, selecting last-before act
-                    int indexLastActSeries = 1 - indexAct;
-
-                    // calculates the top the top of last act
-                    double bottom;
-                    if (PlotData.valueSeries.Count == 1)
-                    {
-                        bottom = 0;
-                    }
-                    else
-                    {
-                        bottom = PlotData.valueSeries[indexLastActSeries][indexCol] - activity.GetValue(type);
-                    }                    
+                    // Top of the column minus the height
+                    bottom = PlotData.valueSeries[indexAct][indexCol] - activity.GetValue(type);
 
                     activity.BoundingRectangle = new BoundingRectangle(
                     height: activity.GetValue(type),
                     verticalCenter: indexCol,
                     bottom: bottom,
                     width: 0.5);
-                }
-
-                
+                }                
             }
         }
     }
