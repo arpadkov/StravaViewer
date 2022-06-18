@@ -219,12 +219,22 @@ namespace StravaViewer
 
             (double x, double y) = BarPlot.GetMouseCoordinates();
 
-            foreach (ActivityCollection actCollection in Model.ActivityCollections)
+            foreach (ActivityCollection collection in Model.ActivityCollections)
             {
-                if (actCollection.BoundingRectangle.Contains(x, y))
+                if (collection.BoundingRectangle.Contains(x, y))
                 {
-                    this.Model.DrillDown(actCollection);
+                    this.Model.DrillDown(collection);
                     return;
+                }
+
+                // no ActivityCollection is clicked, an Activity may be clicked
+                foreach (Activity activity in collection.activities)
+                {
+                    if (activity.BoundingRectangle.Contains(x, y))
+                    {
+                        activity.OpenInBrowser();
+                        return;
+                    }
                 }
             }
 

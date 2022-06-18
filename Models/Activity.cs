@@ -68,6 +68,13 @@ namespace StravaViewer.Models
             }
         }
 
+        public void OpenInBrowser()
+        {
+            string base_url = "https://www.strava.com/activities/";
+            string chrome_exe = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+            System.Diagnostics.Process.Start(chrome_exe, base_url + id);
+        }
+
         public override string ToString()
         {
             return String.Format("{0} - {1} km", name, distance/1000);
