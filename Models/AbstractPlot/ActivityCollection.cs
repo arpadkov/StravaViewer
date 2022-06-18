@@ -77,5 +77,57 @@
             return String.Format("{0} Activities, {1} km total", activities.Count, GetTotalValue(InfoType.Distance));
         }
 
+        public string Name
+        {
+            get
+            {
+                return "Activities";
+            }
+
+            set { }
+        }
+
+        public string Distance
+        {
+            get
+            {
+                double distance_km = Math.Round(GetTotalValue(InfoType.Distance), 2);
+                return distance_km.ToString() + " km";
+            }
+
+            set { }
+        }
+
+        public string ElevationGain
+        {
+            get
+            {
+                return Math.Round(GetTotalValue(InfoType.ElevationGain), 2).ToString() + " m";
+            }
+
+            set { }
+        }
+
+        public string MovingDuration
+        {
+            get
+            {
+                TimeSpan duration = TimeSpan.FromSeconds(GetTotalValue(InfoType.Movingtime));
+                return duration.ToString();
+            }
+
+            set { }
+        }
+
+        public string Date
+        {
+            get
+            {
+                return activities[0].start_date.ToString("yyyy-MMM") + " - " + activities[activities.Count-1].start_date.ToString("yyyy-MMM");
+            }
+
+            set { }
+        }
+
     }
 }

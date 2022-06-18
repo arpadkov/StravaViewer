@@ -58,7 +58,7 @@ namespace StravaViewer.Models.AbstractPlot
                     height: collection.GetTotalValue(type),
                     verticalCenter: index,
                     bottom: 0,
-                    width: 0.5);
+                    width: 0.9);
             }
         }
 

@@ -72,6 +72,59 @@ namespace StravaViewer.Models
         {
             return String.Format("{0} - {1} km", name, distance/1000);
         }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+
+            set { }
+        }
+
+        public string Distance
+        {
+            get
+            {
+                double distance_km = Math.Round(distance / 1000, 2);
+                return distance_km.ToString() + " km";
+            }
+
+            set { }
+        }
+
+        public string ElevationGain
+        {
+            get
+            {
+                return Math.Round(total_elevation_gain, 2).ToString() + " m";
+            }
+
+            set { }
+        }
+
+        public string MovingDuration
+        {
+            get
+            {
+                TimeSpan duration = TimeSpan.FromSeconds(moving_time);
+                return duration.ToString();
+            }
+
+            set { }
+        }
+
+        public string Date
+        {
+            get
+            {
+                return start_date.ToString("yyyy-MMM-d");
+            }
+
+            set { }
+        }
+
     }
 
 

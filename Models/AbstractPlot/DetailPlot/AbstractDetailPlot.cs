@@ -146,7 +146,7 @@
                     height: activity.GetValue(type),
                     verticalCenter: indexCol,
                     bottom: bottom,
-                    width: 0.5);
+                    width: 0.9);
                 }                
             }
         }

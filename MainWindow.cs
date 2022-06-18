@@ -1,11 +1,13 @@
 using StravaViewer.Models;
 using StravaViewer.Models.AbstractPlot;
+using ScottPlot;
 
 namespace StravaViewer
 {
     public partial class MainWindow : Form
     {
         ActivityModel Model;
+        List<ScottPlot.Plottable.ScatterPlot> HighlightLines = new List<ScottPlot.Plottable.ScatterPlot>();
 
         public MainWindow()
         {
@@ -31,7 +33,6 @@ namespace StravaViewer
             this.activityTypeCombo.DataSource = Enum.GetValues(typeof(ActivityType));
 
             plot();
-
         }
 
         private void LoadClient(object sender, EventArgs e)
@@ -62,20 +63,22 @@ namespace StravaViewer
         private void plot()
         {
             BarPlot.Plot.Clear();
+            CleanInfoPanel();
 
             // Reversing the list, to plot the highest bar first
             this.Model.AbstractPlot.PlotData.valueSeries.Reverse();
 
             foreach (double[] values in this.Model.AbstractPlot.PlotData.valueSeries)
             {
-                BarPlot.Plot.AddBar(values, this.Model.AbstractPlot.PlotData.Positions);
+                var plot = BarPlot.Plot.AddBar(values, this.Model.AbstractPlot.PlotData.Positions);
+                plot.BarWidth = 0.9;
             }
 
             BarPlot.Plot.XTicks(this.Model.AbstractPlot.PlotData.Positions, this.Model.AbstractPlot.PlotData.Labels);
 
             BarPlot.Plot.Title(this.Model.AbstractPlot.PlotData.Title);
 
-            DrawBoundingRectangles();
+            // DrawBoundingRectangles();
 
             BarPlot.Refresh();
         }
@@ -90,39 +93,31 @@ namespace StravaViewer
             this.Model.LastDisplayTime();
         }
 
-        private void DisplayDetails()
+        private void CleanInfoPanel()
         {
-            (double x, double y) = BarPlot.GetMouseCoordinates();
-
-            foreach (ActivityCollection collection in this.Model.AbstractPlot.activityCollections)
-            {
-                // the corresponding ActivityCollection is clicked
-                if (collection.BoundingRectangle.Contains(x, y))
-                {
-                    detailLabel.Text = "Activity / Collection details:\n" + collection.ToString();
-                    return;
-                }
-
-                // no ActivityCollection is clicked, an Activity may be clicked
-                foreach (Activity activity in collection.activities)
-                {
-                    if (activity.BoundingRectangle.Contains(x, y))
-                    {
-                        detailLabel.Text = "Activity / Collection details:\n" + activity.ToString();
-                        return;
-                    }
-                }
-            }
+            InfoPanelNameValue.Text = "Nothing selected";
+            InfoPanelDateValue.Text = "-";
+            InfoPanelDistanceValue.Text = "-";
+            InfoPanelDurationValue.Text = "-";
+            InfoPanelElevationGainValue.Text = "-";
         }
 
-        private void DisplayDetails(ActivityCollection ActivityCollection)
+        private void DisplayDetails(ActivityCollection collection)
         {
-
+            InfoPanelNameValue.Text = collection.Name;
+            InfoPanelDateValue.Text = collection.Date;
+            InfoPanelDistanceValue.Text = collection.Distance;
+            InfoPanelDurationValue.Text = collection.MovingDuration;
+            InfoPanelElevationGainValue.Text = collection.ElevationGain;
         }
 
-        private void DisplayDetils(Activity Activity)
+        private void DisplayDetails(Activity activity)
         {
-
+            InfoPanelNameValue.Text = activity.Name;
+            InfoPanelDateValue.Text = activity.Date;
+            InfoPanelDistanceValue.Text = activity.Distance;
+            InfoPanelDurationValue.Text = activity.MovingDuration;
+            InfoPanelElevationGainValue.Text = activity.ElevationGain;
         }
 
 
@@ -133,7 +128,33 @@ namespace StravaViewer
             y = Math.Round(y, 2);
             clickCoordLabel.Text = "Click Coordinates\n" + x.ToString() + " : " + y.ToString();
 
-            DisplayDetails();
+            foreach (ActivityCollection collection in this.Model.AbstractPlot.activityCollections)
+            {
+                // the corresponding ActivityCollection is clicked
+                if (collection.BoundingRectangle.Contains(x, y))
+                {
+                    InfoPanelNameValue.Text = "Activity / Collection details:\n" + collection.ToString();
+                    DisplayDetails(collection);
+                    DrawBoundingRectangle(collection.BoundingRectangle);
+                    return;
+                }
+
+                // no ActivityCollection is clicked, an Activity may be clicked
+                foreach (Activity activity in collection.activities)
+                {
+                    if (activity.BoundingRectangle.Contains(x, y))
+                    {
+                        InfoPanelNameValue.Text = "Activity / Collection details:\n" + activity.ToString();
+                        DisplayDetails(activity);
+                        DrawBoundingRectangle(activity.BoundingRectangle);
+                        return;
+                    }
+                }
+            }
+
+            CleanBoundingRectangles();
+            CleanInfoPanel();
+
         }
 
         private void BarPlot_MouseMove(object sender, MouseEventArgs e)
@@ -167,19 +188,35 @@ namespace StravaViewer
 
         private void DrawBoundingRectangle(BoundingRectangle rect)
         {
+            CleanBoundingRectangles();
+
             PlotLine(rect.left, rect.bottom, rect.right, rect.bottom); //bottom
             PlotLine(rect.left, rect.top, rect.right, rect.top); //top
             PlotLine(rect.left, rect.bottom, rect.left, rect.top); //left
             PlotLine(rect.right, rect.bottom, rect.right, rect.top); //right
         }
 
+        private void CleanBoundingRectangles()
+        {
+            foreach (ScottPlot.Plottable.ScatterPlot line in HighlightLines)
+            {
+                line.IsVisible = false;
+            }
+            HighlightLines.Clear();
+        }
+
         private void PlotLine(double x1, double y1, double x2, double y2)
         {
-            var vLine = BarPlot.Plot.AddLine(x1, y1, x2, y2, Color.Red, lineWidth: 3);
+            ScottPlot.Plottable.ScatterPlot line = BarPlot.Plot.AddLine(x1, y1, x2, y2, Color.Black, lineWidth: 5);
+            line.LineStyle = LineStyle.Dot;
+            line.IsVisible = true;
+            HighlightLines.Add(line);
         }
 
         private void BarPlot_DoubleClick(object sender, EventArgs e)
         {
+            CleanInfoPanel();
+
             (double x, double y) = BarPlot.GetMouseCoordinates();
 
             foreach (ActivityCollection actCollection in Model.ActivityCollections)
@@ -207,6 +244,11 @@ namespace StravaViewer
         private void activityTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             this.Model.ActivityType = (ActivityType) activityTypeCombo.SelectedItem;
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
         /*#region Trash
