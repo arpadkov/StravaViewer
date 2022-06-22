@@ -10,7 +10,7 @@ namespace StravaViewer.Client
         private string clientPath;
         private string userFolderPath;
 
-        private HttpClient client = new HttpClient();
+        //private HttpClient client = new HttpClient();
         private string application_folder_name = "StravaClient";
         private string authentication_url = "https://www.strava.com/oauth/token";
         private string activites_base_url = "https://www.strava.com/api/v3/athlete/activities?per_page=100";
@@ -64,17 +64,20 @@ namespace StravaViewer.Client
                     {"refresh_token", user_credentials.RefreshToken},
                     {"grant_type", "refresh_token"},
                 };
-            var payload = new StringContent(JsonConvert.SerializeObject(payload_dict, Formatting.Indented), Encoding.UTF8, "application/json");
 
-            Console.WriteLine("Requesting acces token ...");
-            var response = client.PostAsync(authentication_url, payload).Result;
+            //var payload = new StringContent(JsonConvert.SerializeObject(payload_dict, Formatting.Indented), Encoding.UTF8, "application/json");
 
-            var result = response.Content.ReadAsStringAsync().Result;
-            JObject result_json = Newtonsoft.Json.Linq.JObject.Parse(result);
+            //Console.WriteLine("Requesting acces token ...");
+            //var response = client.PostAsync(authentication_url, payload).Result;
 
-            #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            this.access_token = result_json["access_token"].ToString();
-            #pragma warning restore CS8602 // Dereference of a possibly null reference.
+            //var result = response.Content.ReadAsStringAsync().Result;
+            //JObject result_json = Newtonsoft.Json.Linq.JObject.Parse(result);
+
+            //#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            //this.access_token = result_json["access_token"].ToString();
+            //#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+            this.access_token = HttpRequest.Post(authentication_url, payload_dict, "access_token");
         }
 
         private JArray GetAllActivitiesFromAPI()
@@ -93,7 +96,7 @@ namespace StravaViewer.Client
 
                 if (new_activities_json.Count > 0)
                 {
-                    page_has_data = true; // CHANGE BACK TO TRUE !!!!!!!!!!!!!!!!!!!
+                    page_has_data = true;
                 }
                 else
                 {
@@ -110,19 +113,16 @@ namespace StravaViewer.Client
 
         private JArray GetActivitiesByPage(int page)
         {
-            //var activities = new List<Activity>();
-            Console.WriteLine(String.Format("Requesting activities for page {0}...", page));
-
             string activites_url = activites_base_url + "&page=" + page.ToString();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, activites_url);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", access_token);
-            var response = client.SendAsync(request).Result;
+            //var request = new HttpRequestMessage(HttpMethod.Get, activites_url);
+            //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", access_token);
+            //var response = client.SendAsync(request).Result;
 
-            //var activities_json_unformatted = response.Content.ReadAsStringAsync().Result;
-            //var activities_json = JArray.Parse(activities_json_unformatted).ToList();
+            //var activities_json = JArray.Parse(response.Content.ReadAsStringAsync().Result);
 
-            var activities_json = JArray.Parse(response.Content.ReadAsStringAsync().Result);
+            string activities_string = HttpRequest.GetWithToken(activites_url, access_token);
+            var activities_json = JArray.Parse(activities_string);
 
             return activities_json;
         }
@@ -156,9 +156,11 @@ namespace StravaViewer.Client
                 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 actId = activity_json["id"].ToString();
                 raw_date_string = activity_json["start_date"].ToString();
+                #pragma warning restore CS8602 // Dereference of a possibly null reference.
+
                 start_date = Convert.ToDateTime(raw_date_string);
                 date = start_date.ToString("yyyy-MM-dd");
-                #pragma warning restore CS8602 // Dereference of a possibly null reference.
+                
 
                 filename = Path.Combine(userFolderPath, date + "_" + actId + ".json");
 
@@ -167,5 +169,16 @@ namespace StravaViewer.Client
                 File.WriteAllText(filename, formattedJson);
             }
         }
+
+        public void GetActivityStream()
+        {
+            string act_id = "7205310239";
+
+            string stream_url = "https://www.strava.com/api/v3/activities/7205310239/streams?keys=&key_by_type=";
+        }
+
+        https://www.strava.com/api/v3/activities/{id}/streams?keys=&key_by_type=" "Authorization: Bearer [[token]]
+
+        https://www.strava.com/api/v3/activities/{id}?include_all_efforts=" "Authorization: Bearer [[token]]
     }
 }

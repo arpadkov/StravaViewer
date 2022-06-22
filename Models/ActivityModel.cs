@@ -25,7 +25,7 @@ namespace StravaViewer.Models
         public event EventHandler? ModelChanged;
         
         List<Activity> activities;
-        StravaClient Client;
+        public StravaClient Client;         // TODO: remove public !!
 
         private ActivityType activityType;
         private InfoType infoType;

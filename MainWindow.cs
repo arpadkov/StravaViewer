@@ -33,6 +33,8 @@ namespace StravaViewer
             this.activityTypeCombo.DataSource = Enum.GetValues(typeof(ActivityType));
 
             plot();
+
+            Model.Client.GetActivityStream();
         }
 
         private void LoadClient(object sender, EventArgs e)
