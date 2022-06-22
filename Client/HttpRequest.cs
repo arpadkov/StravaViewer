@@ -44,5 +44,38 @@ namespace StravaViewer.Client
 
             return result;
         }
+
+        public static void PostWithFileAndAuth(string url, Dictionary<string, string> payload, string access_token, string filename)
+        {
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", access_token);
+
+            var multipartFormContent = new MultipartFormDataContent();
+
+            //Add other fields
+            multipartFormContent.Add(new StringContent("TestActAuto"), name: "name");
+            multipartFormContent.Add(new StringContent("tcx"), name: "data_type");
+
+            //Add the file
+            var fileStreamContent = new StreamContent(File.OpenRead(filename));
+            //fileStreamContent.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+            multipartFormContent.Add(fileStreamContent, name: "file", fileName: "act.tcx");
+
+            //Send it
+            //var response = await client.PostAsync("https://localhost:12345/files/", multipartFormContent);
+            //response.EnsureSuccessStatusCode();
+            //return await response.Content.ReadAsStringAsync();
+
+
+            //var payload_string = new StringContent
+            //    (
+            //    JsonConvert.SerializeObject(payload, Formatting.Indented), Encoding.UTF8, "application/json"
+            //    );
+
+            var response = client.PostAsync(url, multipartFormContent).Result;
+
+            int i = 5;
+
+
+        }
     }
 }

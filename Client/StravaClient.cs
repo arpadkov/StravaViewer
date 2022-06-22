@@ -34,7 +34,6 @@ namespace StravaViewer.Client
 
             if (sync || IsEmptyUserBackupFolder())
             {
-                SetUserCredentials();
                 SetAccesToken();
                 GetAllActivitiesFromAPI();
             }
@@ -55,8 +54,10 @@ namespace StravaViewer.Client
             this.user_credentials = JsonConvert.DeserializeObject<StravaUserCredentials>(File.ReadAllText(filename));
         }
 
-        private void SetAccesToken()
+        public void SetAccesToken()
         {
+            SetUserCredentials();
+
             Dictionary<string, string> payload_dict = new Dictionary<string, string>
                 {
                     {"client_id", user_credentials.ClientId},
@@ -177,8 +178,22 @@ namespace StravaViewer.Client
             string stream_url = "https://www.strava.com/api/v3/activities/7205310239/streams?keys=&key_by_type=";
         }
 
-        https://www.strava.com/api/v3/activities/{id}/streams?keys=&key_by_type=" "Authorization: Bearer [[token]]
+        public void UploadActivity()
+        {
+            string url = "https://www.strava.com/api/v3/uploads";
+            string filename = @"C:\Users\95arp\AppData\Roaming\StravaClient\20220303_TEST.tcx";
 
-        https://www.strava.com/api/v3/activities/{id}?include_all_efforts=" "Authorization: Bearer [[token]]
+            Dictionary<string, string> payload_dict = new Dictionary<string, string>
+                {
+                    {"name", "TestActivity"},
+                    {"data_type", "tcx"},
+                };
+
+            HttpRequest.PostWithFileAndAuth(url, payload_dict, access_token, filename);
+        }
+
+        //https://www.strava.com/api/v3/activities/{id}/streams?keys=&key_by_type=" "Authorization: Bearer [[token]]
+
+        //https://www.strava.com/api/v3/activities/{id}?include_all_efforts=" "Authorization: Bearer [[token]]
     }
 }

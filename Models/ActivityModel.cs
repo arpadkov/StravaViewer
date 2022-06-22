@@ -46,7 +46,7 @@ namespace StravaViewer.Models
             this.plotType = PlotType.YearlySummary;
 
             this.activities = new List<Activity>();
-            this.Client = new StravaClient("95.arpadkov");
+            this.Client = new StravaClient("bontovics.t");
 
             SetActivities();
             this.displayTime = InitializeDisplaytime();

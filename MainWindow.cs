@@ -34,7 +34,8 @@ namespace StravaViewer
 
             plot();
 
-            Model.Client.GetActivityStream();
+            Model.Client.SetAccesToken();
+            Model.Client.UploadActivity();
         }
 
         private void LoadClient(object sender, EventArgs e)
