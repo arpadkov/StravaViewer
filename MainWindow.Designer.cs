@@ -47,6 +47,7 @@
             this.InfoPanelElevationGainLabel = new System.Windows.Forms.Label();
             this.InfoPanelDistanceLabel = new System.Windows.Forms.Label();
             this.InfoPanelDateLabel = new System.Windows.Forms.Label();
+            this.uploadButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -242,11 +243,22 @@
             this.InfoPanelDateLabel.TabIndex = 5;
             this.InfoPanelDateLabel.Text = "Date:";
             // 
+            // uploadButton
+            // 
+            this.uploadButton.Location = new System.Drawing.Point(477, 435);
+            this.uploadButton.Name = "uploadButton";
+            this.uploadButton.Size = new System.Drawing.Size(122, 23);
+            this.uploadButton.TabIndex = 9;
+            this.uploadButton.Text = "Upload Activities";
+            this.uploadButton.UseVisualStyleBackColor = true;
+            this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1045, 500);
+            this.Controls.Add(this.uploadButton);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.activityTypeCombo);
             this.Controls.Add(this.infoTypeCombo);
@@ -287,5 +299,6 @@
         private Label InfoPanelDateValue;
         private Label InfoPanelDurationLabel;
         private Label InfoPanelElevationGainLabel;
+        private Button uploadButton;
     }
 }

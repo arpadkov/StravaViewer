@@ -35,7 +35,6 @@ namespace StravaViewer
             plot();
 
             Model.Client.SetAccesToken();
-            Model.Client.UploadActivity();
         }
 
         private void LoadClient(object sender, EventArgs e)
@@ -262,6 +261,11 @@ namespace StravaViewer
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void uploadButton_Click(object sender, EventArgs e)
+        {
+            Model.Client.UploadActivities();
         }
 
         /*#region Trash

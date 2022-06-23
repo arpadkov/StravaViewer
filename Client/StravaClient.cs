@@ -12,6 +12,7 @@ namespace StravaViewer.Client
 
         //private HttpClient client = new HttpClient();
         private string application_folder_name = "StravaClient";
+        private string upload_folder_name = "to_upload";
         private string authentication_url = "https://www.strava.com/oauth/token";
         private string activites_base_url = "https://www.strava.com/api/v3/athlete/activities?per_page=100";
 
@@ -26,16 +27,28 @@ namespace StravaViewer.Client
             this.userFolderPath = Path.Combine(clientPath, user);
         }
 
-        public JArray GetAllActivities(bool sync = false)
+        public JArray GetAllActivities(bool fullInit = false)
         {
             JArray activities_json = new JArray();
 
             CheckBackupFolder();
-
-            if (sync || IsEmptyUserBackupFolder())
+            try
             {
                 SetAccesToken();
+            }
+            catch
+            {
+                // TODO
+            }
+            
+
+            if (fullInit || IsEmptyUserBackupFolder())
+            {
                 GetAllActivitiesFromAPI();
+            }
+            else
+            {
+                GetLastActivitiesFromAPI();
             }
 
             string[] json_files = Directory.GetFiles(userFolderPath);
@@ -81,10 +94,9 @@ namespace StravaViewer.Client
             this.access_token = HttpRequest.Post(authentication_url, payload_dict, "access_token");
         }
 
+        // TODO: is the return needed?
         private JArray GetAllActivitiesFromAPI()
         {
-
-
             JArray activities_json = new JArray();
             JArray new_activities_json = new JArray();
             bool page_has_data = true;
@@ -106,6 +118,19 @@ namespace StravaViewer.Client
 
                 page++;
             }
+
+            SaveAllActivityJson(activities_json);
+
+            return activities_json;
+        }
+
+        // TODO: is the return needed?
+        private JArray GetLastActivitiesFromAPI()
+        {
+            JArray activities_json = new JArray();
+            activities_json = GetActivitiesByPage(1);
+
+
 
             SaveAllActivityJson(activities_json);
 
@@ -161,15 +186,18 @@ namespace StravaViewer.Client
 
                 start_date = Convert.ToDateTime(raw_date_string);
                 date = start_date.ToString("yyyy-MM-dd");
-                
+
 
                 filename = Path.Combine(userFolderPath, date + "_" + actId + ".json");
 
                 unformattedJson = JsonConvert.SerializeObject(activity_json);
                 formattedJson = JValue.Parse(unformattedJson).ToString(Formatting.Indented);
+
+                // In case the Activity already exists, it will be overwritten
                 File.WriteAllText(filename, formattedJson);
             }
         }
+
 
         public void GetActivityStream()
         {
@@ -178,18 +206,62 @@ namespace StravaViewer.Client
             string stream_url = "https://www.strava.com/api/v3/activities/7205310239/streams?keys=&key_by_type=";
         }
 
-        public void UploadActivity()
+        private void UploadActivity(string filepath)
         {
             string url = "https://www.strava.com/api/v3/uploads";
-            string filename = @"C:\Users\95arp\AppData\Roaming\StravaClient\20220303_TEST.tcx";
+            //filename = @"C:\Users\95arp\AppData\Roaming\StravaClient\20220303_TEST.tcx";
 
+            // currently not used
             Dictionary<string, string> payload_dict = new Dictionary<string, string>
                 {
                     {"name", "TestActivity"},
                     {"data_type", "tcx"},
                 };
 
-            HttpRequest.PostWithFileAndAuth(url, payload_dict, access_token, filename);
+            HttpRequest.PostWithFileAndAuth(url, payload_dict, access_token, filepath);
+        }
+
+        public void UploadActivities()
+        {
+            string upload_folder = Path.Combine(userFolderPath, upload_folder_name);
+
+            foreach (string filepath in Directory.GetFiles(upload_folder).Reverse())
+            {
+                //string filepath = Path.Combine(upload_folder, filename);
+
+                
+
+                Console.WriteLine(filepath);
+
+                UploadActivity(filepath);
+                wait(10000);
+                File.Delete(filepath);
+
+            }
+
+        }
+
+        private void wait(int milliseconds)
+        {
+            var timer1 = new System.Windows.Forms.Timer();
+            if (milliseconds == 0 || milliseconds < 0) return;
+
+            // Console.WriteLine("start wait timer");
+            timer1.Interval = milliseconds;
+            timer1.Enabled = true;
+            timer1.Start();
+
+            timer1.Tick += (s, e) =>
+            {
+                timer1.Enabled = false;
+                timer1.Stop();
+                // Console.WriteLine("stop wait timer");
+            };
+
+            while (timer1.Enabled)
+            {
+                Application.DoEvents();
+            }
         }
 
         //https://www.strava.com/api/v3/activities/{id}/streams?keys=&key_by_type=" "Authorization: Bearer [[token]]
