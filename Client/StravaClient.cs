@@ -199,7 +199,7 @@ namespace StravaViewer.Client
                 };
 
             string response = HttpRequest.GetWithToken(stream_url, payload_dict, access_token);
-            var json_data = JObject.Parse(response)["latlng"]["data"] as JArray;
+            var json_data = JObject.Parse(response)[stream]["data"] as JArray;
 
             return json_data;
         }

@@ -28,19 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.altitudePlot = new ScottPlot.FormsPlot();
+            this.multiPlot = new ScottPlot.FormsPlot();
             this.Map = new GMap.NET.WindowsForms.GMapControl();
             this.SuspendLayout();
             // 
-            // altitudePlot
+            // multiPlot
             // 
-            this.altitudePlot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.multiPlot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.altitudePlot.Location = new System.Drawing.Point(45, 503);
-            this.altitudePlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.altitudePlot.Name = "altitudePlot";
-            this.altitudePlot.Size = new System.Drawing.Size(1141, 223);
-            this.altitudePlot.TabIndex = 0;
+            this.multiPlot.Location = new System.Drawing.Point(45, 503);
+            this.multiPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.multiPlot.Name = "multiPlot";
+            this.multiPlot.Size = new System.Drawing.Size(1141, 223);
+            this.multiPlot.TabIndex = 0;
             // 
             // Map
             // 
@@ -75,7 +75,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1226, 749);
             this.Controls.Add(this.Map);
-            this.Controls.Add(this.altitudePlot);
+            this.Controls.Add(this.multiPlot);
             this.Name = "DetailedActivityView";
             this.Text = "DetailedActivityView";
             this.Load += new System.EventHandler(this.DetailedActivityView_Load);
@@ -85,7 +85,7 @@
 
         #endregion
 
-        private ScottPlot.FormsPlot altitudePlot;
+        private ScottPlot.FormsPlot multiPlot;
         private GMap.NET.WindowsForms.GMapControl Map;
     }
 }

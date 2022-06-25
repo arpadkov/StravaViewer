@@ -247,7 +247,12 @@ namespace StravaViewer
 
         private void OpenDetailedActivityView(Activity activity)
         {
-            DetailedActivityView detailedActivityView = new DetailedActivityView(activity, Model.Client.GetActivityStream(activity.id, "latlng"));
+            DetailedActivityView detailedActivityView = new DetailedActivityView(
+                activity,
+                Model.Client.GetActivityStream(activity.id, "latlng"),
+                Model.Client.GetActivityStream(activity.id, "distance"),
+                Model.Client.GetActivityStream(activity.id, "altitude")
+                );
             detailedActivityView.Show();
         }
 
