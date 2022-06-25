@@ -43,7 +43,7 @@ namespace StravaViewer.Models
 
             this.activityType = ActivityType.Ride;
             this.infoType = InfoType.Distance;
-            this.plotType = PlotType.YearlySummary;
+            this.plotType = PlotType.MonthDetail;
 
             this.activities = new List<Activity>();
             this.Client = new StravaClient("bontovics.t");

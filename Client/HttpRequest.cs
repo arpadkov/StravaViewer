@@ -31,16 +31,31 @@ namespace StravaViewer.Client
             return selected_result;
         }
 
-        public static string GetWithToken(string url, string token)
+        public static string GetWithToken(string url, Dictionary<string, string> payload, string token)
         {
             string result;
 
+            //var payload_string = new StringContent
+            //    (
+            //    JsonConvert.SerializeObject(payload, Formatting.Indented), Encoding.UTF8, "application/json"
+            //    );
+
+            foreach (var param in payload)
+            {
+                url += param.Key;
+                url += "=";
+                url += param.Value;
+                url += "&";
+            }
+
+
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            //request.Content = payload_string;
+
             var response = client.SendAsync(request).Result;
 
             result = response.Content.ReadAsStringAsync().Result;
-
 
             return result;
         }

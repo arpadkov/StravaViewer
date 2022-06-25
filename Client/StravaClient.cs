@@ -79,18 +79,6 @@ namespace StravaViewer.Client
                     {"grant_type", "refresh_token"},
                 };
 
-            //var payload = new StringContent(JsonConvert.SerializeObject(payload_dict, Formatting.Indented), Encoding.UTF8, "application/json");
-
-            //Console.WriteLine("Requesting acces token ...");
-            //var response = client.PostAsync(authentication_url, payload).Result;
-
-            //var result = response.Content.ReadAsStringAsync().Result;
-            //JObject result_json = Newtonsoft.Json.Linq.JObject.Parse(result);
-
-            //#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            //this.access_token = result_json["access_token"].ToString();
-            //#pragma warning restore CS8602 // Dereference of a possibly null reference.
-
             this.access_token = HttpRequest.Post(authentication_url, payload_dict, "access_token");
         }
 
@@ -117,6 +105,10 @@ namespace StravaViewer.Client
                 }
 
                 page++;
+                //if (page > 10)
+                //{
+                //    wait(60000);
+                //}
             }
 
             SaveAllActivityJson(activities_json);
@@ -141,13 +133,9 @@ namespace StravaViewer.Client
         {
             string activites_url = activites_base_url + "&page=" + page.ToString();
 
-            //var request = new HttpRequestMessage(HttpMethod.Get, activites_url);
-            //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", access_token);
-            //var response = client.SendAsync(request).Result;
+            Dictionary<string, string> payload_dict = new Dictionary<string, string> { };
 
-            //var activities_json = JArray.Parse(response.Content.ReadAsStringAsync().Result);
-
-            string activities_string = HttpRequest.GetWithToken(activites_url, access_token);
+            string activities_string = HttpRequest.GetWithToken(activites_url, payload_dict, access_token);
             var activities_json = JArray.Parse(activities_string);
 
             return activities_json;
@@ -199,11 +187,21 @@ namespace StravaViewer.Client
         }
 
 
-        public void GetActivityStream()
+        public JArray GetActivityStream(string act_id, string stream)
         {
-            string act_id = "7205310239";
+            string stream_url = "https://www.strava.com/api/v3/activities/" + act_id + "/streams?";
+            //stream_url += 
 
-            string stream_url = "https://www.strava.com/api/v3/activities/7205310239/streams?keys=&key_by_type=";
+            Dictionary<string, string> payload_dict = new Dictionary<string, string>
+                {
+                    {"keys", stream},
+                    {"key_by_type", "true"},
+                };
+
+            string response = HttpRequest.GetWithToken(stream_url, payload_dict, access_token);
+            var json_data = JObject.Parse(response)["latlng"]["data"] as JArray;
+
+            return json_data;
         }
 
         private void UploadActivity(string filepath)
@@ -263,9 +261,5 @@ namespace StravaViewer.Client
                 Application.DoEvents();
             }
         }
-
-        //https://www.strava.com/api/v3/activities/{id}/streams?keys=&key_by_type=" "Authorization: Bearer [[token]]
-
-        //https://www.strava.com/api/v3/activities/{id}?include_all_efforts=" "Authorization: Bearer [[token]]
     }
 }

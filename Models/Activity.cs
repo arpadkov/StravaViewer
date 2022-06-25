@@ -1,4 +1,5 @@
 ﻿using System;
+using GMap.NET;
 using Newtonsoft.Json.Linq;
 using StravaViewer.Models.AbstractPlot;
 
@@ -26,6 +27,8 @@ namespace StravaViewer.Models
         public float total_elevation_gain;
         public ActivityType type;
         private BoundingRectangle boundingRectangle = BoundingRectangle.Empty();
+        public double start_lat;
+        public double start_lng;
 
         public Activity(JObject json)
         {
@@ -42,6 +45,15 @@ namespace StravaViewer.Models
 
             string type_string = json["type"].ToString();
             type = (ActivityType)Enum.Parse(typeof(ActivityType), type_string);
+
+                // TODO this is baaad
+            if (type == ActivityType.Run && json["start_latlng"].First != null)
+            {
+                //var test = json["start_latlng"].First;
+                start_lat = json["start_latlng"].First.ToObject<double>();
+                start_lng = json["start_latlng"].Last.ToObject<double>();
+                //this.start_point = new PointLatLng(start_lat, start_lng);
+            }
             #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 

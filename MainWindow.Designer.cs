@@ -48,6 +48,7 @@
             this.InfoPanelDistanceLabel = new System.Windows.Forms.Label();
             this.InfoPanelDateLabel = new System.Windows.Forms.Label();
             this.uploadButton = new System.Windows.Forms.Button();
+            this.fullInitButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -253,11 +254,22 @@
             this.uploadButton.UseVisualStyleBackColor = true;
             this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
             // 
+            // fullInitButton
+            // 
+            this.fullInitButton.Location = new System.Drawing.Point(605, 435);
+            this.fullInitButton.Name = "fullInitButton";
+            this.fullInitButton.Size = new System.Drawing.Size(122, 23);
+            this.fullInitButton.TabIndex = 10;
+            this.fullInitButton.Text = "Download All";
+            this.fullInitButton.UseVisualStyleBackColor = true;
+            this.fullInitButton.Click += new System.EventHandler(this.fullInitButton_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1045, 500);
+            this.Controls.Add(this.fullInitButton);
             this.Controls.Add(this.uploadButton);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.activityTypeCombo);
@@ -300,5 +312,6 @@
         private Label InfoPanelDurationLabel;
         private Label InfoPanelElevationGainLabel;
         private Button uploadButton;
+        private Button fullInitButton;
     }
 }

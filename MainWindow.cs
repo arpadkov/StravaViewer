@@ -1,5 +1,6 @@
 using StravaViewer.Models;
 using StravaViewer.Models.AbstractPlot;
+using StravaViewer.Forms;
 using ScottPlot;
 
 namespace StravaViewer
@@ -32,9 +33,9 @@ namespace StravaViewer
             this.infoTypeCombo.DataSource = Enum.GetValues(typeof(InfoType));
             this.activityTypeCombo.DataSource = Enum.GetValues(typeof(ActivityType));
 
-            plot();
+            //Model.Client.GetActivityStream("7351331006");
 
-            Model.Client.SetAccesToken();
+            plot();
         }
 
         private void LoadClient(object sender, EventArgs e)
@@ -234,12 +235,20 @@ namespace StravaViewer
                 {
                     if (activity.BoundingRectangle.Contains(x, y))
                     {
-                        activity.OpenInBrowser();
+                        //JArray LatLngStream = Model.Client.GetActivityStream(activity.id, "latlng");
+                        OpenDetailedActivityView(activity);
+
+                        //activity.OpenInBrowser();
                         return;
                     }
                 }
             }
+        }
 
+        private void OpenDetailedActivityView(Activity activity)
+        {
+            DetailedActivityView detailedActivityView = new DetailedActivityView(activity, Model.Client.GetActivityStream(activity.id, "latlng"));
+            detailedActivityView.Show();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -266,6 +275,11 @@ namespace StravaViewer
         private void uploadButton_Click(object sender, EventArgs e)
         {
             Model.Client.UploadActivities();
+        }
+
+        private void fullInitButton_Click(object sender, EventArgs e)
+        {
+            Model.Client.GetAllActivities(fullInit: true);
         }
 
         /*#region Trash
