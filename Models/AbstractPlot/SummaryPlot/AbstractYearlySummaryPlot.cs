@@ -19,7 +19,7 @@ namespace StravaViewer.Models.AbstractPlot
             List<int> years = new List<int>();
             DateTime date = fromDate;
 
-            while (date < toDate)
+            while (date.Year <= toDate.Year)
             {
                 years.Add(date.Year);           // TODO: check if .Year returns int
                 date = date.AddYears(1);

@@ -251,7 +251,8 @@ namespace StravaViewer
                 activity,
                 Model.Client.GetActivityStream(activity.id, "latlng"),
                 Model.Client.GetActivityStream(activity.id, "distance"),
-                Model.Client.GetActivityStream(activity.id, "altitude")
+                Model.Client.GetActivityStream(activity.id, "altitude"),
+                Model.Client.GetActivityStream(activity.id, "heartrate")
                 );
             detailedActivityView.Show();
         }
