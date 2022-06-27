@@ -138,7 +138,7 @@ namespace StravaViewer.Models
         {
             get
             {
-                return start_date.ToString("yyyy-MMM-d");
+                return start_date.ToString("yyyy MMM d HH:mm");
             }
 
             set { }

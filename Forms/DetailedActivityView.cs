@@ -14,39 +14,67 @@ namespace StravaViewer.Forms
         Activity activity;
         JArray LatLngStream;
         JArray DistanceStream;
-        int[] distances;
+        double[] distances;
         JArray AltitudeStream;
+        double[] elevations;
         JArray HeartRateStream;
+        double[] heartrates;
+        JArray TimeStream;
+
 
         ScottPlot.Plottable.VLine highlightLine;
+        ScottPlot.Plottable.Tooltip infoToolTip;
+        //ScottPlot.PlottableVline
 
+        GMapOverlay markers;
         GMapMarker marker;
 
-        public DetailedActivityView(Activity activity, JArray LatLngStream, JArray DistanceStream, JArray AltitudeStream, JArray HeartRateStream)
+        int plot_resolution = 500;
+
+        public DetailedActivityView(Activity activity, JArray LatLngStream, JArray DistanceStream, JArray AltitudeStream, JArray HeartRateStream, JArray TimeStream)
         {
             this.activity = activity;
             this.LatLngStream = LatLngStream;
             this.DistanceStream = DistanceStream;
             this.AltitudeStream = AltitudeStream;
             this.HeartRateStream = HeartRateStream;
+            this.TimeStream = TimeStream;
 
-            distances = new int[LatLngStream.Count];
-            for (int i = 0; i < LatLngStream.Count; i++)
+            List<double> distances_list = new List<double>();
+            List<double> elevations_list = new List<double>();
+            List<double> heartrates_list = new List<double>();
+
+            int value_frequency = 1;
+            if (LatLngStream.Count > plot_resolution)
             {
-                distances[i] = (int)DistanceStream[i];
+                value_frequency = LatLngStream.Count / plot_resolution;
+            }
+            
+            for (int i = 0; i < LatLngStream.Count; i += value_frequency)
+            {
+                distances_list.Add((double)DistanceStream[i] / 1000);
+                elevations_list.Add((double)AltitudeStream[i]);
+                heartrates_list.Add((double)HeartRateStream[i]);
             }
 
+            distances = distances_list.ToArray();
+            elevations = elevations_list.ToArray();
+            heartrates = heartrates_list.ToArray();
+
             InitializeComponent();
+
+            this.timer1.Interval = 1000 / Properties.Settings.Default.PlotRefreshRate;
 
             highlightLine = new ScottPlot.Plottable.VLine();
             highlightLine.LineColor = Color.Black;
 
-            GMapOverlay markers = new GMapOverlay("markers");
-            marker = new GMap.NET.WindowsForms.Markers.GMarkerCross(new PointLatLng(0, 0));
-            markers.Markers.Add(marker);
-            Map.Overlays.Add(markers);
+            infoToolTip = new ScottPlot.Plottable.Tooltip();
+            infoToolTip.Label = "isnt empty";
+            infoToolTip.X = 0;
+            infoToolTip.Y = 0;
 
-            
+
+
         }
 
         private void DetailedActivityView_Load(object sender, EventArgs e)
@@ -58,6 +86,15 @@ namespace StravaViewer.Forms
             Map.DragButton = MouseButtons.Left;
             GMaps.Instance.Mode = AccessMode.ServerOnly;
             Map.ShowCenter = false;
+
+            double temp_marker_lat = LatLngStream[0][0].ToObject<double>();
+            double temp_marker_lng = LatLngStream[0][1].ToObject<double>();
+
+            markers = new GMapOverlay("markers");
+            marker = new GMarkerGoogle(new PointLatLng(temp_marker_lat, temp_marker_lng), GMarkerGoogleType.yellow);
+            //marker.Size = System.Drawing.Size(10, 10);
+            markers.Markers.Add(marker);
+            Map.Overlays.Add(markers);
 
             CreateRoute();
             CreateElevationPlot();
@@ -73,60 +110,34 @@ namespace StravaViewer.Forms
             GMapOverlay routes = new GMapOverlay("routes");
             List<PointLatLng> points = new List<PointLatLng>();
 
-            //points.Add(new PointLatLng(48.656289, 10.302153));
-            //points.Add(new PointLatLng(48.661909, 10.307454));
-
             foreach (var jtoken_point in LatLngStream)
             {
                 double lat = jtoken_point[0].ToObject<double>();
                 double lng = jtoken_point[1].ToObject<double>();
                 points.Add(new PointLatLng(lat, lng));
-                //Map.Position = new PointLatLng(lat, lng);
             }            
 
             GMapRoute route = new GMapRoute(points, "A walk in the park");
             route.Stroke = new Pen(Color.Red, 3);
             routes.Routes.Add(route);
-            Map.Overlays.Add(routes);
-
-            
+            Map.Overlays.Add(routes);            
 
             Map.Position = points[0];
-            //Map.Position = new PointLatLng(0, 0);
         }
 
         private void CreateElevationPlot()
         {
-            List<double> distance_list = new List<double>();
-            List<double> elevation_list = new List<double>();
-
-            for (int i = 0; i < DistanceStream.Count; i++)
-            {
-                distance_list.Add(DistanceStream[i].ToObject<double>()/1000);
-                elevation_list.Add(AltitudeStream[i].ToObject<double>());
-            }
-
-            double[] distance = distance_list.ToArray();
-            double[] elevation = elevation_list.ToArray();
-
-            //foreach (var jtoken_point in DistanceStream)
-            //{
-            //    distance_list.Add(jtoken_point.ToObject<double>());
-            //}
-
-            var plt = new ScottPlot.Plottable.ScatterPlot(distance, elevation);
+            //var plt = new ScottPlot.Plottable.ScatterPlot(distances, elevations);
+            var plt = elevationPlot.Plot.AddSignalXY(distances, elevations);
             plt.Color = Color.SpringGreen;
             plt.LineWidth = 2;
             plt.MarkerSize = 0;
+            plt.FillBelow(Color.SpringGreen, Color.Transparent);
 
-            //var FillPlot = new ScottPlot.Plottable.
-            var fillPlot = this.elevationPlot.Plot.AddFill(distance, elevation);
-            //fillPlot.Color = Color.ForestGreen;
-            //fillPlot.FillColor = Color.ForestGreen;
-            fillPlot.FillColor = Color.SpringGreen;
-            fillPlot.LineWidth = 0;
-            //fillPlot.
-            
+            //var fillPlot = elevationPlot.Plot.AddFill(distances, elevations);
+            //fillPlot.FillColor = Color.SpringGreen;
+            //fillPlot.LineWidth = 0;
+
 
             //this.elevationPlot.Plot.XAxis.Label("Distance [km]");
             //this.elevationPlot.Plot.YAxis.Label("Elevation [m]");
@@ -134,64 +145,83 @@ namespace StravaViewer.Forms
             elevationPlot.Plot.Add(plt);
 
             elevationPlot.Plot.Add(highlightLine);
+            elevationPlot.Plot.Add(infoToolTip);
 
             elevationPlot.Refresh();
         }
 
         public void CreateMultiPlot()
         {
-            List<double> distance_list = new List<double>();
-            List<double> heartrate_list = new List<double>();
-
-            for (int i = 0; i < HeartRateStream.Count; i++)
-            {
-                distance_list.Add(DistanceStream[i].ToObject<double>() / 1000);
-                heartrate_list.Add(HeartRateStream[i].ToObject<double>());
-            }
-
-            double[] distance = distance_list.ToArray();
-            double[] heartrate = heartrate_list.ToArray();
-
-            var heartratePlot = new ScottPlot.Plottable.ScatterPlot(distance, heartrate);
+            var heartratePlot = new ScottPlot.Plottable.ScatterPlot(distances, heartrates);
             heartratePlot.Color = Color.Red;
             heartratePlot.LineWidth = 2;
             heartratePlot.MarkerSize = 0;
 
             multiPlot.Plot.Add(heartratePlot);
             multiPlot.Plot.Add(highlightLine);
+
+            multiPlot.Plot.MatchLayout(elevationPlot.Plot, true, true);
+
             multiPlot.Refresh();
         }
 
         private void HighlightPoint(double distance)
         {
-
+            highlightLine.IsVisible = true;
             highlightLine.X = distance;
 
-            //double[] array = DistanceStream.ToArray<double>();
+            // find index in Streams
+            double[] full_distances_array = DistanceStream.ToObject<double[]>();
 
-            int index = Array.IndexOf(distances, Convert.ToInt32(distance*1000));
-            //var nearest = array.MinBy(x => Math.Abs((long)x - distance));
+            double closest_distance = ClosestValue(full_distances_array, distance * 1000);
+            int index = Array.IndexOf(full_distances_array, closest_distance);
 
-            if (index != -1)
+            // label string
+            double elevation = AltitudeStream[index].ToObject<double>();
+            TimeSpan time = TimeSpan.FromSeconds(TimeStream[index].ToObject<double>());
+            double heartrate = HeartRateStream[index].ToObject<double>();
+            string info =
+                String.Format("Distance: {0} km\n", Math.Round(distance, 2)) +
+                String.Format("Elevation: {0} m\n", Math.Round(elevation, 2)) +
+                "Time: " + time.ToString(@"hh\:mm\:ss") + "\n" +
+                String.Format("Heartrate: {0} bpm\n", Math.Round(heartrate));
+
+            infoToolTip.X = distance;
+            var x = elevationPlot.Plot.YAxis.GetSize();
+            double yMax = elevationPlot.Plot.YAxis.Dims.Max;
+            double yMin = elevationPlot.Plot.YAxis.Dims.Min;
+            infoToolTip.Y = ((yMax + yMin) / 2) + ((yMax-yMin) * 0.2);
+            infoToolTip.Label = info;
+
+            try
+            {
+                elevationPlot.Render();
+                multiPlot.Render();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            // MAP           
+
+            if (index > 0)
             {
                 var jtoken_point = LatLngStream[index];
                 double lat = jtoken_point[0].ToObject<double>();
                 double lng = jtoken_point[1].ToObject<double>();
 
                 PointLatLng point = new PointLatLng(lat, lng);
-                marker = new GMarkerCross(point);
-
-                Map.Overlays[0].IsVisibile = false;
-                Map.Overlays[0].IsVisibile = true;
-                Map.Refresh();
+                markers.Markers.Clear();
+                markers.Markers.Add(new GMarkerGoogle(point, GMarkerGoogleType.yellow));
 
             }
+        }
 
-            
-
-            //elevationPlot.Plot.Add(line);
-            elevationPlot.Refresh();
-            multiPlot.Refresh();
+        private void CleanHighlight()
+        {
+            highlightLine.IsVisible = false;
+            markers.Markers.Clear();
         }
 
         private void Map_MouseClick(object sender, MouseEventArgs e)
@@ -207,9 +237,54 @@ namespace StravaViewer.Forms
 
         private void elevationPlot_MouseMove(object sender, MouseEventArgs e)
         {
+            //(double x, double y) = elevationPlot.GetMouseCoordinates();
+
+            //HighlightPoint(x);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
             (double x, double y) = elevationPlot.GetMouseCoordinates();
+            //elevationPlot.Mou
 
             HighlightPoint(x);
+        }
+
+        private void elevationPlot_MouseEnter(object sender, EventArgs e)
+        {
+            timer1.Start();
+        }
+
+        private void elevationPlot_MouseLeave(object sender, EventArgs e)
+        {
+            timer1.Stop();
+            CleanHighlight();
+        }
+
+        private double ClosestValue(double[] array, double toFind)
+        {
+            //int toFindRound = Convert.ToInt32(toFind);
+            double closest = array[0];
+            double minDifference = Math.Abs(array[0] - toFind);
+            //double closest = array[0];
+
+            foreach (double val in array)
+            {
+                double dif = Math.Abs(toFind - val);
+
+                if (dif < minDifference)
+                {
+                    minDifference = dif;
+                    closest = val;
+                }
+            }
+
+            return closest;
+        }
+
+        private void openStravaButton_Click(object sender, EventArgs e)
+        {
+            activity.OpenInBrowser();
         }
 
         //public static int findClosest(int[] arr,

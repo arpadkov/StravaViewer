@@ -7,11 +7,13 @@ namespace StravaViewer
 {
     public partial class MainWindow : Form
     {
+        SplashScreen splashScreen = new SplashScreen();
         ActivityModel Model;
         List<ScottPlot.Plottable.ScatterPlot> HighlightLines = new List<ScottPlot.Plottable.ScatterPlot>();
 
         public MainWindow()
         {
+            splashScreen.Show();
             InitializeComponent();
 
             BarPlot.Configuration.LeftClickDragPan = false;
@@ -27,32 +29,40 @@ namespace StravaViewer
             //this.Size = new System.Drawing.Size(1200, 900);
 
 
+            //this.Model = new ActivityModel();
+            //this.Model.ModelChanged += ModelChanged;
+
+            //this.infoTypeCombo.DataSource = Enum.GetValues(typeof(InfoType));
+            //this.activityTypeCombo.DataSource = Enum.GetValues(typeof(ActivityType));
+
+            //plot();
+        }
+
+        private void LoadClient(object sender, EventArgs e)
+        {
+            //SplashScreen splashScreen = new SplashScreen();
+            //splashScreen.Show();
+
             this.Model = new ActivityModel();
             this.Model.ModelChanged += ModelChanged;
 
             this.infoTypeCombo.DataSource = Enum.GetValues(typeof(InfoType));
             this.activityTypeCombo.DataSource = Enum.GetValues(typeof(ActivityType));
 
-            //Model.Client.GetActivityStream("7351331006");
-
             plot();
-        }
 
-        private void LoadClient(object sender, EventArgs e)
-        {
+            splashScreen.Close();
+
+
+
             //Model.SetActivities();
+            //Model.DisplayTime = Model.InitializeDisplaytime();
+            //Model.SetAbstractPlot();
 
             //Model.DisplayTime = TimePeriod.FromYear(2022);
 
             //Model.ModelChanged += ModelChanged;
         }
-
-        /* TODO Misi
-         * - add 2 buttons
-         * - bind them to the NextDisplayTime() and LastDisplayTime() methods
-         * - make them fancy
-         */
-
 
         private void ModelChanged(object sender, EventArgs e)
         {
@@ -210,8 +220,8 @@ namespace StravaViewer
 
         private void PlotLine(double x1, double y1, double x2, double y2)
         {
-            ScottPlot.Plottable.ScatterPlot line = BarPlot.Plot.AddLine(x1, y1, x2, y2, Color.Black, lineWidth: 5);
-            line.LineStyle = LineStyle.Dot;
+            ScottPlot.Plottable.ScatterPlot line = BarPlot.Plot.AddLine(x1, y1, x2, y2, Color.Black, lineWidth: 3);
+            //line.LineStyle = LineStyle.Dot;
             line.IsVisible = true;
             HighlightLines.Add(line);
         }
@@ -247,14 +257,19 @@ namespace StravaViewer
 
         private void OpenDetailedActivityView(Activity activity)
         {
+            Cursor = Cursors.AppStarting;
+
             DetailedActivityView detailedActivityView = new DetailedActivityView(
                 activity,
                 Model.Client.GetActivityStream(activity.id, "latlng"),
                 Model.Client.GetActivityStream(activity.id, "distance"),
                 Model.Client.GetActivityStream(activity.id, "altitude"),
-                Model.Client.GetActivityStream(activity.id, "heartrate")
+                Model.Client.GetActivityStream(activity.id, "heartrate"),
+                Model.Client.GetActivityStream(activity.id, "time")
                 );
             detailedActivityView.Show();
+
+            Cursor = Cursors.Default;
         }
 
         private void button1_Click(object sender, EventArgs e)

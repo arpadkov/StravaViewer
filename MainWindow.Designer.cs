@@ -280,9 +280,11 @@
             this.Controls.Add(this.LastTimeButton);
             this.Controls.Add(this.NextTimeButton);
             this.Controls.Add(this.BarPlot);
+            this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(100, 100);
             this.Name = "MainWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "StravaViewer";
             this.Load += new System.EventHandler(this.LoadClient);
             this.panel1.ResumeLayout(false);
