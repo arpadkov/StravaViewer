@@ -23,12 +23,15 @@ namespace StravaViewer.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public int PlotRefreshRate {
             get {
                 return ((int)(this["PlotRefreshRate"]));
+            }
+            set {
+                this["PlotRefreshRate"] = value;
             }
         }
     }

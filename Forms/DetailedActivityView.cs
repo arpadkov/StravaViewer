@@ -64,6 +64,7 @@ namespace StravaViewer.Forms
             InitializeComponent();
 
             this.timer1.Interval = 1000 / Properties.Settings.Default.PlotRefreshRate;
+            numericUpDown1.Value = Properties.Settings.Default.PlotRefreshRate;
 
             highlightLine = new ScottPlot.Plottable.VLine();
             highlightLine.LineColor = Color.Black;
@@ -285,6 +286,11 @@ namespace StravaViewer.Forms
         private void openStravaButton_Click(object sender, EventArgs e)
         {
             activity.OpenInBrowser();
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            timer1.Interval = Convert.ToInt32(1000 / numericUpDown1.Value);
         }
 
         //public static int findClosest(int[] arr,

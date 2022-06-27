@@ -34,6 +34,9 @@
             this.multiPlot = new ScottPlot.FormsPlot();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.openStravaButton = new System.Windows.Forms.Button();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // elevationPlot
@@ -104,11 +107,45 @@
             this.openStravaButton.UseVisualStyleBackColor = true;
             this.openStravaButton.Click += new System.EventHandler(this.openStravaButton_Click);
             // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(990, 55);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            165,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(120, 23);
+            this.numericUpDown1.TabIndex = 4;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(990, 27);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(144, 15);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Plot/Map refresh rate [Hz]";
+            // 
             // DetailedActivityView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1226, 887);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.openStravaButton);
             this.Controls.Add(this.multiPlot);
             this.Controls.Add(this.Map);
@@ -116,7 +153,9 @@
             this.Name = "DetailedActivityView";
             this.Text = "DetailedActivityView";
             this.Load += new System.EventHandler(this.DetailedActivityView_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -127,5 +166,7 @@
         private ScottPlot.FormsPlot multiPlot;
         private System.Windows.Forms.Timer timer1;
         private Button openStravaButton;
+        private NumericUpDown numericUpDown1;
+        private Label label1;
     }
 }
