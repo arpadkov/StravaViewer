@@ -28,8 +28,8 @@ namespace StravaViewer.Forms
 
             InitializeComponent();
 
-            this.timer1.Interval = 1000 / 150;
-            numericUpDown1.Value = 150;
+            this.timer1.Interval = 1000 / 165;
+            numericUpDown1.Value = 165;
 
             highlightLine = new ScottPlot.Plottable.VLine();
             highlightLine.LineColor = Color.Black;
@@ -38,6 +38,8 @@ namespace StravaViewer.Forms
             infoToolTip.Label = "isnt empty";
             infoToolTip.X = 0;
             infoToolTip.Y = 0;
+
+            //MapRefreshThread = new Thread(new ThreadStart(RefreshMap));
         }
 
         private void DetailedActivityView_Load(object sender, EventArgs e)
@@ -122,21 +124,22 @@ namespace StravaViewer.Forms
 
         private void HighlightPoint(double distance)
         {
-            highlightLine.IsVisible = true;
+            //highlightLine.IsVisible = true;
             highlightLine.X = distance;
 
             // TODO: This needs refactpring
 
-            // find index in Streams
-            double[] full_distances_array = streams.distances.ToArray();
+            //find index in Streams
+            int index = streams.IndexOfClosestDistance(distance);
+            //double[] full_distances_array = streams.distances.ToArray();
 
-            double closest_distance = ClosestValue(full_distances_array, distance);
-            int index = Array.IndexOf(full_distances_array, closest_distance);
+            //double closest_distance = ClosestValue(full_distances_array, distance);
+            //int index = Array.IndexOf(full_distances_array, closest_distance);
 
-            // label string
-            double elevation = streams.elevations[index];
-            TimeSpan time = TimeSpan.FromSeconds(streams.times[index]);
-            double heartrate = streams.heartrates[index];
+            //label string
+            double elevation = streams.elevations_lowres[index];
+            TimeSpan time = TimeSpan.FromSeconds(streams.times_lowres[index]);
+            double heartrate = streams.times_lowres[index];
 
             string info =
                 String.Format("Distance: {0} km\n", Math.Round(distance, 2)) +
@@ -148,7 +151,7 @@ namespace StravaViewer.Forms
             var x = elevationPlot.Plot.YAxis.GetSize();
             double yMax = elevationPlot.Plot.YAxis.Dims.Max;
             double yMin = elevationPlot.Plot.YAxis.Dims.Min;
-            infoToolTip.Y = ((yMax + yMin) / 2) + ((yMax-yMin) * 0.2);
+            infoToolTip.Y = ((yMax + yMin) / 2) + ((yMax - yMin) * 0.2);
             infoToolTip.Label = info;
 
             try
@@ -163,12 +166,12 @@ namespace StravaViewer.Forms
             }
 
             // MAP           
-
             if (index > 0)
             {
-                PointLatLng point = new PointLatLng(streams.latlngs[index][0], streams.latlngs[index][1]);
-                markers.Markers.Clear();
-                markers.Markers.Add(new GMarkerGoogle(point, GMarkerGoogleType.yellow));
+                PointLatLng point = new PointLatLng(streams.latlngs_lowres[index][0], streams.latlngs_lowres[index][1]);
+                marker.Position = point;
+                //markers.Markers.Clear();
+                //markers.Markers.Add(new GMarkerGoogle(point, GMarkerGoogleType.yellow));
 
             }
         }
@@ -176,7 +179,12 @@ namespace StravaViewer.Forms
         private void CleanHighlight()
         {
             highlightLine.IsVisible = false;
-            markers.Markers.Clear();
+            marker.IsVisible = false;
+            infoToolTip.IsVisible = false;
+
+            elevationPlot.Render();
+            multiPlot.Render();
+            //markers.Markers.Clear();
         }
 
         private void Map_MouseClick(object sender, MouseEventArgs e)
@@ -207,6 +215,9 @@ namespace StravaViewer.Forms
 
         private void elevationPlot_MouseEnter(object sender, EventArgs e)
         {
+            marker.IsVisible = true;
+            highlightLine.IsVisible = true;
+            infoToolTip.IsVisible = true;
             timer1.Start();
         }
 

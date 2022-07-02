@@ -36,6 +36,7 @@
             this.openStravaButton = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
+            this.coordsLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -142,11 +143,21 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "Plot/Map refresh rate [Hz]";
             // 
+            // coordsLabel
+            // 
+            this.coordsLabel.AutoSize = true;
+            this.coordsLabel.Location = new System.Drawing.Point(994, 174);
+            this.coordsLabel.Name = "coordsLabel";
+            this.coordsLabel.Size = new System.Drawing.Size(38, 15);
+            this.coordsLabel.TabIndex = 6;
+            this.coordsLabel.Text = "label2";
+            // 
             // DetailedActivityView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1226, 887);
+            this.Controls.Add(this.coordsLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.openStravaButton);
@@ -171,5 +182,6 @@
         private Button openStravaButton;
         private NumericUpDown numericUpDown1;
         private Label label1;
+        private Label coordsLabel;
     }
 }

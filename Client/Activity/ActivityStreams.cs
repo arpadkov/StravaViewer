@@ -15,9 +15,9 @@ namespace StravaViewer.Client.Activity
         public double[] heartrates_lowres;
         public List<double> velocities = new List<double>();
         public double[] velocities_lowres;
-
         public List<float[]> latlngs = new List<float[]>();
-        
+        public List<float[]> latlngs_lowres = new List<float[]>();
+
 
         public ActivityStreams(Dictionary<string, JArray> JStreams, int resolution)
         {
@@ -56,6 +56,12 @@ namespace StravaViewer.Client.Activity
                 elevations_list_lowres.Add((double)JStreams["elevation"][index]);
                 heartrates_list_lowres.Add((double)JStreams["heartrate"][index]);
                 velocities_list_lowres.Add((double)JStreams["heartrate"][index]);
+
+                // Filling up LatLng List
+                float[] coords = new float[2];
+                coords[0] = (float)JStreams["latlng"][index][0];
+                coords[1] = (float)JStreams["latlng"][index][1];
+                latlngs_lowres.Add(coords);
             }
 
             // Converting lowres lists to arrays
@@ -64,6 +70,26 @@ namespace StravaViewer.Client.Activity
             elevations_lowres = elevations_list_lowres.ToArray();
             heartrates_lowres = heartrates_list_lowres.ToArray();
             velocities_lowres = velocities_list_lowres.ToArray();
+        }
+
+        public int IndexOfClosestDistance(double distance)
+        {
+            double closest = distances_lowres[0];
+            double minDifference = Math.Abs(distances_lowres[0] - distance);
+
+            foreach (double val in distances_lowres)
+            {
+                double dif = Math.Abs(distance - val);
+
+                if (dif < minDifference)
+                {
+                    minDifference = dif;
+                    closest = val;
+                }
+            }
+
+            int index = Array.IndexOf(distances_lowres, closest);
+            return index;
         }
     }
 }
