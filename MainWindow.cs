@@ -2,6 +2,7 @@ using StravaViewer.Models;
 using StravaViewer.Models.AbstractPlot;
 using StravaViewer.Forms;
 using ScottPlot;
+using StravaViewer.Client.Activity;
 
 namespace StravaViewer
 {
@@ -259,14 +260,12 @@ namespace StravaViewer
         {
             Cursor = Cursors.AppStarting;
 
-            DetailedActivityView detailedActivityView = new DetailedActivityView(
-                activity,
-                Model.Client.GetActivityStream(activity.id, "latlng"),
-                Model.Client.GetActivityStream(activity.id, "distance"),
-                Model.Client.GetActivityStream(activity.id, "altitude"),
-                Model.Client.GetActivityStream(activity.id, "heartrate"),
-                Model.Client.GetActivityStream(activity.id, "time")
-                );
+            // TODO: StravaClient could return ActivityStreams object
+            var JStreams = Model.Client.GetActivityStreams(activity.id, new List<string> {"latlng", "distance", "altitude", "heartrate", "time", "velocity_smooth"});
+            var streams = new ActivityStreams(JStreams, 500);
+
+            DetailedActivityView detailedActivityView = new DetailedActivityView(activity, streams);
+
             detailedActivityView.Show();
 
             Cursor = Cursors.Default;

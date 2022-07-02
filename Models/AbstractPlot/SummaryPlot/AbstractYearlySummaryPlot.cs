@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StravaViewer.Client.Activity;
+using System;
 
 namespace StravaViewer.Models.AbstractPlot
 {

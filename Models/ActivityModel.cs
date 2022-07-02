@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using StravaViewer.Client;
+using StravaViewer.Client.Activity;
 using StravaViewer.Models.AbstractPlot;
 
 namespace StravaViewer.Models

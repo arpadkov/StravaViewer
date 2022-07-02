@@ -99,6 +99,7 @@
             // 
             // openStravaButton
             // 
+            this.openStravaButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.openStravaButton.Location = new System.Drawing.Point(990, 483);
             this.openStravaButton.Name = "openStravaButton";
             this.openStravaButton.Size = new System.Drawing.Size(108, 23);
@@ -109,6 +110,7 @@
             // 
             // numericUpDown1
             // 
+            this.numericUpDown1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown1.Location = new System.Drawing.Point(990, 55);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             165,
@@ -132,6 +134,7 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(990, 27);
             this.label1.Name = "label1";

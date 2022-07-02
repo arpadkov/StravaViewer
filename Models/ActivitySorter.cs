@@ -1,4 +1,6 @@
-﻿namespace StravaViewer.Models
+﻿using StravaViewer.Client.Activity;
+
+namespace StravaViewer.Models
 {
     internal class ActivitySorter
     {

@@ -1,9 +1,10 @@
 ﻿using System;
 using GMap.NET;
 using Newtonsoft.Json.Linq;
+using StravaViewer.Models;
 using StravaViewer.Models.AbstractPlot;
 
-namespace StravaViewer.Models
+namespace StravaViewer.Client.Activity
 {
     public enum ActivityType
     {
@@ -32,13 +33,13 @@ namespace StravaViewer.Models
 
         public Activity(JObject json)
         {
-            #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            this.id = json["id"].ToString();
-            this.name = json["name"].ToString();
-            this.distance = json["distance"].ToObject<float>();
-            this.moving_time = json["moving_time"].ToObject<float>();
-            this.elapsed_time = json["elapsed_time"].ToObject<float>();            
-            this.total_elevation_gain = json["total_elevation_gain"].ToObject<float>();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            id = json["id"].ToString();
+            name = json["name"].ToString();
+            distance = json["distance"].ToObject<float>();
+            moving_time = json["moving_time"].ToObject<float>();
+            elapsed_time = json["elapsed_time"].ToObject<float>();
+            total_elevation_gain = json["total_elevation_gain"].ToObject<float>();
 
             string start_date_string = json["start_date"].ToString();
             start_date = Convert.ToDateTime(start_date_string);
@@ -46,7 +47,7 @@ namespace StravaViewer.Models
             string type_string = json["type"].ToString();
             type = (ActivityType)Enum.Parse(typeof(ActivityType), type_string);
 
-                // TODO this is baaad
+            // TODO this is baaad
             if (type == ActivityType.Run && json["start_latlng"].First != null)
             {
                 //var test = json["start_latlng"].First;
@@ -54,7 +55,7 @@ namespace StravaViewer.Models
                 start_lng = json["start_latlng"].Last.ToObject<double>();
                 //this.start_point = new PointLatLng(start_lat, start_lng);
             }
-            #pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         public float GetValue(InfoType type)
@@ -76,7 +77,7 @@ namespace StravaViewer.Models
 
             set
             {
-                this.boundingRectangle = value;
+                boundingRectangle = value;
             }
         }
 
@@ -89,7 +90,7 @@ namespace StravaViewer.Models
 
         public override string ToString()
         {
-            return String.Format("{0} - {1} km", name, distance/1000);
+            return string.Format("{0} - {1} km", name, distance / 1000);
         }
 
         public string Name

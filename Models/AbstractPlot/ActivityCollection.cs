@@ -1,4 +1,6 @@
-﻿namespace StravaViewer.Models.AbstractPlot
+﻿using StravaViewer.Client.Activity;
+
+namespace StravaViewer.Models.AbstractPlot
 {
     public class ActivityCollection
     {
