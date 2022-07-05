@@ -36,7 +36,6 @@
             this.openStravaButton = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.coordsLabel = new System.Windows.Forms.Label();
             this.lapsGridView = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lapsGridView)).BeginInit();
@@ -46,10 +45,10 @@
             // 
             this.elevationPlot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.elevationPlot.Location = new System.Drawing.Point(28, 512);
+            this.elevationPlot.Location = new System.Drawing.Point(13, 512);
             this.elevationPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.elevationPlot.Name = "elevationPlot";
-            this.elevationPlot.Size = new System.Drawing.Size(1139, 196);
+            this.elevationPlot.Size = new System.Drawing.Size(1439, 196);
             this.elevationPlot.TabIndex = 0;
             this.elevationPlot.MouseEnter += new System.EventHandler(this.elevationPlot_MouseEnter);
             this.elevationPlot.MouseLeave += new System.EventHandler(this.elevationPlot_MouseLeave);
@@ -67,7 +66,7 @@
             this.Map.GrayScaleMode = false;
             this.Map.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
             this.Map.LevelsKeepInMemory = 5;
-            this.Map.Location = new System.Drawing.Point(95, 12);
+            this.Map.Location = new System.Drawing.Point(13, 12);
             this.Map.MarkersEnabled = true;
             this.Map.MaxZoom = 18;
             this.Map.MinZoom = 2;
@@ -81,7 +80,7 @@
             this.Map.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
             this.Map.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.Map.ShowTileGridLines = false;
-            this.Map.Size = new System.Drawing.Size(839, 494);
+            this.Map.Size = new System.Drawing.Size(1037, 494);
             this.Map.TabIndex = 1;
             this.Map.Zoom = 13D;
             this.Map.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Map_MouseClick);
@@ -90,10 +89,10 @@
             // 
             this.multiPlot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.multiPlot.Location = new System.Drawing.Point(28, 693);
+            this.multiPlot.Location = new System.Drawing.Point(13, 690);
             this.multiPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.multiPlot.Name = "multiPlot";
-            this.multiPlot.Size = new System.Drawing.Size(1139, 199);
+            this.multiPlot.Size = new System.Drawing.Size(1439, 199);
             this.multiPlot.TabIndex = 2;
             // 
             // timer1
@@ -104,7 +103,7 @@
             // openStravaButton
             // 
             this.openStravaButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.openStravaButton.Location = new System.Drawing.Point(990, 483);
+            this.openStravaButton.Location = new System.Drawing.Point(1394, 463);
             this.openStravaButton.Name = "openStravaButton";
             this.openStravaButton.Size = new System.Drawing.Size(108, 23);
             this.openStravaButton.TabIndex = 3;
@@ -115,7 +114,7 @@
             // numericUpDown1
             // 
             this.numericUpDown1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDown1.Location = new System.Drawing.Point(990, 55);
+            this.numericUpDown1.Location = new System.Drawing.Point(1382, 30);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             165,
             0,
@@ -140,37 +139,34 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(990, 27);
+            this.label1.Location = new System.Drawing.Point(1370, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(144, 15);
             this.label1.TabIndex = 5;
             this.label1.Text = "Plot/Map refresh rate [Hz]";
             // 
-            // coordsLabel
-            // 
-            this.coordsLabel.AutoSize = true;
-            this.coordsLabel.Location = new System.Drawing.Point(990, 447);
-            this.coordsLabel.Name = "coordsLabel";
-            this.coordsLabel.Size = new System.Drawing.Size(38, 15);
-            this.coordsLabel.TabIndex = 6;
-            this.coordsLabel.Text = "label2";
-            // 
             // lapsGridView
             // 
+            this.lapsGridView.AllowUserToAddRows = false;
+            this.lapsGridView.AllowUserToDeleteRows = false;
+            this.lapsGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lapsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.lapsGridView.Location = new System.Drawing.Point(990, 96);
+            this.lapsGridView.Location = new System.Drawing.Point(1071, 77);
             this.lapsGridView.Name = "lapsGridView";
+            this.lapsGridView.ReadOnly = true;
+            this.lapsGridView.RowHeadersVisible = false;
             this.lapsGridView.RowTemplate.Height = 25;
-            this.lapsGridView.Size = new System.Drawing.Size(224, 332);
+            this.lapsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.lapsGridView.Size = new System.Drawing.Size(431, 334);
             this.lapsGridView.TabIndex = 7;
+            this.lapsGridView.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.lapsGridView_CellMouseEnter);
             // 
             // DetailedActivityView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1226, 887);
+            this.ClientSize = new System.Drawing.Size(1526, 887);
             this.Controls.Add(this.lapsGridView);
-            this.Controls.Add(this.coordsLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.openStravaButton);
@@ -196,7 +192,6 @@
         private Button openStravaButton;
         private NumericUpDown numericUpDown1;
         private Label label1;
-        private Label coordsLabel;
         private DataGridView lapsGridView;
     }
 }

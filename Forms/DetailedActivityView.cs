@@ -14,7 +14,7 @@ namespace StravaViewer.Forms
     {
         Activity activity;
         ActivityStreams streams;
-        DataTable lapsTable;
+        ActivityLaps laps;
 
         ScottPlot.Plottable.VLine highlightLine;
         ScottPlot.Plottable.Tooltip infoToolTip;
@@ -26,11 +26,11 @@ namespace StravaViewer.Forms
 
         
 
-        public DetailedActivityView(Activity activity, ActivityStreams streams, DataTable lapsTable)
+        public DetailedActivityView(Activity activity, ActivityStreams streams, ActivityLaps laps)
         {
             this.activity = activity;
             this.streams = streams;
-            this.lapsTable = lapsTable;
+            this.laps = laps;
 
             InitializeComponent();
 
@@ -45,7 +45,7 @@ namespace StravaViewer.Forms
             infoToolTip.X = 0;
             infoToolTip.Y = 0;
 
-            lapsGridView.DataSource = lapsTable;
+            lapsGridView.DataSource = laps.LapsTable;
 
             //this.Cursor = new Cursor(Cursor.Current.Handle);
 
@@ -184,6 +184,11 @@ namespace StravaViewer.Forms
             }
         }
 
+        private void HighlightSection(int lapIndex)
+        {
+            //float start_distance = 
+        }
+
         private void CleanHighlight()
         {
             highlightLine.IsVisible = false;
@@ -264,6 +269,26 @@ namespace StravaViewer.Forms
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             timer1.Interval = Convert.ToInt32(1000 / numericUpDown1.Value);
+        }
+
+        private void lapsGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            int index = e.RowIndex;
+
+            HighlightSection(index);
+
+            foreach (DataGridViewRow row in lapsGridView.Rows)
+            {
+                if (row.Index == index)
+                {
+                    row.Selected = true;
+                }
+                else
+                {
+                    row.Selected = false;
+                }
+
+            }
         }
 
         //public static int findClosest(int[] arr,
