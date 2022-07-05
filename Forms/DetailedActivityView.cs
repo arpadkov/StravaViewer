@@ -5,6 +5,7 @@ using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using GMap.NET.MapProviders;
 using ScottPlot;
+using System.Data;
 using StravaViewer.Client.Activity;
 
 namespace StravaViewer.Forms
@@ -13,23 +14,28 @@ namespace StravaViewer.Forms
     {
         Activity activity;
         ActivityStreams streams;
+        DataTable lapsTable;
 
         ScottPlot.Plottable.VLine highlightLine;
         ScottPlot.Plottable.Tooltip infoToolTip;
-        //ScottPlot.PlottableVline
+        ScottPlot.Plottable.SignalPlotXY elevationSignaPlot;
+        //ScottPlot.PlottableVline vline;
 
         GMapOverlay markers;
         GMapMarker marker;
 
-        public DetailedActivityView(Activity activity, ActivityStreams streams)
+        
+
+        public DetailedActivityView(Activity activity, ActivityStreams streams, DataTable lapsTable)
         {
             this.activity = activity;
             this.streams = streams;
+            this.lapsTable = lapsTable;
 
             InitializeComponent();
 
-            this.timer1.Interval = 1000 / 165;
-            numericUpDown1.Value = 165;
+            this.timer1.Interval = 1000 / 30;
+            numericUpDown1.Value = 30;
 
             highlightLine = new ScottPlot.Plottable.VLine();
             highlightLine.LineColor = Color.Black;
@@ -38,6 +44,10 @@ namespace StravaViewer.Forms
             infoToolTip.Label = "isnt empty";
             infoToolTip.X = 0;
             infoToolTip.Y = 0;
+
+            lapsGridView.DataSource = lapsTable;
+
+            //this.Cursor = new Cursor(Cursor.Current.Handle);
 
             //MapRefreshThread = new Thread(new ThreadStart(RefreshMap));
         }
@@ -90,16 +100,16 @@ namespace StravaViewer.Forms
         private void CreateElevationPlot()
         {
             //var plt = new ScottPlot.Plottable.ScatterPlot(streams.distances_lowres, streams.elevations_lowres);
-            var plt = elevationPlot.Plot.AddSignalXY(streams.distances_lowres, streams.elevations_lowres);
-            plt.Color = Color.SpringGreen;
-            plt.LineWidth = 2;
-            plt.MarkerSize = 0;
-            plt.FillBelow(Color.SpringGreen, Color.Transparent);
+            elevationSignaPlot = elevationPlot.Plot.AddSignalXY(streams.distances_lowres, streams.elevations_lowres);
+            elevationSignaPlot.Color = Color.SpringGreen;
+            elevationSignaPlot.LineWidth = 2;
+            elevationSignaPlot.MarkerSize = 0;
+            elevationSignaPlot.FillBelow(Color.SpringGreen, Color.Transparent);
 
             //this.elevationPlot.Plot.XAxis.Label("Distance [km]");
             //this.elevationPlot.Plot.YAxis.Label("Elevation [m]");
 
-            elevationPlot.Plot.Add(plt);
+            elevationPlot.Plot.Add(elevationSignaPlot);
 
             elevationPlot.Plot.Add(highlightLine);
             elevationPlot.Plot.Add(infoToolTip);
@@ -124,17 +134,15 @@ namespace StravaViewer.Forms
 
         private void HighlightPoint(double distance)
         {
-            //highlightLine.IsVisible = true;
             highlightLine.X = distance;
 
             // TODO: This needs refactpring
 
             //find index in Streams
-            int index = streams.IndexOfClosestDistance(distance);
-            //double[] full_distances_array = streams.distances.ToArray();
+            //int index = streams.IndexOfClosestDistance(distance);
+            (double mouseCoordX, _) = elevationPlot.GetMouseCoordinates();
+            (double pointX, double pointY, int index) = elevationSignaPlot.GetPointNearestX(mouseCoordX);
 
-            //double closest_distance = ClosestValue(full_distances_array, distance);
-            //int index = Array.IndexOf(full_distances_array, closest_distance);
 
             //label string
             double elevation = streams.elevations_lowres[index];
@@ -158,7 +166,7 @@ namespace StravaViewer.Forms
             {
                 //highlightLine.RenderLine();
                 elevationPlot.Render();
-                multiPlot.Render();
+                //multiPlot.Render();
             }
             catch (Exception ex)
             {
@@ -215,6 +223,7 @@ namespace StravaViewer.Forms
 
         private void elevationPlot_MouseEnter(object sender, EventArgs e)
         {
+            //System.Windows.Forms.Cursor.Hide();
             marker.IsVisible = true;
             highlightLine.IsVisible = true;
             infoToolTip.IsVisible = true;
@@ -223,6 +232,7 @@ namespace StravaViewer.Forms
 
         private void elevationPlot_MouseLeave(object sender, EventArgs e)
         {
+            //System.Windows.Forms.Cursor.Show();
             timer1.Stop();
             CleanHighlight();
         }

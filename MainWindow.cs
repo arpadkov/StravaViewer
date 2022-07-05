@@ -246,10 +246,7 @@ namespace StravaViewer
                 {
                     if (activity.BoundingRectangle.Contains(x, y))
                     {
-                        //JArray LatLngStream = Model.Client.GetActivityStream(activity.id, "latlng");
                         OpenDetailedActivityView(activity);
-
-                        //activity.OpenInBrowser();
                         return;
                     }
                 }
@@ -264,7 +261,9 @@ namespace StravaViewer
             var JStreams = Model.Client.GetActivityStreams(activity.id, new List<string> {"latlng", "distance", "altitude", "heartrate", "time", "velocity_smooth"});
             var streams = new ActivityStreams(JStreams, 500);
 
-            DetailedActivityView detailedActivityView = new DetailedActivityView(activity, streams);
+            var laps = Model.Client.ListActivityLaps(activity.id);
+
+            DetailedActivityView detailedActivityView = new DetailedActivityView(activity, streams, laps);
 
             detailedActivityView.Show();
 

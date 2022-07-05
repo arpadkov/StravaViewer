@@ -37,7 +37,9 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.coordsLabel = new System.Windows.Forms.Label();
+            this.lapsGridView = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lapsGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // elevationPlot
@@ -60,6 +62,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Map.Bearing = 0F;
             this.Map.CanDragMap = true;
+            this.Map.Cursor = System.Windows.Forms.Cursors.Cross;
             this.Map.EmptyTileColor = System.Drawing.Color.Navy;
             this.Map.GrayScaleMode = false;
             this.Map.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
@@ -146,17 +149,27 @@
             // coordsLabel
             // 
             this.coordsLabel.AutoSize = true;
-            this.coordsLabel.Location = new System.Drawing.Point(994, 174);
+            this.coordsLabel.Location = new System.Drawing.Point(990, 447);
             this.coordsLabel.Name = "coordsLabel";
             this.coordsLabel.Size = new System.Drawing.Size(38, 15);
             this.coordsLabel.TabIndex = 6;
             this.coordsLabel.Text = "label2";
+            // 
+            // lapsGridView
+            // 
+            this.lapsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.lapsGridView.Location = new System.Drawing.Point(990, 96);
+            this.lapsGridView.Name = "lapsGridView";
+            this.lapsGridView.RowTemplate.Height = 25;
+            this.lapsGridView.Size = new System.Drawing.Size(224, 332);
+            this.lapsGridView.TabIndex = 7;
             // 
             // DetailedActivityView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1226, 887);
+            this.Controls.Add(this.lapsGridView);
             this.Controls.Add(this.coordsLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericUpDown1);
@@ -168,6 +181,7 @@
             this.Text = "DetailedActivityView";
             this.Load += new System.EventHandler(this.DetailedActivityView_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lapsGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,5 +197,6 @@
         private NumericUpDown numericUpDown1;
         private Label label1;
         private Label coordsLabel;
+        private DataGridView lapsGridView;
     }
 }

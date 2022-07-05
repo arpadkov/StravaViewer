@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Text;
+using System.Data;
 
 namespace StravaViewer.Client
 {
@@ -236,9 +236,38 @@ namespace StravaViewer.Client
             return JStreams;
         }
 
-        public void ListActivityLaps(string act_id)
+        public DataTable ListActivityLaps(string act_id)
         {
+            DataTable lapsTable = new DataTable("ActivityTable");
+            DataRow row;
 
+            // TODO: ffs please do it better
+            lapsTable.Columns.Add(new DataColumn("Index", Type.GetType("System.Int32")));
+            lapsTable.Columns.Add(new DataColumn("Distance", Type.GetType("System.Single")));
+            lapsTable.Columns.Add(new DataColumn("Average Pace", Type.GetType("System.Single")));
+            lapsTable.Columns.Add(new DataColumn("Time", Type.GetType("System.Single")));
+            lapsTable.Columns.Add(new DataColumn("Average Heartrate", Type.GetType("System.Single")));
+
+
+            string laps_url = "https://www.strava.com/api/v3/activities/" + act_id + "/laps?";
+
+            Dictionary<string, string> payload_dict = new Dictionary<string, string>{};
+
+            string response = HttpRequest.GetWithToken(laps_url, payload_dict, access_token);
+            var json_data = JArray.Parse(response);
+
+            foreach (var Jlap in json_data)
+            {
+                row = lapsTable.NewRow();
+                row["Index"] = Jlap["lap_index"].ToObject<int>();
+                row["Distance"] = Jlap["distance"].ToObject<float>();
+                row["Average Pace"] = Jlap["average_speed"].ToObject<float>();
+                row["Time"] = Jlap["elapsed_time"].ToObject<float>();
+                row["Average Heartrate"] = Jlap["average_heartrate"].ToObject<float>();
+                lapsTable.Rows.Add(row);
+            }
+
+            return lapsTable;
         }
 
         private void UploadActivity(string filepath)
