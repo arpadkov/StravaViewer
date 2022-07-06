@@ -160,6 +160,7 @@
             this.lapsGridView.Size = new System.Drawing.Size(431, 334);
             this.lapsGridView.TabIndex = 7;
             this.lapsGridView.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.lapsGridView_CellMouseEnter);
+            this.lapsGridView.MouseLeave += new System.EventHandler(this.lapsGridView_MouseLeave);
             // 
             // DetailedActivityView
             // 

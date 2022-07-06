@@ -21,7 +21,8 @@ namespace StravaViewer.Client.Activity
 
             foreach (var Jlap in JLaps)
             {
-                var x = new ActivityLap(Jlap.ToObject<JObject>());
+                var lap = new ActivityLap(Jlap.ToObject<JObject>());
+                laps.Add(lap);
 
                 row = LapsTable.NewRow();
                 row["Index"] = Jlap["lap_index"].ToObject<int>();
@@ -31,6 +32,11 @@ namespace StravaViewer.Client.Activity
                 row["Average Heartrate"] = Jlap["average_heartrate"].ToObject<float>();
                 LapsTable.Rows.Add(row);
             }
+        }
+
+        public ActivityLap GetActivityLap(int index)
+        {
+            return laps[index];
         }
     }
 }

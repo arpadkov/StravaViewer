@@ -17,6 +17,7 @@ namespace StravaViewer.Forms
         ActivityLaps laps;
 
         ScottPlot.Plottable.VLine highlightLine;
+        ScottPlot.Plottable.Polygon highlightPolygon;
         ScottPlot.Plottable.Tooltip infoToolTip;
         ScottPlot.Plottable.SignalPlotXY elevationSignaPlot;
         //ScottPlot.PlottableVline vline;
@@ -39,11 +40,17 @@ namespace StravaViewer.Forms
 
             highlightLine = new ScottPlot.Plottable.VLine();
             highlightLine.LineColor = Color.Black;
+            highlightLine.IsVisible = false;
+
+            highlightPolygon = new ScottPlot.Plottable.Polygon(new double[4], new double[4]);
+            highlightPolygon.FillColor = Color.FromArgb(50, Color.DarkSlateGray);
+            highlightPolygon.LineWidth = 0;
 
             infoToolTip = new ScottPlot.Plottable.Tooltip();
             infoToolTip.Label = "isnt empty";
             infoToolTip.X = 0;
             infoToolTip.Y = 0;
+            infoToolTip.IsVisible = false;
 
             lapsGridView.DataSource = laps.LapsTable;
 
@@ -112,6 +119,7 @@ namespace StravaViewer.Forms
             elevationPlot.Plot.Add(elevationSignaPlot);
 
             elevationPlot.Plot.Add(highlightLine);
+            elevationPlot.Plot.Add(highlightPolygon);
             elevationPlot.Plot.Add(infoToolTip);
 
             elevationPlot.Refresh();
@@ -126,6 +134,7 @@ namespace StravaViewer.Forms
 
             multiPlot.Plot.Add(heartratePlot);
             multiPlot.Plot.Add(highlightLine);
+            multiPlot.Plot.Add(highlightPolygon);
 
             multiPlot.Plot.MatchLayout(elevationPlot.Plot, true, true);
 
@@ -156,7 +165,7 @@ namespace StravaViewer.Forms
                 String.Format("Heartrate: {0} bpm\n", Math.Round(heartrate));
 
             infoToolTip.X = distance;
-            var x = elevationPlot.Plot.YAxis.GetSize();
+            //var x = elevationPlot.Plot.YAxis.GetSize();
             double yMax = elevationPlot.Plot.YAxis.Dims.Max;
             double yMin = elevationPlot.Plot.YAxis.Dims.Min;
             infoToolTip.Y = ((yMax + yMin) / 2) + ((yMax - yMin) * 0.2);
@@ -166,7 +175,7 @@ namespace StravaViewer.Forms
             {
                 //highlightLine.RenderLine();
                 elevationPlot.Render();
-                //multiPlot.Render();
+                multiPlot.Render();
             }
             catch (Exception ex)
             {
@@ -186,10 +195,32 @@ namespace StravaViewer.Forms
 
         private void HighlightSection(int lapIndex)
         {
-            //float start_distance = 
+            if (lapIndex < 0)
+            {
+                return;
+            }
+
+            ActivityLap lap = laps.GetActivityLap(lapIndex);
+            double start_distance = streams.distances[lap.start_index];
+            double end_distance = streams.distances[lap.end_index];
+
+            // draw poligon to highlight the section
+            highlightPolygon.IsVisible = true;
+            //double yMax = elevationPlot.Plot.YAxis.Dims.Max;
+            //double yMin = elevationPlot.Plot.YAxis.Dims.Min;
+            double yMax = 10000;
+            double yMin = -100;
+            double[] xs = {start_distance, end_distance, end_distance, start_distance};
+            double[] ys = { yMin, yMin, yMax, yMax};
+
+            highlightPolygon.Xs = xs;
+            highlightPolygon.Ys = ys;
+
+            elevationPlot.Render();
+            multiPlot.Render();
         }
 
-        private void CleanHighlight()
+        private void CleanPointHighlight()
         {
             highlightLine.IsVisible = false;
             marker.IsVisible = false;
@@ -198,6 +229,13 @@ namespace StravaViewer.Forms
             elevationPlot.Render();
             multiPlot.Render();
             //markers.Markers.Clear();
+        }
+
+        private void CleanSectionHighlight()
+        {
+            highlightPolygon.IsVisible = false;
+            elevationPlot.Render();
+            multiPlot.Render();
         }
 
         private void Map_MouseClick(object sender, MouseEventArgs e)
@@ -239,7 +277,7 @@ namespace StravaViewer.Forms
         {
             //System.Windows.Forms.Cursor.Show();
             timer1.Stop();
-            CleanHighlight();
+            CleanPointHighlight();
         }
 
         private double ClosestValue(double[] array, double toFind)
@@ -289,6 +327,11 @@ namespace StravaViewer.Forms
                 }
 
             }
+        }
+
+        private void lapsGridView_MouseLeave(object sender, EventArgs e)
+        {
+            CleanSectionHighlight();
         }
 
         //public static int findClosest(int[] arr,

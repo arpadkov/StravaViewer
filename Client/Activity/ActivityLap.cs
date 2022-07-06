@@ -2,19 +2,19 @@
 
 namespace StravaViewer.Client.Activity
 {
-    internal class ActivityLap
+    public class ActivityLap
     {
-        int index;
-        TimeSpan time;
-        DateTime start_date;
-        float distance;
-        float elevation_gain;
-        float average_speed;
-        float max_speed;
-        float average_heartrate;
-        float max_heartrate;
-        int start_index;
-        int end_index;
+        public int index;
+        public TimeSpan time;
+        public DateTime start_date;
+        public float distance;
+        public float elevation_gain;
+        public float average_speed;
+        public float max_speed;
+        public float average_heartrate;
+        public float max_heartrate;
+        public int start_index;
+        public int end_index;
 
         public ActivityLap(JObject Jlap)
         {
