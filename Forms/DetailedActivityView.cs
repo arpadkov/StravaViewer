@@ -25,7 +25,8 @@ namespace StravaViewer.Forms
         GMapOverlay markers;
         GMapMarker marker;
 
-        
+        double? current_lat;
+        double? current_lng;
 
         public DetailedActivityView(Activity activity, ActivityStreams streams, ActivityLaps laps)
         {
@@ -73,7 +74,9 @@ namespace StravaViewer.Forms
             double temp_marker_lng = streams.latlngs[0][1];
 
             markers = new GMapOverlay("markers");
-            marker = new GMarkerGoogle(new PointLatLng(temp_marker_lat, temp_marker_lng), GMarkerGoogleType.yellow);
+            var projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            string filePath = Path.Combine(projectPath, "Resources");
+            marker = new GMarkerGoogle(new PointLatLng(temp_marker_lat, temp_marker_lng), GMarkerGoogleType.blue_dot);
             //marker.Size = System.Drawing.Size(10, 10);
             markers.Markers.Add(marker);
             Map.Overlays.Add(markers);
@@ -99,7 +102,19 @@ namespace StravaViewer.Forms
             GMapRoute route = new GMapRoute(points, "A walk in the park");
             route.Stroke = new Pen(Color.Red, 3);
             routes.Routes.Add(route);
-            Map.Overlays.Add(routes);            
+            Map.Overlays.Add(routes);
+
+            // start and end marker
+            var start_marker = new GMarkerGoogle(new PointLatLng(streams.latlngs[0][0], streams.latlngs[0][1]), GMarkerGoogleType.green_big_go);
+            var end_marker = new GMarkerGoogle(new PointLatLng(streams.latlngs[streams.latlngs.Count-1][0], streams.latlngs[streams.latlngs.Count - 1][1]), GMarkerGoogleType.red_big_stop);
+            start_marker.ToolTipText = "Start here";
+            end_marker.ToolTipText = "End here";
+            start_marker.Size = new Size(32, 32);
+            end_marker.Size = new Size(32, 32);
+            start_marker.Offset = new Point(-16, -32);
+            end_marker.Offset = new Point(-16, -32);
+            markers.Markers.Add(start_marker);
+            markers.Markers.Add(end_marker);
 
             Map.Position = points[0];
         }
@@ -148,15 +163,15 @@ namespace StravaViewer.Forms
             // TODO: This needs refactpring
 
             //find index in Streams
-            //int index = streams.IndexOfClosestDistance(distance);
-            (double mouseCoordX, _) = elevationPlot.GetMouseCoordinates();
-            (double pointX, double pointY, int index) = elevationSignaPlot.GetPointNearestX(mouseCoordX);
+            int index = streams.IndexOfClosestDistance(distance);
+            //(double mouseCoordX, _) = elevationPlot.GetMouseCoordinates();
+            //(double pointX, double pointY, int index) = elevationSignaPlot.GetPointNearestX(mouseCoordX);
 
 
             //label string
             double elevation = streams.elevations_lowres[index];
             TimeSpan time = TimeSpan.FromSeconds(streams.times_lowres[index]);
-            double heartrate = streams.times_lowres[index];
+            double heartrate = streams.heartrates_lowres[index];
 
             string info =
                 String.Format("Distance: {0} km\n", Math.Round(distance, 2)) +
@@ -238,33 +253,7 @@ namespace StravaViewer.Forms
             multiPlot.Render();
         }
 
-        private void Map_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                double lat = Map.FromLocalToLatLng(e.X, e.Y).Lat;
-                double lng = Map.FromLocalToLatLng(e.X, e.Y).Lng;
-
-                //coordLabel.Text = lat.ToString() + " - " + lng.ToString();
-            }
-        }
-
-        private void elevationPlot_MouseMove(object sender, MouseEventArgs e)
-        {
-            //(double x, double y) = elevationPlot.GetMouseCoordinates();
-
-            //HighlightPoint(x);
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            (double x, double y) = elevationPlot.GetMouseCoordinates();
-            //elevationPlot.Mou
-
-            HighlightPoint(x);
-        }
-
-        private void elevationPlot_MouseEnter(object sender, EventArgs e)
+        private void StartPointHighlight()
         {
             //System.Windows.Forms.Cursor.Hide();
             marker.IsVisible = true;
@@ -273,30 +262,54 @@ namespace StravaViewer.Forms
             timer1.Start();
         }
 
-        private void elevationPlot_MouseLeave(object sender, EventArgs e)
+        private void EndPointHighlight()
         {
             //System.Windows.Forms.Cursor.Show();
             timer1.Stop();
             CleanPointHighlight();
         }
 
-        private double ClosestValue(double[] array, double toFind)
+        private void timer1_Tick(object sender, EventArgs e)
         {
-            double closest = array[0];
-            double minDifference = Math.Abs(array[0] - toFind);
+            // distance needs to be determinrmined to highlight a point
+            // it is determined either from the map or from the elevationPlot
+            double distance;
 
-            foreach (double val in array)
+            // cursor is not on the map => it must be on elevationPlot
+            if (current_lat == null || current_lng == null)
             {
-                double dif = Math.Abs(toFind - val);
-
-                if (dif < minDifference)
-                {
-                    minDifference = dif;
-                    closest = val;
-                }
+                (distance, _) = elevationPlot.GetMouseCoordinates();
             }
 
-            return closest;
+            else
+            { 
+                distance = streams.DistanceFromLatLng((double)current_lat, (double)current_lng, (float)0.2);
+            }
+
+            if (distance > 0)
+            {
+                //TODO: this is bad
+                marker.IsVisible = true;
+                highlightLine.IsVisible = true;
+                infoToolTip.IsVisible = true;
+                HighlightPoint(distance);
+            }
+            else
+            {
+                CleanPointHighlight();
+            }
+
+        }
+
+        private void elevationPlot_MouseEnter(object sender, EventArgs e)
+        {
+            StartPointHighlight();
+            CleanPointHighlight();
+        }
+
+        private void elevationPlot_MouseLeave(object sender, EventArgs e)
+        {
+            EndPointHighlight();
         }
 
         private void openStravaButton_Click(object sender, EventArgs e)
@@ -332,80 +345,30 @@ namespace StravaViewer.Forms
         private void lapsGridView_MouseLeave(object sender, EventArgs e)
         {
             CleanSectionHighlight();
+            foreach (DataGridViewRow row in lapsGridView.Rows)
+            {
+                row.Selected = false;
+            }
         }
 
-        //public static int findClosest(int[] arr,
-        //                          int target)
-        //{
-        //    int n = arr.Length;
+        private void Map_MouseEnter(object sender, EventArgs e)
+        {
+            // also calls Map_MouseMove -> current_lat & lng will be set
+            StartPointHighlight();
+        }
 
-        //    // Corner cases
-        //    if (target <= arr[0])
-        //        return arr[0];
-        //    if (target >= arr[n - 1])
-        //        return arr[n - 1];
+        private void Map_MouseMove(object sender, MouseEventArgs e)
+        {
+            current_lat = Map.FromLocalToLatLng(e.X, e.Y).Lat;
+            current_lng = Map.FromLocalToLatLng(e.X, e.Y).Lng;
+        }
 
-        //    // Doing binary search
-        //    int i = 0, j = n, mid = 0;
-        //    while (i < j)
-        //    {
-        //        mid = (i + j) / 2;
-
-        //        if (arr[mid] == target)
-        //            return arr[mid];
-
-        //        /* If target is less
-        //        than array element,
-        //        then search in left */
-        //        if (target < arr[mid])
-        //        {
-
-        //            // If target is greater
-        //            // than previous to mid,
-        //            // return closest of two
-        //            if (mid > 0 && target > arr[mid - 1])
-        //                return getClosest(arr[mid - 1],
-        //                             arr[mid], target);
-
-        //            /* Repeat for left half */
-        //            j = mid;
-        //        }
-
-        //        // If target is
-        //        // greater than mid
-        //        else
-        //        {
-        //            if (mid < n - 1 && target < arr[mid + 1])
-        //                return getClosest(arr[mid],
-        //                     arr[mid + 1], target);
-        //            i = mid + 1; // update i
-        //        }
-        //    }
-
-        //    // Only single element
-        //    // left after search
-        //    return arr[mid];
-        //}
-
-        //public static int ClosestTo(this IEnumerable<int> collection, int target)
-        //{
-        //    // NB Method will return int.MaxValue for a sequence containing no elements.
-        //    // Apply any defensive coding here as necessary.
-        //    var closest = int.MaxValue;
-        //    var minDifference = int.MaxValue;
-        //    foreach (var element in collection)
-        //    {
-        //        var difference = Math.Abs((long)element - target);
-        //        if (minDifference > difference)
-        //        {
-        //            minDifference = (int)difference;
-        //            closest = element;
-        //        }
-        //    }
-
-        //    return closest;
-        //}
+        private void Map_MouseLeave(object sender, EventArgs e)
+        {
+            current_lat = null;
+            current_lng = null;
+            EndPointHighlight();
+        }
     }
-
 
 }

@@ -9,7 +9,7 @@ namespace StravaViewer.Client.Activity
         public DateTime start_date;
         public float distance;
         public float elevation_gain;
-        public float average_speed;
+        public TimeSpan average_pace;
         public float max_speed;
         public float average_heartrate;
         public float max_heartrate;
@@ -23,7 +23,11 @@ namespace StravaViewer.Client.Activity
             start_date = Convert.ToDateTime(Jlap["start_date_local"].ToString());
             distance = Jlap["distance"].ToObject<float>();
             elevation_gain = Jlap["total_elevation_gain"].ToObject<float>();
-            average_speed = Jlap["average_speed"].ToObject<float>();
+
+            float pace_ms = Jlap["average_speed"].ToObject<float>();
+            float pace_skm = 1000 / pace_ms;
+            average_pace = TimeSpan.FromSeconds(pace_skm);
+
             max_speed = Jlap["max_speed"].ToObject<float>();
             average_heartrate = Jlap["average_heartrate"].ToObject<float>();
             max_heartrate = Jlap["max_heartrate"].ToObject<float>();

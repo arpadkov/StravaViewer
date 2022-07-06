@@ -52,7 +52,6 @@
             this.elevationPlot.TabIndex = 0;
             this.elevationPlot.MouseEnter += new System.EventHandler(this.elevationPlot_MouseEnter);
             this.elevationPlot.MouseLeave += new System.EventHandler(this.elevationPlot_MouseLeave);
-            this.elevationPlot.MouseMove += new System.Windows.Forms.MouseEventHandler(this.elevationPlot_MouseMove);
             // 
             // Map
             // 
@@ -83,7 +82,9 @@
             this.Map.Size = new System.Drawing.Size(1037, 494);
             this.Map.TabIndex = 1;
             this.Map.Zoom = 13D;
-            this.Map.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Map_MouseClick);
+            this.Map.MouseEnter += new System.EventHandler(this.Map_MouseEnter);
+            this.Map.MouseLeave += new System.EventHandler(this.Map_MouseLeave);
+            this.Map.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Map_MouseMove);
             // 
             // multiPlot
             // 

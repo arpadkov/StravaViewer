@@ -91,5 +91,50 @@ namespace StravaViewer.Client.Activity
             int index = Array.IndexOf(distances_lowres, closest);
             return index;
         }
+
+        public double DistanceFromLatLng(double lat, double lng, float acceptable_radius)
+        {
+            // returns the closest distance of the activity, if the given point is inside the acceptable_radius
+            // return -1 if the given point is not inside the radius of any activity points
+
+            // distance to the first point
+            float min_distance = (float)distance((float)lat, (float)lng, latlngs_lowres[0][0], latlngs_lowres[0][1]);
+            float current_distance;
+            int index = 0;
+            int min_index = 0;
+            foreach (float[] point in latlngs_lowres)
+            {
+                current_distance = (float)distance((float)lat, (float)lng, point[0], point[1]);
+                if (current_distance < min_distance)
+                {
+                    min_distance = current_distance;
+                    min_index = index;
+                }
+                index++;
+            }
+
+            if (min_distance > acceptable_radius)
+            {
+                return -1;
+            }
+            else
+            {
+                return distances_lowres[min_index];
+            }
+
+        }
+
+        private double distance(float lat1, float lon1, float lat2, float lon2)
+        {
+            // should calculate the distance between 2 lat-lng points.. maybe
+
+            var p = 0.017453292519943295;    // Math.PI / 180
+            var c = Math.Cos;
+            var a = 0.5 - c((lat2 - lat1) * p) / 2 +
+                    c(lat1 * p) * c(lat2 * p) *
+                    (1 - c((lon2 - lon1) * p)) / 2;
+
+            return 12742 * Math.Asin(Math.Sqrt(a)); // 2 * R; R = 6371 km
+        }
     }
 }
