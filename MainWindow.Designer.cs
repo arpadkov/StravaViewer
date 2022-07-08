@@ -49,6 +49,7 @@
             this.InfoPanelDateLabel = new System.Windows.Forms.Label();
             this.uploadButton = new System.Windows.Forms.Button();
             this.fullInitButton = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -264,11 +265,21 @@
             this.fullInitButton.UseVisualStyleBackColor = true;
             this.fullInitButton.Click += new System.EventHandler(this.fullInitButton_Click);
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(533, 470);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 11;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1045, 500);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.fullInitButton);
             this.Controls.Add(this.uploadButton);
             this.Controls.Add(this.panel1);
@@ -314,5 +325,6 @@
         private Label InfoPanelElevationGainLabel;
         private Button uploadButton;
         private Button fullInitButton;
+        private Button button2;
     }
 }

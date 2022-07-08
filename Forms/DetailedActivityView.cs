@@ -64,6 +64,11 @@ namespace StravaViewer.Forms
 
         private void DetailedActivityView_Load(object sender, EventArgs e)
         {
+            splitContainer1.BorderStyle = BorderStyle.FixedSingle;
+            splitContainer2.BorderStyle = BorderStyle.FixedSingle;
+            splitContainer3.BorderStyle = BorderStyle.FixedSingle;
+            splitContainer4.BorderStyle = BorderStyle.FixedSingle;
+
             //Map.MapProvider = GoogleMapProvider.Instance;
             //Map.MapProvider = GoogleSatelliteMapProvider.Instance;
             //Map.MapProvider = GoogleTerrainMapProvider.Instance;
@@ -395,6 +400,7 @@ namespace StravaViewer.Forms
             current_lng = null;
             EndPointHighlight();
         }
+
     }
 
 }
