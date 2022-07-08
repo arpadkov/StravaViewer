@@ -5,79 +5,235 @@ namespace StravaViewer.Client.Activity
 {
     public class ActivityStreams
     {
-        public List<double> distances = new List<double>();
-        public double[] distances_lowres;
-        public List<double> times = new List<double>();
-        public double[] times_lowres;
-        public List<double> elevations = new List<double>();
-        public double[] elevations_lowres;
-        public List<double> heartrates = new List<double>();
-        public double[] heartrates_lowres;
-        public List<double> velocities = new List<double>();
-        public double[] velocities_lowres;
-        public List<float[]> latlngs = new List<float[]>();
-        public List<float[]> latlngs_lowres = new List<float[]>();
+        //public List<double>? distances = new List<double>();
+        //public double[]? distances_lowres;
+        //public List<double>? times = new List<double>();
+        //public double[]? times_lowres;
+        //public List<double>? elevations = new List<double>();
+        //public double[]? elevations_lowres;
+        //public List<double>? heartrates = new List<double>();
+        //public double[]? heartrates_lowres;
+        //public List<double>? velocities = new List<double>();
+        //public double[]? velocities_lowres;
+        public List<float[]>? latlngs = new List<float[]>();
+        public List<float[]>? latlngs_lowres = new List<float[]>();
+
+        Dictionary<string, List<double>> highres_streams;
+        Dictionary<string, double[]> lowres_streams;
+
+        int highres_resolution;
+        int lowres_resolution;
 
 
-        public ActivityStreams(Dictionary<string, JArray> JStreams, int resolution)
+
+        public ActivityStreams(Dictionary<string, JArray> JStreams, int resolution = 500)
         {
-            int length = JStreams["time"].Count;
+            highres_resolution = JStreams["time"].Count;
+            lowres_resolution = resolution;
 
-            // Initializing Lists for lowres arrays
-            List<double> distances_list_lowres = new List<double>();
-            List<double> times_list_lowres = new List<double>();
-            List<double> elevations_list_lowres = new List<double>();
-            List<double> heartrates_list_lowres = new List<double>();
-            List<double> velocities_list_lowres = new List<double>();
+            highres_streams = new Dictionary<string, List<double>>
+            {
+                {"distance", new List<double>()},
+                {"time", new List<double>()},
+                {"altitude", new List<double>()},
+                {"heartrate", new List<double>()},
+                {"velocity_smooth", new List<double>()},
+            };
 
             // Filling up highres Lists
-            for (int i = 0; i < length; i ++)
+            foreach (var item in JStreams)
             {
-                distances.Add((double)JStreams["distance"][i] / 1000);
-                times.Add((double)JStreams["time"][i]);
-                elevations.Add((double)JStreams["elevation"][i]);
-                heartrates.Add((double)JStreams["heartrate"][i]);
-                velocities.Add((double)JStreams["heartrate"][i]);
-
-                // Filling up LatLng List
-                float[] coords = new float[2];
-                coords[0] = (float)JStreams["latlng"][i][0];
-                coords[1] = (float)JStreams["latlng"][i][1];
-                latlngs.Add(coords);
+                if (item.Key == "latlng")
+                {
+                    for (int i = 0; i < highres_resolution; i++)
+                    {
+                        // Filling up LatLng List
+                        float[] coords = new float[2];
+                        coords[0] = (float)JStreams["latlng"][i][0];
+                        coords[1] = (float)JStreams["latlng"][i][1];
+                        latlngs.Add(coords);
+                    }
+                }
+                else
+                {
+                    FillHighresList(item.Key, item.Value);
+                }
             }
+
+            // Initializing Lists for lowres arrays
+            //List<double> distances_list_lowres = new List<double>();
+            //List<double> times_list_lowres = new List<double>();
+            //List<double> elevations_list_lowres = new List<double>();
+            //List<double> heartrates_list_lowres = new List<double>();
+            //List<double> velocities_list_lowres = new List<double>();
+
+
+            // Filling up highres Lists
+            //for (int i = 0; i < highres_resolution; i ++)
+            //{
+            //    distances.Add((double)JStreams["distance"][i] / 1000);
+            //    times.Add((double)JStreams["time"][i]);
+            //    elevations.Add((double)JStreams["altitude"][i]);
+            //    heartrates.Add((double)JStreams["heartrate"][i]);
+            //    velocities.Add((double)JStreams["heartrate"][i]);
+
+            //    // Filling up LatLng List
+            //    float[] coords = new float[2];
+            //    coords[0] = (float)JStreams["latlng"][i][0];
+            //    coords[1] = (float)JStreams["latlng"][i][1];
+            //    latlngs.Add(coords);
+            //}
+
+
+
+            lowres_streams = new Dictionary<string, double[]>
+            {
+                {"distance", new double[0]},
+                {"time", new double[0]},
+                {"altitude", new double[0]},
+                {"heartrate", new double[0]},
+                {"velocity_smooth", new double[0]},
+            };
 
             // Filling up lowres Lists
-            for (int i = 0; i < resolution; i++)
+            foreach (var item in JStreams)
             {
-                int index = (int)Math.Round(i * ((float)length / resolution));
+                if (item.Key == "latlng")
+                {
+                    for (int i = 0; i < lowres_resolution; i++)
+                    {
+                        int index = (int)Math.Round(i * ((float)highres_resolution / lowres_resolution));
 
-                distances_list_lowres.Add((double)JStreams["distance"][index] / 1000);
-                times_list_lowres.Add((double)JStreams["time"][index]);
-                elevations_list_lowres.Add((double)JStreams["elevation"][index]);
-                heartrates_list_lowres.Add((double)JStreams["heartrate"][index]);
-                velocities_list_lowres.Add((double)JStreams["heartrate"][index]);
-
-                // Filling up LatLng List
-                float[] coords = new float[2];
-                coords[0] = (float)JStreams["latlng"][index][0];
-                coords[1] = (float)JStreams["latlng"][index][1];
-                latlngs_lowres.Add(coords);
+                        // Filling up LatLng List
+                        float[] coords = new float[2];
+                        coords[0] = (float)JStreams["latlng"][index][0];
+                        coords[1] = (float)JStreams["latlng"][index][1];
+                        latlngs_lowres.Add(coords);
+                    }
+                }
+                else
+                {
+                    FillLowresList(item.Key, item.Value);
+                }
             }
 
+            SetUnits();
+
+            // Filling up lowres Lists
+            //for (int i = 0; i < lowres_resolution; i++)
+            //{
+            //    int index = (int)Math.Round(i * ((float)highres_resolution / lowres_resolution));
+
+            //    distances_list_lowres.Add((double)JStreams["distance"][index] / 1000);
+            //    times_list_lowres.Add((double)JStreams["time"][index]);
+            //    elevations_list_lowres.Add((double)JStreams["altitude"][index]);
+            //    heartrates_list_lowres.Add((double)JStreams["heartrate"][index]);              
+            //    velocities_list_lowres.Add((double)JStreams["heartrate"][index]);
+
+            //    // Filling up LatLng List
+            //    float[] coords = new float[2];
+            //    coords[0] = (float)JStreams["latlng"][index][0];
+            //    coords[1] = (float)JStreams["latlng"][index][1];
+            //    latlngs_lowres.Add(coords);
+            //}
+
             // Converting lowres lists to arrays
-            distances_lowres = distances_list_lowres.ToArray();
-            times_lowres = times_list_lowres.ToArray();
-            elevations_lowres = elevations_list_lowres.ToArray();
-            heartrates_lowres = heartrates_list_lowres.ToArray();
-            velocities_lowres = velocities_list_lowres.ToArray();
+            //distances_lowres = distances_list_lowres.ToArray();
+            //times_lowres = times_list_lowres.ToArray();
+            //elevations_lowres = elevations_list_lowres.ToArray();
+            //heartrates_lowres = heartrates_list_lowres.ToArray();
+            //velocities_lowres = velocities_list_lowres.ToArray();
+
+            //CheckStreams();
+        }
+
+        public double[] GetLowresStream(string stream)
+        {
+            if (lowres_streams[stream].Length == 0)
+            {
+                throw new NotImplementedException();
+            }
+
+            return lowres_streams[stream];
+        }
+
+        public List<double> GetStream(string stream)
+        {
+            return highres_streams[stream];
+        }
+
+        //public void CheckStreams()
+        //{
+        //    foreach(var item in highres_streams)
+        //    {
+        //        if (item.Value.Count == 0)
+        //        {
+        //            for (int i = 0; i < highres_resolution; i++)
+        //            {
+        //                item.Value.Add(0);
+        //            }
+        //        }
+        //    }
+
+        //    foreach (var item in lowres_streams)
+        //    {
+        //        if (item.Value.Length == 0)
+        //        {
+        //            item.Value = new double[500];
+        //        }
+        //    }
+
+
+        //}
+
+        private void FillHighresList(string stream, JArray values)
+        {
+            for (int i = 0; i < highres_resolution; i++)
+            {
+                highres_streams[stream].Add((double)values[i]);
+            }
+        }
+
+        private void FillLowresList(string stream, JArray values)
+        {
+            // temporary list, used to convert to array
+            List<double> list_lowres = new List<double>();
+
+            for (int i = 0; i < lowres_resolution; i++)
+            {
+                int index = (int)Math.Round(i * ((float)highres_resolution / lowres_resolution));
+
+                list_lowres.Add((double)values[index]);
+            }
+
+            //var x = lowres_mapping[stream];
+
+            //x = list_lowres.ToArray();
+
+            lowres_streams[stream] = list_lowres.ToArray();
+
+        }
+
+        private void SetUnits()
+        {
+            // Changing the distance values from m to km
+            for (int i = 0; i < highres_resolution; i++)
+            {
+                highres_streams["distance"][i] = highres_streams["distance"][i] / 1000;
+            }
+
+            for (int i = 0; i < lowres_resolution; i++)
+            {
+                lowres_streams["distance"][i] = lowres_streams["distance"][i] / 1000;
+            }
         }
 
         public int IndexOfClosestDistance(double distance)
         {
-            double closest = distances_lowres[0];
-            double minDifference = Math.Abs(distances_lowres[0] - distance);
+            double closest = GetLowresStream("distance")[0];
+            double minDifference = Math.Abs(GetLowresStream("distance")[0] - distance);
 
-            foreach (double val in distances_lowres)
+            foreach (double val in GetLowresStream("distance"))
             {
                 double dif = Math.Abs(distance - val);
 
@@ -88,7 +244,7 @@ namespace StravaViewer.Client.Activity
                 }
             }
 
-            int index = Array.IndexOf(distances_lowres, closest);
+            int index = Array.IndexOf(GetLowresStream("distance"), closest);
             return index;
         }
 
@@ -119,7 +275,7 @@ namespace StravaViewer.Client.Activity
             }
             else
             {
-                return distances_lowres[min_index];
+                return GetLowresStream("distance")[min_index];
             }
 
         }

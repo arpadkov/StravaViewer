@@ -28,6 +28,8 @@ namespace StravaViewer.Forms
         double? current_lat;
         double? current_lng;
 
+        bool hasHertrate = true;
+
         public DetailedActivityView(Activity activity, ActivityStreams streams, ActivityLaps laps)
         {
             this.activity = activity;
@@ -81,9 +83,15 @@ namespace StravaViewer.Forms
             markers.Markers.Add(marker);
             Map.Overlays.Add(markers);
 
+            //streams.CheckStreams();
+
             CreateRoute();
             CreateElevationPlot();
+
+
             CreateMultiPlot();
+
+            
 
             //Map.Position = new PointLatLng(activity.start_lat, activity.start_lng);
             //Map.Position = new PointLatLng(48.655, 10.299);    //Altenberg
@@ -122,7 +130,7 @@ namespace StravaViewer.Forms
         private void CreateElevationPlot()
         {
             //var plt = new ScottPlot.Plottable.ScatterPlot(streams.distances_lowres, streams.elevations_lowres);
-            elevationSignaPlot = elevationPlot.Plot.AddSignalXY(streams.distances_lowres, streams.elevations_lowres);
+            elevationSignaPlot = elevationPlot.Plot.AddSignalXY(streams.GetLowresStream("distance"), streams.GetLowresStream("altitude"));
             elevationSignaPlot.Color = Color.SpringGreen;
             elevationSignaPlot.LineWidth = 2;
             elevationSignaPlot.MarkerSize = 0;
@@ -137,19 +145,33 @@ namespace StravaViewer.Forms
             elevationPlot.Plot.Add(highlightPolygon);
             elevationPlot.Plot.Add(infoToolTip);
 
+            elevationPlot.Plot.SetAxisLimitsX(0, streams.GetStream("distance").Last());
+            elevationPlot.Plot.AxisAutoY();
+
             elevationPlot.Refresh();
         }
 
         public void CreateMultiPlot()
         {
-            var heartratePlot = new ScottPlot.Plottable.ScatterPlot(streams.distances_lowres, streams.heartrates_lowres);
-            heartratePlot.Color = Color.Red;
-            heartratePlot.LineWidth = 2;
-            heartratePlot.MarkerSize = 0;
-
-            multiPlot.Plot.Add(heartratePlot);
+            try
+            {
+                var heartratePlot = new ScottPlot.Plottable.ScatterPlot(streams.GetLowresStream("distance"), streams.GetLowresStream("heartrate"));
+                heartratePlot.Color = Color.Red;
+                heartratePlot.LineWidth = 2;
+                heartratePlot.MarkerSize = 0;
+                multiPlot.Plot.Add(heartratePlot);
+            }
+            catch
+            {
+                MessageBox.Show("The Activity does not contain Heart Rate data\nHeart rate related data will not be displayed");
+                hasHertrate = false;
+            }
+            
             multiPlot.Plot.Add(highlightLine);
             multiPlot.Plot.Add(highlightPolygon);
+
+            multiPlot.Plot.SetAxisLimitsX(0, streams.GetStream("distance").Last());
+            multiPlot.Plot.AxisAutoY();
 
             multiPlot.Plot.MatchLayout(elevationPlot.Plot, true, true);
 
@@ -169,9 +191,13 @@ namespace StravaViewer.Forms
 
 
             //label string
-            double elevation = streams.elevations_lowres[index];
-            TimeSpan time = TimeSpan.FromSeconds(streams.times_lowres[index]);
-            double heartrate = streams.heartrates_lowres[index];
+            double elevation = streams.GetLowresStream("altitude")[index];
+            TimeSpan time = TimeSpan.FromSeconds(streams.GetLowresStream("time")[index]);
+            double heartrate = 0;
+            if (hasHertrate)
+            {
+                heartrate = streams.GetLowresStream("heartrate")[index];
+            }
 
             string info =
                 String.Format("Distance: {0} km\n", Math.Round(distance, 2)) +
@@ -216,8 +242,8 @@ namespace StravaViewer.Forms
             }
 
             ActivityLap lap = laps.GetActivityLap(lapIndex);
-            double start_distance = streams.distances[lap.start_index];
-            double end_distance = streams.distances[lap.end_index];
+            double start_distance = streams.GetStream("distance")[lap.start_index];
+            double end_distance = streams.GetStream("distance")[lap.end_index];
 
             // draw poligon to highlight the section
             highlightPolygon.IsVisible = true;

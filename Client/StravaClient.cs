@@ -205,7 +205,39 @@ namespace StravaViewer.Client
             return json_data;
         }
 
-        public Dictionary<string, JArray> GetActivityStreams(string act_id, List<string> streams)
+        //public Dictionary<string, JArray> GetActivityStreams(string act_id, List<string> streams)
+        //{
+        //    // TODO: Should return ActivityStreams object
+        //    string stream_url = "https://www.strava.com/api/v3/activities/" + act_id + "/streams?";
+
+        //    string keys = "";
+        //    foreach (string key in streams)
+        //    {
+        //        keys += key + ",";
+        //    }
+
+        //    Dictionary<string, string> payload_dict = new Dictionary<string, string>
+        //        {
+        //            {"keys", keys},
+        //            {"key_by_type", "true"},
+        //        };
+
+        //    string response = HttpRequest.GetWithToken(stream_url, payload_dict, access_token);
+        //    var json_data = JObject.Parse(response)[streams[0]];
+
+        //    var JStreams = new Dictionary<string, JArray>
+        //        {
+        //            {"latlng", JObject.Parse(response)["latlng"]["data"] as JArray},
+        //            {"distance", JObject.Parse(response)["distance"]["data"] as JArray},
+        //            {"elevation", JObject.Parse(response)["altitude"]["data"] as JArray},
+        //            {"heartrate", JObject.Parse(response)["heartrate"]["data"] as JArray},
+        //            {"time", JObject.Parse(response)["time"]["data"] as JArray}
+        //        };
+
+        //    return JStreams;
+        //}
+
+        public ActivityStreams GetActivityStreams(string act_id, List<string> streams)
         {
             // TODO: Should return ActivityStreams object
             string stream_url = "https://www.strava.com/api/v3/activities/" + act_id + "/streams?";
@@ -220,21 +252,21 @@ namespace StravaViewer.Client
                 {
                     {"keys", keys},
                     {"key_by_type", "true"},
-                };
+                };            
 
             string response = HttpRequest.GetWithToken(stream_url, payload_dict, access_token);
-            var json_data = JObject.Parse(response)[streams[0]];
+            var json_data = JObject.Parse(response);
 
-            var JStreams = new Dictionary<string, JArray>
-                {
-                    {"latlng", JObject.Parse(response)["latlng"]["data"] as JArray},
-                    {"distance", JObject.Parse(response)["distance"]["data"] as JArray},
-                    {"elevation", JObject.Parse(response)["altitude"]["data"] as JArray},
-                    {"heartrate", JObject.Parse(response)["heartrate"]["data"] as JArray},
-                    {"time", JObject.Parse(response)["time"]["data"] as JArray}
-                };
+            var JStreams = new Dictionary<string, JArray>();
+            foreach (var stream in json_data.Properties())
+            {
+                string name = stream.Name;
+                var value = stream.Value["data"] as JArray;
 
-            return JStreams;
+                JStreams.Add(name, value);
+            }
+
+            return new ActivityStreams(JStreams);
         }
 
         public ActivityLaps ListActivityLaps(string act_id)

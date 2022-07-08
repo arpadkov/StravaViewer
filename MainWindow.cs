@@ -258,8 +258,8 @@ namespace StravaViewer
             Cursor = Cursors.AppStarting;
 
             // TODO: StravaClient could return ActivityStreams object
-            var JStreams = Model.Client.GetActivityStreams(activity.id, new List<string> {"latlng", "distance", "altitude", "heartrate", "time", "velocity_smooth"});
-            var streams = new ActivityStreams(JStreams, 500);
+            //var JStreams = Model.Client.GetActivityStreams(activity.id, new List<string> {"latlng", "distance", "altitude", "heartrate", "time", "velocity_smooth"});
+            var streams = Model.Client.GetActivityStreams(activity.id, new List<string> { "latlng", "distance", "altitude", "heartrate", "time", "velocity_smooth" });
 
             var laps = Model.Client.ListActivityLaps(activity.id);
 

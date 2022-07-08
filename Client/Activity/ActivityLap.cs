@@ -21,18 +21,30 @@ namespace StravaViewer.Client.Activity
             index = Jlap["lap_index"].ToObject<int>();
             time = TimeSpan.FromSeconds(Jlap["elapsed_time"].ToObject<int>());
             start_date = Convert.ToDateTime(Jlap["start_date_local"].ToString());
-            distance = Jlap["distance"].ToObject<float>();
-            elevation_gain = Jlap["total_elevation_gain"].ToObject<float>();
+            distance = Jlap["distance"].ToObject<float>();            
 
-            float pace_ms = Jlap["average_speed"].ToObject<float>();
-            float pace_skm = 1000 / pace_ms;
-            average_pace = TimeSpan.FromSeconds(pace_skm);
+            //float pace_ms = Jlap["average_speed"].ToObject<float>();
+            //float pace_skm = 1000 / Jlap["average_speed"].ToObject<float>();
+            average_pace = TimeSpan.FromSeconds(1000 / Jlap["average_speed"].ToObject<float>());
 
             max_speed = Jlap["max_speed"].ToObject<float>();
-            average_heartrate = Jlap["average_heartrate"].ToObject<float>();
-            max_heartrate = Jlap["max_heartrate"].ToObject<float>();
+
             start_index = Jlap["start_index"].ToObject<int>();
             end_index = Jlap["end_index"].ToObject<int>();
+
+            try
+            {
+                average_heartrate = Jlap["average_heartrate"].ToObject<float>();
+                max_heartrate = Jlap["max_heartrate"].ToObject<float>();
+            }
+            catch
+            {
+                average_heartrate = 0;
+                max_heartrate = 0;
+            }
+
+            elevation_gain = Jlap["total_elevation_gain"].ToObject<float>();
+
         }
     }
 }
