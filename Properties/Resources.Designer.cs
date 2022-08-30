@@ -83,6 +83,16 @@ namespace StravaViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap plus_sign {
+            get {
+                object obj = ResourceManager.GetObject("plus_sign", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap strava_logo {
             get {
                 object obj = ResourceManager.GetObject("strava_logo", resourceCulture);

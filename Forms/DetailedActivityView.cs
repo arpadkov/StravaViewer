@@ -13,8 +13,10 @@ namespace StravaViewer.Forms
     public partial class DetailedActivityView : Form
     {
         Activity activity;
+        ActivityRoute main_route;
         ActivityStreams streams;
         ActivityLaps laps;
+        //List<ActivityRoute> additional_routes = new List<ActivityRoute>();
 
         ScottPlot.Plottable.VLine highlightLine;
         ScottPlot.Plottable.Polygon highlightPolygon;
@@ -22,8 +24,11 @@ namespace StravaViewer.Forms
         ScottPlot.Plottable.SignalPlotXY elevationSignaPlot;
         //ScottPlot.PlottableVline vline;
 
-        GMapOverlay markers;
-        GMapMarker marker;
+        GMapOverlay routes = new GMapOverlay("routes");
+        //GMapOverlay main_route_overlay = new GMapOverlay("main_route");
+
+        GMapOverlay markers = new GMapOverlay("markers");
+        GMapMarker highlight_marker;
 
         double? current_lat;
         double? current_lng;
@@ -33,6 +38,7 @@ namespace StravaViewer.Forms
         public DetailedActivityView(Activity activity, ActivityStreams streams, ActivityLaps laps)
         {
             this.activity = activity;
+            this.main_route = streams.Route;
             this.streams = streams;
             this.laps = laps;
 
@@ -64,10 +70,9 @@ namespace StravaViewer.Forms
 
         private void DetailedActivityView_Load(object sender, EventArgs e)
         {
-            splitContainer1.BorderStyle = BorderStyle.FixedSingle;
-            splitContainer2.BorderStyle = BorderStyle.FixedSingle;
-            splitContainer3.BorderStyle = BorderStyle.FixedSingle;
-            splitContainer4.BorderStyle = BorderStyle.FixedSingle;
+            mainSplitContainer.BorderStyle = BorderStyle.FixedSingle;
+            MapPloSplitContainer.BorderStyle = BorderStyle.FixedSingle;
+            PlotsSplitContainer.BorderStyle = BorderStyle.FixedSingle;
 
             //Map.MapProvider = GoogleMapProvider.Instance;
             //Map.MapProvider = GoogleSatelliteMapProvider.Instance;
@@ -77,20 +82,21 @@ namespace StravaViewer.Forms
             GMaps.Instance.Mode = AccessMode.ServerOnly;
             Map.ShowCenter = false;
 
-            double temp_marker_lat = streams.latlngs[0][0];
-            double temp_marker_lng = streams.latlngs[0][1];
+            double temp_marker_lat = main_route.latlngs[0][0];
+            double temp_marker_lng = main_route.latlngs[0][1];
 
-            markers = new GMapOverlay("markers");
-            var projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            string filePath = Path.Combine(projectPath, "Resources");
-            marker = new GMarkerGoogle(new PointLatLng(temp_marker_lat, temp_marker_lng), GMarkerGoogleType.blue_dot);
+            //markers = new GMapOverlay("markers");
+            //var projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            //string filePath = Path.Combine(projectPath, "Resources");
+            highlight_marker = new GMarkerGoogle(new PointLatLng(temp_marker_lat, temp_marker_lng), GMarkerGoogleType.blue_dot);
             //marker.Size = System.Drawing.Size(10, 10);
-            markers.Markers.Add(marker);
+            markers.Markers.Add(highlight_marker);
             Map.Overlays.Add(markers);
+            
 
             //streams.CheckStreams();
 
-            CreateRoute();
+            DrawRoute(main_route, "main_route", Color.Red);
             CreateElevationPlot();
 
 
@@ -102,34 +108,53 @@ namespace StravaViewer.Forms
             //Map.Position = new PointLatLng(48.655, 10.299);    //Altenberg
         }
 
-        private void CreateRoute()
+        //private void DrawRoute(ActivityStreams additional_stream)
+        //{
+        //    GMapOverlay additionalRoute = new GMapOverlay("AdditionalActivity");
+        //    List<PointLatLng> points = new List<PointLatLng>();
+
+        //    foreach (var point in additional_stream.latlngs)
+        //    {
+        //        points.Add(new PointLatLng(point[0], point[1]));
+        //    }
+
+        //}
+
+        private void DrawRoute(ActivityRoute route, string route_name, Color color)
         {
-            GMapOverlay routes = new GMapOverlay("routes");
+            //GMapOverlay routes = new GMapOverlay("routes");
+            //GMapOverlay route_overlay = new GMapOverlay(route_name);
             List<PointLatLng> points = new List<PointLatLng>();
 
-            foreach (var point in streams.latlngs)
+            foreach (var point in route.latlngs)
             {
                 points.Add(new PointLatLng(point[0], point[1]));
             }            
 
-            GMapRoute route = new GMapRoute(points, "A walk in the park");
-            route.Stroke = new Pen(Color.Red, 3);
-            routes.Routes.Add(route);
+            GMapRoute groute = new GMapRoute(points, route_name);
+            groute.Stroke = new Pen(color, 3);
+            //groute.Stroke.Color = color;
+            groute.Stroke.Width = 3;
+            routes.Routes.Add(groute);
             Map.Overlays.Add(routes);
 
+
+
             // start and end marker
-            var start_marker = new GMarkerGoogle(new PointLatLng(streams.latlngs[0][0], streams.latlngs[0][1]), GMarkerGoogleType.green_big_go);
-            var end_marker = new GMarkerGoogle(new PointLatLng(streams.latlngs[streams.latlngs.Count-1][0], streams.latlngs[streams.latlngs.Count - 1][1]), GMarkerGoogleType.red_big_stop);
-            start_marker.ToolTipText = "Start here";
-            end_marker.ToolTipText = "End here";
-            start_marker.Size = new Size(32, 32);
-            end_marker.Size = new Size(32, 32);
-            start_marker.Offset = new Point(-16, -32);
-            end_marker.Offset = new Point(-16, -32);
-            markers.Markers.Add(start_marker);
-            markers.Markers.Add(end_marker);
+            //var start_marker = new GMarkerGoogle(new PointLatLng(route.latlngs[0][0], route.latlngs[0][1]), GMarkerGoogleType.green_big_go);
+            //var end_marker = new GMarkerGoogle(new PointLatLng(route.latlngs[route.latlngs.Count-1][0], route.latlngs[route.latlngs.Count - 1][1]), GMarkerGoogleType.red_big_stop);
+            //start_marker.ToolTipText = "Start here";
+            //end_marker.ToolTipText = "End here";
+            //start_marker.Size = new Size(32, 32);
+            //end_marker.Size = new Size(32, 32);
+            //start_marker.Offset = new Point(-16, -32);
+            //end_marker.Offset = new Point(-16, -32);
+            //markers.Markers.Add(start_marker);
+            //markers.Markers.Add(end_marker);
 
             Map.Position = points[0];
+            //routes.IsVisibile = false;
+            //routes.IsVisibile = true;
         }
 
         private void CreateElevationPlot()
@@ -183,6 +208,11 @@ namespace StravaViewer.Forms
             multiPlot.Refresh();
         }
 
+        public void AddRouteGPX(string raw_gpx)
+        {
+            //ActivityRoute route = new ActivityRoute()
+        }
+
         private void HighlightPoint(double distance)
         {
             highlightLine.X = distance;
@@ -231,8 +261,8 @@ namespace StravaViewer.Forms
             // MAP           
             if (index > 0)
             {
-                PointLatLng point = new PointLatLng(streams.latlngs_lowres[index][0], streams.latlngs_lowres[index][1]);
-                marker.Position = point;
+                PointLatLng point = new PointLatLng(main_route.latlngs_lowres[index][0], main_route.latlngs_lowres[index][1]);
+                highlight_marker.Position = point;
                 //markers.Markers.Clear();
                 //markers.Markers.Add(new GMarkerGoogle(point, GMarkerGoogleType.yellow));
 
@@ -269,7 +299,7 @@ namespace StravaViewer.Forms
         private void CleanPointHighlight()
         {
             highlightLine.IsVisible = false;
-            marker.IsVisible = false;
+            highlight_marker.IsVisible = false;
             infoToolTip.IsVisible = false;
 
             elevationPlot.Render();
@@ -287,7 +317,7 @@ namespace StravaViewer.Forms
         private void StartPointHighlight()
         {
             //System.Windows.Forms.Cursor.Hide();
-            marker.IsVisible = true;
+            highlight_marker.IsVisible = true;
             highlightLine.IsVisible = true;
             infoToolTip.IsVisible = true;
             timer1.Start();
@@ -320,7 +350,7 @@ namespace StravaViewer.Forms
             if (distance > 0)
             {
                 //TODO: this is bad
-                marker.IsVisible = true;
+                highlight_marker.IsVisible = true;
                 highlightLine.IsVisible = true;
                 infoToolTip.IsVisible = true;
                 HighlightPoint(distance);
@@ -401,6 +431,53 @@ namespace StravaViewer.Forms
             EndPointHighlight();
         }
 
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
+
+        private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
+
+        private void splitContainer3_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void AddRouteButton_Click(object sender, EventArgs e)
+        {
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    filePath = openFileDialog.FileName;
+
+                    //Read the contents of the file into a stream
+                    var fileStream = openFileDialog.OpenFile();
+
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        fileContent = reader.ReadToEnd();
+                    }
+                }
+            }
+
+            ActivityRoute new_route = new ActivityRoute(fileContent);
+
+            DrawRoute(new_route, "route1", Color.Blue);
+
+        }
     }
 
 }

@@ -37,28 +37,26 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.lapsGridView = new System.Windows.Forms.DataGridView();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.MapPloSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.PlotsSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.AddRouteButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lapsGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
-            this.splitContainer4.Panel1.SuspendLayout();
-            this.splitContainer4.Panel2.SuspendLayout();
-            this.splitContainer4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
+            this.mainSplitContainer.Panel1.SuspendLayout();
+            this.mainSplitContainer.Panel2.SuspendLayout();
+            this.mainSplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MapPloSplitContainer)).BeginInit();
+            this.MapPloSplitContainer.Panel1.SuspendLayout();
+            this.MapPloSplitContainer.Panel2.SuspendLayout();
+            this.MapPloSplitContainer.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PlotsSplitContainer)).BeginInit();
+            this.PlotsSplitContainer.Panel1.SuspendLayout();
+            this.PlotsSplitContainer.Panel2.SuspendLayout();
+            this.PlotsSplitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // elevationPlot
@@ -66,14 +64,16 @@
             this.elevationPlot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.elevationPlot.Location = new System.Drawing.Point(0, 0);
             this.elevationPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.elevationPlot.MinimumSize = new System.Drawing.Size(0, 150);
             this.elevationPlot.Name = "elevationPlot";
-            this.elevationPlot.Size = new System.Drawing.Size(951, 156);
+            this.elevationPlot.Size = new System.Drawing.Size(1190, 160);
             this.elevationPlot.TabIndex = 0;
             this.elevationPlot.MouseEnter += new System.EventHandler(this.elevationPlot_MouseEnter);
             this.elevationPlot.MouseLeave += new System.EventHandler(this.elevationPlot_MouseLeave);
             // 
             // Map
             // 
+            this.Map.BackColor = System.Drawing.Color.Cyan;
             this.Map.Bearing = 0F;
             this.Map.CanDragMap = true;
             this.Map.Cursor = System.Windows.Forms.Cursors.Cross;
@@ -85,6 +85,7 @@
             this.Map.Location = new System.Drawing.Point(0, 0);
             this.Map.MarkersEnabled = true;
             this.Map.MaxZoom = 18;
+            this.Map.MinimumSize = new System.Drawing.Size(400, 200);
             this.Map.MinZoom = 2;
             this.Map.MouseWheelZoomEnabled = true;
             this.Map.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
@@ -96,7 +97,7 @@
             this.Map.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
             this.Map.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.Map.ShowTileGridLines = false;
-            this.Map.Size = new System.Drawing.Size(951, 416);
+            this.Map.Size = new System.Drawing.Size(1190, 400);
             this.Map.TabIndex = 1;
             this.Map.Zoom = 13D;
             this.Map.MouseEnter += new System.EventHandler(this.Map_MouseEnter);
@@ -108,8 +109,9 @@
             this.multiPlot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.multiPlot.Location = new System.Drawing.Point(0, 0);
             this.multiPlot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.multiPlot.MinimumSize = new System.Drawing.Size(0, 150);
             this.multiPlot.Name = "multiPlot";
-            this.multiPlot.Size = new System.Drawing.Size(951, 142);
+            this.multiPlot.Size = new System.Drawing.Size(1190, 156);
             this.multiPlot.TabIndex = 2;
             // 
             // timer1
@@ -120,7 +122,7 @@
             // openStravaButton
             // 
             this.openStravaButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.openStravaButton.Location = new System.Drawing.Point(27, 110);
+            this.openStravaButton.Location = new System.Drawing.Point(87, 32);
             this.openStravaButton.Name = "openStravaButton";
             this.openStravaButton.Size = new System.Drawing.Size(108, 23);
             this.openStravaButton.TabIndex = 3;
@@ -131,7 +133,7 @@
             // numericUpDown1
             // 
             this.numericUpDown1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDown1.Location = new System.Drawing.Point(27, 59);
+            this.numericUpDown1.Location = new System.Drawing.Point(150, 3);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             165,
             0,
@@ -143,7 +145,7 @@
             0,
             0});
             this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 23);
+            this.numericUpDown1.Size = new System.Drawing.Size(45, 23);
             this.numericUpDown1.TabIndex = 4;
             this.numericUpDown1.Value = new decimal(new int[] {
             1,
@@ -156,7 +158,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(27, 30);
+            this.label1.Location = new System.Drawing.Point(2, 7);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(144, 15);
             this.label1.TabIndex = 5;
@@ -169,119 +171,124 @@
             this.lapsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.lapsGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lapsGridView.Location = new System.Drawing.Point(0, 0);
+            this.lapsGridView.MinimumSize = new System.Drawing.Size(150, 0);
             this.lapsGridView.Name = "lapsGridView";
             this.lapsGridView.ReadOnly = true;
             this.lapsGridView.RowHeadersVisible = false;
             this.lapsGridView.RowTemplate.Height = 25;
             this.lapsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.lapsGridView.Size = new System.Drawing.Size(380, 724);
+            this.lapsGridView.Size = new System.Drawing.Size(328, 724);
             this.lapsGridView.TabIndex = 7;
             this.lapsGridView.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.lapsGridView_CellMouseEnter);
             this.lapsGridView.MouseLeave += new System.EventHandler(this.lapsGridView_MouseLeave);
             // 
-            // splitContainer1
+            // mainSplitContainer
             // 
-            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
+            this.mainSplitContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.mainSplitContainer.Name = "mainSplitContainer";
             // 
-            // splitContainer1.Panel1
+            // mainSplitContainer.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.numericUpDown1);
-            this.splitContainer1.Panel1.Controls.Add(this.openStravaButton);
-            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.mainSplitContainer.Panel1.Controls.Add(this.MapPloSplitContainer);
             // 
-            // splitContainer1.Panel2
+            // mainSplitContainer.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1526, 726);
-            this.splitContainer1.SplitterDistance = 183;
-            this.splitContainer1.TabIndex = 8;
+            this.mainSplitContainer.Panel2.Controls.Add(this.lapsGridView);
+            this.mainSplitContainer.Size = new System.Drawing.Size(1526, 726);
+            this.mainSplitContainer.SplitterDistance = 1192;
+            this.mainSplitContainer.TabIndex = 8;
+            this.mainSplitContainer.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
-            // splitContainer2
+            // MapPloSplitContainer
             // 
-            this.splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
+            this.MapPloSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MapPloSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.MapPloSplitContainer.MinimumSize = new System.Drawing.Size(0, 400);
+            this.MapPloSplitContainer.Name = "MapPloSplitContainer";
+            this.MapPloSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer2.Panel1
+            // MapPloSplitContainer.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.splitContainer3);
+            this.MapPloSplitContainer.Panel1.Controls.Add(this.AddRouteButton);
+            this.MapPloSplitContainer.Panel1.Controls.Add(this.panel1);
+            this.MapPloSplitContainer.Panel1.Controls.Add(this.Map);
             // 
-            // splitContainer2.Panel2
+            // MapPloSplitContainer.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.lapsGridView);
-            this.splitContainer2.Size = new System.Drawing.Size(1339, 726);
-            this.splitContainer2.SplitterDistance = 953;
-            this.splitContainer2.TabIndex = 0;
+            this.MapPloSplitContainer.Panel2.Controls.Add(this.PlotsSplitContainer);
+            this.MapPloSplitContainer.Size = new System.Drawing.Size(1190, 724);
+            this.MapPloSplitContainer.SplitterDistance = 400;
+            this.MapPloSplitContainer.TabIndex = 0;
+            this.MapPloSplitContainer.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
             // 
-            // splitContainer3
+            // panel1
             // 
-            this.splitContainer3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.openStravaButton);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.numericUpDown1);
+            this.panel1.Location = new System.Drawing.Point(980, 317);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(198, 68);
+            this.panel1.TabIndex = 8;
             // 
-            // splitContainer3.Panel1
+            // PlotsSplitContainer
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.Map);
+            this.PlotsSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PlotsSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.PlotsSplitContainer.Name = "PlotsSplitContainer";
+            this.PlotsSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer3.Panel2
+            // PlotsSplitContainer.Panel1
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-            this.splitContainer3.Size = new System.Drawing.Size(953, 726);
-            this.splitContainer3.SplitterDistance = 418;
-            this.splitContainer3.TabIndex = 0;
+            this.PlotsSplitContainer.Panel1.Controls.Add(this.elevationPlot);
+            this.PlotsSplitContainer.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer3_Panel1_Paint);
             // 
-            // splitContainer4
+            // PlotsSplitContainer.Panel2
             // 
-            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer4.Name = "splitContainer4";
-            this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.PlotsSplitContainer.Panel2.Controls.Add(this.multiPlot);
+            this.PlotsSplitContainer.Size = new System.Drawing.Size(1190, 320);
+            this.PlotsSplitContainer.SplitterDistance = 160;
+            this.PlotsSplitContainer.TabIndex = 0;
             // 
-            // splitContainer4.Panel1
+            // AddRouteButton
             // 
-            this.splitContainer4.Panel1.Controls.Add(this.elevationPlot);
-            // 
-            // splitContainer4.Panel2
-            // 
-            this.splitContainer4.Panel2.Controls.Add(this.multiPlot);
-            this.splitContainer4.Size = new System.Drawing.Size(951, 302);
-            this.splitContainer4.SplitterDistance = 156;
-            this.splitContainer4.TabIndex = 0;
+            this.AddRouteButton.BackgroundImage = global::StravaViewer.Properties.Resources.plus_sign;
+            this.AddRouteButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.AddRouteButton.Location = new System.Drawing.Point(16, 17);
+            this.AddRouteButton.Name = "AddRouteButton";
+            this.AddRouteButton.Size = new System.Drawing.Size(30, 30);
+            this.AddRouteButton.TabIndex = 9;
+            this.AddRouteButton.UseVisualStyleBackColor = true;
+            this.AddRouteButton.Click += new System.EventHandler(this.AddRouteButton_Click);
             // 
             // DetailedActivityView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1526, 726);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.mainSplitContainer);
             this.Name = "DetailedActivityView";
             this.Text = "DetailedActivityView";
             this.Load += new System.EventHandler(this.DetailedActivityView_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lapsGridView)).EndInit();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
-            this.splitContainer4.Panel1.ResumeLayout(false);
-            this.splitContainer4.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
-            this.splitContainer4.ResumeLayout(false);
+            this.mainSplitContainer.Panel1.ResumeLayout(false);
+            this.mainSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
+            this.mainSplitContainer.ResumeLayout(false);
+            this.MapPloSplitContainer.Panel1.ResumeLayout(false);
+            this.MapPloSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.MapPloSplitContainer)).EndInit();
+            this.MapPloSplitContainer.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.PlotsSplitContainer.Panel1.ResumeLayout(false);
+            this.PlotsSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.PlotsSplitContainer)).EndInit();
+            this.PlotsSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -296,9 +303,10 @@
         private NumericUpDown numericUpDown1;
         private Label label1;
         private DataGridView lapsGridView;
-        private SplitContainer splitContainer1;
-        private SplitContainer splitContainer2;
-        private SplitContainer splitContainer3;
-        private SplitContainer splitContainer4;
+        private SplitContainer mainSplitContainer;
+        private SplitContainer MapPloSplitContainer;
+        private Panel panel1;
+        private SplitContainer PlotsSplitContainer;
+        private Button AddRouteButton;
     }
 }

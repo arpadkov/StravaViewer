@@ -15,8 +15,10 @@ namespace StravaViewer.Client.Activity
         //public double[]? heartrates_lowres;
         //public List<double>? velocities = new List<double>();
         //public double[]? velocities_lowres;
-        public List<float[]>? latlngs = new List<float[]>();
-        public List<float[]>? latlngs_lowres = new List<float[]>();
+        //private List<float[]>? latlngs = new List<float[]>();
+        //private List<float[]>? latlngs_lowres = new List<float[]>();
+
+        public ActivityRoute Route;
 
         Dictionary<string, List<double>> highres_streams;
         Dictionary<string, double[]> lowres_streams;
@@ -28,6 +30,8 @@ namespace StravaViewer.Client.Activity
 
         public ActivityStreams(Dictionary<string, JArray> JStreams, int resolution = 500)
         {
+            Route = new ActivityRoute(JStreams["latlng"]);
+
             highres_resolution = JStreams["time"].Count;
             lowres_resolution = resolution;
 
@@ -43,48 +47,11 @@ namespace StravaViewer.Client.Activity
             // Filling up highres Lists
             foreach (var item in JStreams)
             {
-                if (item.Key == "latlng")
-                {
-                    for (int i = 0; i < highres_resolution; i++)
-                    {
-                        // Filling up LatLng List
-                        float[] coords = new float[2];
-                        coords[0] = (float)JStreams["latlng"][i][0];
-                        coords[1] = (float)JStreams["latlng"][i][1];
-                        latlngs.Add(coords);
-                    }
-                }
-                else
+                if (item.Key != "latlng")
                 {
                     FillHighresList(item.Key, item.Value);
                 }
             }
-
-            // Initializing Lists for lowres arrays
-            //List<double> distances_list_lowres = new List<double>();
-            //List<double> times_list_lowres = new List<double>();
-            //List<double> elevations_list_lowres = new List<double>();
-            //List<double> heartrates_list_lowres = new List<double>();
-            //List<double> velocities_list_lowres = new List<double>();
-
-
-            // Filling up highres Lists
-            //for (int i = 0; i < highres_resolution; i ++)
-            //{
-            //    distances.Add((double)JStreams["distance"][i] / 1000);
-            //    times.Add((double)JStreams["time"][i]);
-            //    elevations.Add((double)JStreams["altitude"][i]);
-            //    heartrates.Add((double)JStreams["heartrate"][i]);
-            //    velocities.Add((double)JStreams["heartrate"][i]);
-
-            //    // Filling up LatLng List
-            //    float[] coords = new float[2];
-            //    coords[0] = (float)JStreams["latlng"][i][0];
-            //    coords[1] = (float)JStreams["latlng"][i][1];
-            //    latlngs.Add(coords);
-            //}
-
-
 
             lowres_streams = new Dictionary<string, double[]>
             {
@@ -98,53 +65,13 @@ namespace StravaViewer.Client.Activity
             // Filling up lowres Lists
             foreach (var item in JStreams)
             {
-                if (item.Key == "latlng")
-                {
-                    for (int i = 0; i < lowres_resolution; i++)
-                    {
-                        int index = (int)Math.Round(i * ((float)highres_resolution / lowres_resolution));
-
-                        // Filling up LatLng List
-                        float[] coords = new float[2];
-                        coords[0] = (float)JStreams["latlng"][index][0];
-                        coords[1] = (float)JStreams["latlng"][index][1];
-                        latlngs_lowres.Add(coords);
-                    }
-                }
-                else
+                if (item.Key != "latlng")
                 {
                     FillLowresList(item.Key, item.Value);
                 }
             }
 
             SetUnits();
-
-            // Filling up lowres Lists
-            //for (int i = 0; i < lowres_resolution; i++)
-            //{
-            //    int index = (int)Math.Round(i * ((float)highres_resolution / lowres_resolution));
-
-            //    distances_list_lowres.Add((double)JStreams["distance"][index] / 1000);
-            //    times_list_lowres.Add((double)JStreams["time"][index]);
-            //    elevations_list_lowres.Add((double)JStreams["altitude"][index]);
-            //    heartrates_list_lowres.Add((double)JStreams["heartrate"][index]);              
-            //    velocities_list_lowres.Add((double)JStreams["heartrate"][index]);
-
-            //    // Filling up LatLng List
-            //    float[] coords = new float[2];
-            //    coords[0] = (float)JStreams["latlng"][index][0];
-            //    coords[1] = (float)JStreams["latlng"][index][1];
-            //    latlngs_lowres.Add(coords);
-            //}
-
-            // Converting lowres lists to arrays
-            //distances_lowres = distances_list_lowres.ToArray();
-            //times_lowres = times_list_lowres.ToArray();
-            //elevations_lowres = elevations_list_lowres.ToArray();
-            //heartrates_lowres = heartrates_list_lowres.ToArray();
-            //velocities_lowres = velocities_list_lowres.ToArray();
-
-            //CheckStreams();
         }
 
         public double[] GetLowresStream(string stream)
@@ -161,30 +88,6 @@ namespace StravaViewer.Client.Activity
         {
             return highres_streams[stream];
         }
-
-        //public void CheckStreams()
-        //{
-        //    foreach(var item in highres_streams)
-        //    {
-        //        if (item.Value.Count == 0)
-        //        {
-        //            for (int i = 0; i < highres_resolution; i++)
-        //            {
-        //                item.Value.Add(0);
-        //            }
-        //        }
-        //    }
-
-        //    foreach (var item in lowres_streams)
-        //    {
-        //        if (item.Value.Length == 0)
-        //        {
-        //            item.Value = new double[500];
-        //        }
-        //    }
-
-
-        //}
 
         private void FillHighresList(string stream, JArray values)
         {
@@ -254,11 +157,11 @@ namespace StravaViewer.Client.Activity
             // return -1 if the given point is not inside the radius of any activity points
 
             // distance to the first point
-            float min_distance = (float)distance((float)lat, (float)lng, latlngs_lowres[0][0], latlngs_lowres[0][1]);
+            float min_distance = (float)distance((float)lat, (float)lng, Route.latlngs_lowres[0][0], Route.latlngs_lowres[0][1]);
             float current_distance;
             int index = 0;
             int min_index = 0;
-            foreach (float[] point in latlngs_lowres)
+            foreach (float[] point in Route.latlngs_lowres)
             {
                 current_distance = (float)distance((float)lat, (float)lng, point[0], point[1]);
                 if (current_distance < min_distance)
