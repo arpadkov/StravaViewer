@@ -83,9 +83,39 @@ namespace StravaViewer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap end_marker {
+            get {
+                object obj = ResourceManager.GetObject("end_marker", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap highlight_marker {
+            get {
+                object obj = ResourceManager.GetObject("highlight_marker", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap plus_sign {
             get {
                 object obj = ResourceManager.GetObject("plus_sign", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap start_marker {
+            get {
+                object obj = ResourceManager.GetObject("start_marker", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

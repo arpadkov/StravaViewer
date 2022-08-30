@@ -88,7 +88,9 @@ namespace StravaViewer.Forms
             //markers = new GMapOverlay("markers");
             //var projectPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
             //string filePath = Path.Combine(projectPath, "Resources");
-            highlight_marker = new GMarkerGoogle(new PointLatLng(temp_marker_lat, temp_marker_lng), GMarkerGoogleType.blue_dot);
+            highlight_marker = new GMarkerGoogle(new PointLatLng(temp_marker_lat, temp_marker_lng), new Bitmap(Properties.Resources.highlight_marker));
+            highlight_marker.Size = new Size(24, 24);
+            highlight_marker.Offset = new Point(-12, -12);
             //marker.Size = System.Drawing.Size(10, 10);
             markers.Markers.Add(highlight_marker);
             Map.Overlays.Add(markers);
@@ -141,16 +143,20 @@ namespace StravaViewer.Forms
 
 
             // start and end marker
+            var start_sign_bitmap = new Bitmap(Properties.Resources.start_marker);
+            var end_sign_bitmap = new Bitmap(Properties.Resources.end_marker);
+            //var tempmarker = new GMarkerGoogle(new PointLatLng(route.latlngs[0][0], route.latlngs[0][1]), new Bitmap());
             //var start_marker = new GMarkerGoogle(new PointLatLng(route.latlngs[0][0], route.latlngs[0][1]), GMarkerGoogleType.green_big_go);
-            //var end_marker = new GMarkerGoogle(new PointLatLng(route.latlngs[route.latlngs.Count-1][0], route.latlngs[route.latlngs.Count - 1][1]), GMarkerGoogleType.red_big_stop);
+            var start_marker = new GMarkerGoogle(new PointLatLng(route.latlngs[0][0], route.latlngs[0][1]), start_sign_bitmap);
+            var end_marker = new GMarkerGoogle(new PointLatLng(route.latlngs[route.latlngs.Count - 1][0], route.latlngs[route.latlngs.Count - 1][1]), end_sign_bitmap);
             //start_marker.ToolTipText = "Start here";
             //end_marker.ToolTipText = "End here";
-            //start_marker.Size = new Size(32, 32);
-            //end_marker.Size = new Size(32, 32);
-            //start_marker.Offset = new Point(-16, -32);
-            //end_marker.Offset = new Point(-16, -32);
-            //markers.Markers.Add(start_marker);
-            //markers.Markers.Add(end_marker);
+            start_marker.Size = new Size(32, 32);
+            end_marker.Size = new Size(32, 32);
+            start_marker.Offset = new Point(-16, -16);
+            end_marker.Offset = new Point(-16, -16);
+            markers.Markers.Add(start_marker);
+            markers.Markers.Add(end_marker);
 
             Map.Position = points[0];
             //routes.IsVisibile = false;
@@ -473,9 +479,11 @@ namespace StravaViewer.Forms
                 }
             }
 
-            ActivityRoute new_route = new ActivityRoute(fileContent);
-
-            DrawRoute(new_route, "route1", Color.Blue);
+            if (filePath != string.Empty) 
+            {
+                ActivityRoute new_route = new ActivityRoute(fileContent);
+                DrawRoute(new_route, "route1", Color.Blue);
+            }
 
         }
     }
