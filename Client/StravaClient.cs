@@ -83,6 +83,19 @@ namespace StravaViewer.Client
             this.access_token = HttpRequest.Post(authentication_url, payload_dict, "access_token");
         }
 
+        private void GetRefreshToken(string code)
+        {
+            Dictionary<string, string> payload_dict = new Dictionary<string, string>
+                {
+                    {"client_id", user_credentials.ClientId},
+                    {"client_secret", user_credentials.ClientSecret},
+                    {"code", code},
+                    {"grant_type", "authorization_code"},
+                };
+
+            string refresh_token = HttpRequest.Post(authentication_url, payload_dict, "access_token");
+        }
+
         // TODO: is the return needed?
         private JArray GetAllActivitiesFromAPI()
         {

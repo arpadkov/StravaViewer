@@ -5,5 +5,14 @@
     <Setting Name="PlotRefreshRate" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">30</Value>
     </Setting>
+    <Setting Name="ClientId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">81997</Value>
+    </Setting>
+    <Setting Name="ClientSecret" Type="System.String" Scope="User">
+      <Value Profile="(Default)">a74cce30521051b03c03af592232459784ce18d0</Value>
+    </Setting>
+    <Setting Name="RefreshToken" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0d68792da1294bd1d18a91f41f14c3cb3f8b0d00</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

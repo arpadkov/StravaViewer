@@ -7,3 +7,5 @@ request refresh token:
 web.postmen
 https://www.strava.com/oauth/token?client_id=[CLIENT_ID]&client_secret=[CLIENT_SECRET]&code=[CODE]&grant_type=authorization_code
 from response json: -----> refresh token <-----
+
+
